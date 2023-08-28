@@ -1,32 +1,15 @@
-import "@/styles/globals.css";
-import {
-    Hydrate,
-    QueryClient,
-    QueryClientProvider,
-} from "@tanstack/react-query";
+import {ThemeProvider} from "styled-components";
+import {GlobalStyle, defaultTheme} from "@/components/theme";
 
-// Create a client
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false,
-            refetchOnmount: true,
-            refetchOnReconnect: true,
-            retry: 1,
-            staleTime: "Infinity",
-        },
-    },
-});
-
-export default function App({ Component, pageProps }) {
+export default function App({Component, pageProps}) {
     const getLayout = Component.getLayout || ((page) => page);
 
     return (
-        // Provide the client to your App
-        <QueryClientProvider client={queryClient}>
-            <Hydrate state={pageProps.dehydratedState}>
+        <>
+            <GlobalStyle/>
+            <ThemeProvider theme={defaultTheme}>
                 {getLayout(<Component {...pageProps} />)}
-            </Hydrate>
-        </QueryClientProvider>
+            </ThemeProvider>
+        </>
     );
 }

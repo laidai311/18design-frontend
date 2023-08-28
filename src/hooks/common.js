@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useRef, useState } from "react";
+import {useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
 
 export function useDidUpdate(fn, dependencies) {
     const mounted = useRef(false);
@@ -28,7 +28,7 @@ export function useClickOutside(handler, events, nodes) {
 
     useEffect(() => {
         const listener = (event) => {
-            const { target } = event ?? {};
+            const {target} = event ?? {};
             if (Array.isArray(nodes)) {
                 const shouldIgnore =
                     target?.hasAttribute("data-ignore-outside-clicks") ||
@@ -57,19 +57,33 @@ export function useClickOutside(handler, events, nodes) {
     return ref;
 }
 
-export function useEventListener(type, listener, options) {
-    const ref = useRef();
+export const useIsomorphicLayoutEffect =
+    typeof window !== 'undefined' ? useLayoutEffect : useEffect
+
+export function useEventListener(eventName, handler, element, options,) {
+    // Create a ref that stores handler
+    const savedHandler = useRef(handler)
+
+    useIsomorphicLayoutEffect(() => {
+        savedHandler.current = handler
+    }, [handler])
 
     useEffect(() => {
-        if (ref.current) {
-            ref.current.addEventListener(type, listener, options);
-            return () =>
-                ref.current?.removeEventListener(type, listener, options);
-        }
-        return undefined;
-    }, [listener, options]);
+        // Define the listening target
+        const targetElement = element?.current ?? window
 
-    return ref;
+        if (!(targetElement && targetElement.addEventListener)) return
+
+        // Create event listener that calls handler function stored in ref
+        const listener = event => savedHandler.current(event)
+
+        targetElement.addEventListener(eventName, listener, options)
+
+        // Remove event listener on cleanup
+        return () => {
+            targetElement.removeEventListener(eventName, listener, options)
+        }
+    }, [eventName, element, options])
 }
 
 export function useHover() {
@@ -92,7 +106,7 @@ export function useHover() {
         return undefined;
     }, []);
 
-    return { ref, hovered };
+    return {ref, hovered};
 }
 
 function attachMediaListener(query, callback) {
@@ -120,7 +134,7 @@ function getInitialValue(query, initialValue) {
 export function useMediaQuery(
     query,
     initialValue,
-    { getInitialValueInEffect } = {
+    {getInitialValueInEffect} = {
         getInitialValueInEffect: true,
     }
 ) {
@@ -152,8 +166,8 @@ export const useDetectKeyboardOpen = (minKeyboardHeight = 300, defaultValue = fa
     useEffect(() => {
         const listener = () => {
             const newState =
-                window.screen.height - minKeyboardHeight > window.visualViewport.height;
-            if (isKeyboardOpen != newState) {
+                (window.screen.height - minKeyboardHeight) > window.visualViewport.height;
+            if (isKeyboardOpen !== newState) {
                 setIsKeyboardOpen(newState);
             }
         };
@@ -185,8 +199,8 @@ export const useWindowHeight = () => {
         const isMobile =
             typeof window === 'object'
                 ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                      window.navigator.userAgent
-                  )
+                    window.navigator.userAgent
+                )
                 : false;
         const syncHeight = () => {
             if (isDetectKeyboardOpen && isMobile) return;
