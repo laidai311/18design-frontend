@@ -1,4 +1,4 @@
-import {createGlobalStyle} from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   :root {
@@ -16,6 +16,14 @@ export const GlobalStyle = createGlobalStyle`
       --background-start-rgb: 0, 0, 0;
       --background-end-rgb: 0, 0, 0;
     }
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
   }
 
   body {
@@ -36,7 +44,12 @@ export const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
 
-  img {
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  img, picture, video, canvas, svg {
     width: auto;
     height: auto;
     max-width: 100%;
