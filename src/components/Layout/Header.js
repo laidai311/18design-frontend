@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { Button } from "@/components/UI";
 import {
-    IconArrowDown3,
+    IconChevronDown,
     IconHome,
     IconMenu,
     IconSearch,
 } from "@/components/Icons";
 import { useEventListener } from "@/hooks";
 import {
-    HeaderInner,
-    HeaderMain,
-    HeaderLogoImg,
-    HeaderLogoLink,
-    HeaderNavWrapper,
-    HeaderNavLink,
-    HeaderNavLinks,
-    HeaderIconMenu,
-    HeaderNavButton,
-    HeaderNavPopover,
-    HeaderContainer,
+    Inner,
+    Main,
+    LogoImg,
+    LogoLink,
+    NavList,
+    NavItemLink,
+    NavListChild,
+    MenuWrap,
+    NavItemButton,
+    NavChild,
+    Wrapper,
 } from "@/components/Styled/Header";
 
 export default function Header({}) {
@@ -29,70 +29,70 @@ export default function Header({}) {
     });
 
     return (
-        <HeaderContainer>
-            <HeaderMain sticky={headerSticky ? headerSticky : undefined}>
-                <HeaderInner>
-                    <HeaderIconMenu>
+        <Wrapper>
+            <Main sticky={headerSticky ? headerSticky : undefined}>
+                <Inner>
+                    <MenuWrap>
                         <Button>
                             <IconMenu width={20} height={20} />
                         </Button>
-                    </HeaderIconMenu>
-                    <HeaderLogoLink href={"/"}>
-                        <HeaderLogoImg
+                    </MenuWrap>
+                    <LogoLink href={"/"}>
+                        <LogoImg
                             alt={"logo"}
                             data-src={"./images/18-design-cut.png"}
                         />
-                    </HeaderLogoLink>
-                    <HeaderNavWrapper>
-                        <HeaderNavLink href={"/"}>
+                    </LogoLink>
+                    <NavList>
+                        <NavItemLink href={"/"}>
                             <IconHome
                                 width={18}
                                 height={18}
                                 color={"#E6BC67"}
                             />
-                        </HeaderNavLink>
-                        <HeaderNavLink href={"/"}>Về chúng tôi</HeaderNavLink>
-                        <HeaderNavLinks>
-                            <HeaderNavLink href={"/"}>Dự án</HeaderNavLink>
-                            <IconArrowDown3 width={14} />
-                            <HeaderNavPopover
+                        </NavItemLink>
+                        <NavItemLink href={"/"}>Về chúng tôi</NavItemLink>
+                        <NavListChild>
+                            <NavItemLink href={"/"}>Dự án</NavItemLink>
+                            <IconChevronDown width={14} />
+                            <NavChild
                                 aria-expanded="false"
                                 className={"header-nav-popover"}
                             >
-                                <HeaderNavLink href={"/"}>
+                                <NavItemLink href={"/"}>
                                     Sửa nhà trọn gói
-                                </HeaderNavLink>
-                                <HeaderNavLink href={"/"}>
+                                </NavItemLink>
+                                <NavItemLink href={"/"}>
                                     Xây nhà trọn gói
-                                </HeaderNavLink>
-                                <HeaderNavLink href={"/"}>
+                                </NavItemLink>
+                                <NavItemLink href={"/"}>
                                     Thi công nội thất
-                                </HeaderNavLink>
-                            </HeaderNavPopover>
-                        </HeaderNavLinks>
-                        <HeaderNavLinks>
-                            <HeaderNavLink href={"/"}>
+                                </NavItemLink>
+                            </NavChild>
+                        </NavListChild>
+                        <NavListChild>
+                            <NavItemLink href={"/"}>
                                 Thiết kế nội thất
-                            </HeaderNavLink>
-                            <IconArrowDown3 width={14} />
-                        </HeaderNavLinks>
-                        <HeaderNavLinks>
-                            <HeaderNavLink href={"/"}>
+                            </NavItemLink>
+                            <IconChevronDown width={14} />
+                        </NavListChild>
+                        <NavListChild>
+                            <NavItemLink href={"/"}>
                                 Thiết kế kiến trúc
-                            </HeaderNavLink>
-                            <IconArrowDown3 width={14} />
-                        </HeaderNavLinks>
-                        <HeaderNavLinks>
-                            <HeaderNavLink href={"/"}>Tin tức</HeaderNavLink>
-                            <IconArrowDown3 width={14} />
-                        </HeaderNavLinks>
-                        <HeaderNavLink href={"/"}>Liên hệ</HeaderNavLink>
-                        <HeaderNavButton>
+                            </NavItemLink>
+                            <IconChevronDown width={14} />
+                        </NavListChild>
+                        <NavListChild>
+                            <NavItemLink href={"/"}>Tin tức</NavItemLink>
+                            <IconChevronDown width={14} />
+                        </NavListChild>
+                        <NavItemLink href={"/"}>Liên hệ</NavItemLink>
+                        <NavItemButton>
                             <IconSearch width={18} height={18} />
-                        </HeaderNavButton>
-                    </HeaderNavWrapper>
-                </HeaderInner>
-            </HeaderMain>
-        </HeaderContainer>
+                        </NavItemButton>
+                    </NavList>
+                </Inner>
+            </Main>
+        </Wrapper>
     );
 }

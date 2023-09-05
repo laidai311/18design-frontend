@@ -3,7 +3,7 @@ import { Button, Img, Link } from "@/components/UI";
 import { screens, spacing, media } from "@/components/theme";
 import { AbsCenterY } from "@/components/Css";
 
-export const HeaderContainer = styled.header.attrs(() => ({
+export const Wrapper = styled.header.attrs(() => ({
     id: "header",
 }))`
     position: relative;
@@ -20,13 +20,13 @@ const stuckMoveDown = keyframes`
 
 const color = "#E6BC67";
 
-const HoverNavItem = css`
+const NavItemHover = css`
     &:hover {
         color: ${color};
     }
 `;
 
-export const HeaderMain = styled.div`
+export const Main = styled.div`
     position: absolute;
     top: 0;
     left: 0;
@@ -66,7 +66,7 @@ export const HeaderMain = styled.div`
     }
 `;
 
-export const HeaderInner = styled.div`
+export const Inner = styled.div`
     position: relative;
     height: 100%;
     padding-inline: 15px;
@@ -82,20 +82,20 @@ export const HeaderInner = styled.div`
     `)}
 `;
 
-export const HeaderLogoLink = styled(Link)`
+export const LogoLink = styled(Link)`
     display: flex;
     padding: 5px 0;
     width: 150px;
     align-items: center;
 `;
 
-export const HeaderLogoImg = styled(Img)`
+export const LogoImg = styled(Img)`
     display: block;
     height: 100%;
     object-fit: contain;
 `;
 
-export const HeaderNavWrapper = styled.div`
+export const NavList = styled.ul`
     display: none;
     text-transform: uppercase;
     font-weight: 600;
@@ -110,53 +110,60 @@ export const HeaderNavWrapper = styled.div`
     `)}
 `;
 
-export const HeaderNavLink = styled(Link)`
+export const NavItem = styled.li`
     display: flex !important;
     align-items: center;
 
-    ${HoverNavItem}
+    ${NavItemHover}
 `;
 
-export const HeaderNavButton = styled(Button)`
-    ${HoverNavItem}
+export const NavItemLink = styled(Link)`
+    display: flex !important;
+    align-items: center;
+
+    ${NavItemHover}
 `;
 
-export const HeaderIconMenu = styled.div`
+export const NavItemButton = styled(Button)`
+    ${NavItemHover}
+`;
+
+export const MenuWrap = styled.div`
     position: absolute;
     left: ${spacing["5"]};
 
     ${AbsCenterY}
-    ${HoverNavItem}
+    ${NavItemHover}
     
     ${media.lg(css`
         display: none;
     `)}
 `;
 
-const openHeaderPopover = css`
+const InvisiblePopover = css`
     opacity: 1;
     pointer-events: unset;
     left: 0;
 `;
 
-export const HeaderNavLinks = styled.div`
+export const NavListChild = styled.div`
     position: relative;
     display: flex;
     align-items: center;
 
-    ${HoverNavItem}
+    ${NavItemHover}
     > * + * {
         margin-left: ${spacing["1"]};
     }
 
     &:hover {
         .header-nav-popover {
-            ${openHeaderPopover}
+            ${InvisiblePopover}
         }
     }
 `;
 
-export const HeaderNavPopover = styled.div`
+export const NavChild = styled.ul`
     opacity: 0;
     pointer-events: none;
     position: absolute;
@@ -173,5 +180,5 @@ export const HeaderNavPopover = styled.div`
         padding: 8px 20px;
     }
 
-    ${(p) => p.open && openHeaderPopover}
+    ${(p) => p.open && InvisiblePopover}
 `;
