@@ -167,7 +167,7 @@ export function Seasion1() {
             <Row>
                 <Col6>
                     <Inner>
-                        <TextAction class="text-action">
+                        <TextAction className="text-action">
                             <TItleH4>
                                 Bạn đang ấp ủ ý tưởng về ngôi nhà của mình?
                             </TItleH4>

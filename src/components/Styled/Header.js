@@ -35,7 +35,7 @@ export const HeaderMain = styled.div`
     z-index: 10;
     width: 100%;
     box-shadow: 0 0 10px rgb(0 0 0 / 30%);
-    //color: white;
+    color: white;
     background-color: transparent;
     transition: all 0.3s ease-out;
 
@@ -48,6 +48,22 @@ export const HeaderMain = styled.div`
             background-color: #fff;
             color: #000;
         `}
+
+    & .header_inner {
+        position: relative;
+        height: 100%;
+        padding-inline: 15px;
+        max-width: ${screens.xl};
+        margin-inline: auto;
+
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+
+        ${media.lg(css`
+            justify-content: space-between;
+        `)}
+    }
 `;
 
 export const HeaderInner = styled.div`
@@ -57,7 +73,7 @@ export const HeaderInner = styled.div`
     max-width: ${screens.xl};
     margin-inline: auto;
 
-    display: flex; 
+    display: flex;
     align-items: stretch;
     justify-content: center;
 
@@ -67,9 +83,10 @@ export const HeaderInner = styled.div`
 `;
 
 export const HeaderLogoLink = styled(Link)`
-    display: block;
+    display: flex;
     padding: 5px 0;
     width: 150px;
+    align-items: center;
 `;
 
 export const HeaderLogoImg = styled(Img)`
@@ -100,24 +117,6 @@ export const HeaderNavLink = styled(Link)`
     ${HoverNavItem}
 `;
 
-export const HeaderNavLinks = styled.div`
-    position: relative;
-    display: flex;
-    align-items: center;
-
-    ${HoverNavItem}
-    > * + * {
-        margin-left: ${spacing["1"]};
-    }
-
-    &:hover {
-        .header-nav-popover {
-            opacity: 1;
-            pointer-events: auto;
-        }
-    }
-`;
-
 export const HeaderNavButton = styled(Button)`
     ${HoverNavItem}
 `;
@@ -134,19 +133,45 @@ export const HeaderIconMenu = styled.div`
     `)}
 `;
 
+const openHeaderPopover = css`
+    opacity: 1;
+    pointer-events: unset;
+    left: 0;
+`;
+
+export const HeaderNavLinks = styled.div`
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    ${HoverNavItem}
+    > * + * {
+        margin-left: ${spacing["1"]};
+    }
+
+    &:hover {
+        .header-nav-popover {
+            ${openHeaderPopover}
+        }
+    }
+`;
+
 export const HeaderNavPopover = styled.div`
     opacity: 0;
     pointer-events: none;
     position: absolute;
     top: 100%;
-    left: 0;
-    transition: visibility 0.3s ease-out;
+    left: -999px;
+    transition: opacity 0.3s ease-out;
     color: #000;
-    min-width: 190px;
+    min-width: 200px;
     background-color: #fff;
-    padding: 20px;
+    padding: 8px 0;
+    font-weight: 400;
 
-    > * + * {
-        margin-top: ${spacing["1"]};
+    > * {
+        padding: 8px 20px;
     }
+
+    ${(p) => p.open && openHeaderPopover}
 `;

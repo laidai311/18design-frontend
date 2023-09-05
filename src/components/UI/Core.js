@@ -12,7 +12,7 @@ export const Button = styled.button`
 `
 
 export const Img = styled.img.attrs(() => ({
-    className: 'lazyload',
+    class: 'lazyload',
     src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII='
 }))`
   display: inline-block;

@@ -60,13 +60,13 @@ export default function Header({}) {
                                 className={"header-nav-popover"}
                             >
                                 <HeaderNavLink href={"/"}>
+                                    Sửa nhà trọn gói
+                                </HeaderNavLink>
+                                <HeaderNavLink href={"/"}>
                                     Xây nhà trọn gói
                                 </HeaderNavLink>
                                 <HeaderNavLink href={"/"}>
-                                    Liên hệ
-                                </HeaderNavLink>
-                                <HeaderNavLink href={"/"}>
-                                    Liên hệ
+                                    Thi công nội thất
                                 </HeaderNavLink>
                             </HeaderNavPopover>
                         </HeaderNavLinks>
