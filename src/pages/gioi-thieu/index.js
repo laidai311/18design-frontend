@@ -1,14 +1,6 @@
 import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
-import {
-    Introduct,
-    Seasion1,
-    Seasion2,
-    TypicalProject,
-} from "@/components/Home";
-import { Slide } from "@/components/Home/Slide";
-import { Pricing } from "@/components/Home/Pricing";
-import { Partner } from "@/components/Home/Partner";
+import { AboutUs } from "@/components/AboutUs";
 
 export default function Home() {
     return (
@@ -23,14 +15,9 @@ export default function Home() {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Slide />
-            <Seasion1 />
-            <Seasion2 />
-            <TypicalProject />
-            <Pricing />
-            <Introduct />
-            <Partner />
+            <AboutUs/>
         </>
     );
 }

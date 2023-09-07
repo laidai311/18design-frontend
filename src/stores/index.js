@@ -1,7 +1,9 @@
-import { create } from "zustand";
+import { createContext, useContext } from "react";
 
-export const useStore = create((set) => ({
-    bears: 0,
-    increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-    removeAllBears: () => set({ bears: 0 }),
-}));
+export const StoreProvider = (props) => {
+    return <StoreContext.Provider value={{}} {...props} />;
+};
+
+export const StoreContext = createContext();
+
+export const useStore = () => useContext(StoreContext);
