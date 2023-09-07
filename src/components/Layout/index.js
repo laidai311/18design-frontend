@@ -2,7 +2,11 @@ import Header from "./Header";
 import Footer from "./Footer";
 import FloatButton from "./FloatButton";
 import { useRef, useState } from "react";
-import { Modal, ModalContent, ModalOverlay } from "../Styled/ContactForm";
+import {
+    Modal,
+    ModalContent,
+    ModalOverlay,
+} from "../Styled/Layout/ContactForm";
 import ContactForm from "./ContactForm";
 import { useEventListener, useLockBodyScroll } from "@/hooks";
 

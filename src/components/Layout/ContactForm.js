@@ -1,5 +1,5 @@
 import { IconXmark } from "../Icons";
-import { CloseWrap, Main, Wrapper } from "../Styled/ContactForm";
+import { CloseWrap, Main, Wrapper } from "../Styled/Layout/ContactForm";
 import { Form } from "../UI";
 
 export default function ContactForm({ onClose }) {

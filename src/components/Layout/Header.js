@@ -31,7 +31,7 @@ import {
     SearchInput,
     SearchButton,
     SearchWrap,
-} from "@/components/Styled/Header";
+} from "@/components/Styled/Layout/Header";
 import { spacing } from "../theme";
 
 export default function Header({}) {

@@ -5,7 +5,7 @@ import {
     FloatLeft,
     FloatRight,
     PulseRing,
-} from "../Styled/FloatButton";
+} from "../Styled/Layout/FloatButton";
 
 export default function FloatButton({ onContactClick }) {
     return (

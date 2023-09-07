@@ -2,8 +2,8 @@ import styled, { css, keyframes } from "styled-components";
 import { Form, Img } from "@/components/UI";
 import { screens, spacing, media, colors } from "@/components/theme";
 import Link from "next/link";
-import { AbsCenterY } from "../Css";
-import { IconHome } from "../Icons";
+import { AbsCenterY } from "../../Css";
+import { IconHome } from "../../Icons";
 
 export const Wrapper = styled.header`
     position: relative;
@@ -146,7 +146,7 @@ const invisible = css`
         display: block;
         opacity: 0;
         pointer-events: none;
-        left: 999px;
+        left: 9999px;
     `)}
 `;
 

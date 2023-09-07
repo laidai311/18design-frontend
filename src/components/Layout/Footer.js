@@ -14,7 +14,7 @@ import {
     FooterLogo,
     FooterAdviceButton,
     FooterContactWrap,
-} from "../Styled/Footer";
+} from "../Styled/Layout/Footer";
 import { Img } from "../UI";
 
 export default function Footer({ onContactClick }) {

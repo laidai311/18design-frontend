@@ -1,7 +1,5 @@
-import styled, { css, keyframes } from "styled-components";
-import Link from "next/link";
-import { FlxCenter } from "../Css";
-import { colors, media } from "../theme";
+import styled, { css } from "styled-components";
+import { colors, media } from "../../theme";
 
 export const Modal = styled.div`
     position: fixed;

@@ -1,7 +1,6 @@
 import styled, { keyframes } from "styled-components";
-import Link from "next/link";
-import { FlxCenter } from "../Css";
-import { colors } from "../theme";
+import { FlxCenter } from "../../Css";
+import { colors } from "../../theme";
 
 export const FloatLeft = styled.div`
     position: fixed;
