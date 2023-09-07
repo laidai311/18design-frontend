@@ -1,7 +1,9 @@
 import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
-import { Seasion1, Seasion2 } from "@/components/Home";
+import { Introduct, Seasion1, Seasion2 } from "@/components/Home";
 import { Slide } from "@/components/Home/Slide";
+import { Pricing } from "@/components/Home/Pricing";
+import { Partner } from "@/components/Home/Partner";
 
 export default function Home() {
     return (
@@ -21,6 +23,9 @@ export default function Home() {
             <Slide />
             <Seasion1 />
             <Seasion2 />
+            <Pricing />
+            <Introduct/>
+            <Partner />
         </>
     );
 }
