@@ -10,15 +10,15 @@ export const Container = styled.div`
 
 export const Flex = styled.div`
     display: flex;
-    ${({ justify }) =>
-        justify &&
+    ${(p) =>
+        typeof p.$justify === "string" &&
         css`
-            justify-content: ${justify};
+            justify-content: ${p.$justify};
         `}
-    ${({ items }) =>
-        items &&
+    ${(p) =>
+        typeof p.$items === "string" &&
         css`
-            align-items: ${items};
+            align-items: ${p.$items};
         `}
   ${({ direction }) =>
         direction &&

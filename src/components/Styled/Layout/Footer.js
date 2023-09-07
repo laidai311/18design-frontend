@@ -48,13 +48,12 @@ export const ContentItem = styled.div`
     }
 
     ${(p) =>
-        p.center
-            ? css`
-                  display: flex;
-                  flex-flow: column;
-                  align-items: center;
-              `
-            : null}
+        p.$center &&
+        css`
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+        `}
 `;
 
 export const FooterLogo = styled.div`

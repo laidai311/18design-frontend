@@ -17,13 +17,13 @@ export const CardItem = ({ image_link, title, total_view, location }) => {
                     <Link href={location || "/"}>
                         <h5>{title || ""}</h5>
                     </Link>
-                    <Flex justify="space-between">
-                        <Space center>
+                    <Flex $justify="space-between">
+                        <Space $center>
                             <IconEye />
                             <span>{total_view}</span>
                         </Space>
                         <Link href={location || "/"}>
-                            <Space center>
+                            <Space $center>
                                 <span>Chi tiết</span>
                                 <IconAnglesRight />
                             </Space>

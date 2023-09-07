@@ -5,15 +5,14 @@ export const Modal = styled.div`
     position: fixed;
     inset: 0;
     z-index: 100;
-
     height: 100%;
     width: 100%;
     align-items: center;
     justify-content: center;
     display: flex;
     transition: all 0.3s ease-out;
-    opacity: ${(p) => (p.open ? "1" : "0")};
-    pointer-events: ${(p) => (p.open ? "all" : "none")};
+    opacity: ${(p) => (p.$open ? "1" : "0")};
+    pointer-events: ${(p) => (p.$open ? "all" : "none")};
 `;
 
 export const ModalOverlay = styled.div`
@@ -21,16 +20,15 @@ export const ModalOverlay = styled.div`
     inset: 0;
     background-color: ${colors.overlay};
     transition: all 0.3s ease-out;
-    opacity: ${(p) => (p.open ? "1" : "0")};
-    pointer-events: ${(p) => (p.open ? "all" : "none")};
+    opacity: ${(p) => (p.$open ? "1" : "0")};
+    pointer-events: ${(p) => (p.$open ? "all" : "none")};
 `;
-// display: ${(p) => (p.open ? "block" : "none")};
 
 export const ModalContent = styled.div`
     position: relative;
     transition: all 0.15s ease-out;
-    transform: ${(p) => (p.open ? "translateY(0px)" : "translateY(-100px)")};
-    opacity: ${(p) => (p.open ? "1" : "0")};
+    transform: ${(p) => (p.$open ? "translateY(0px)" : "translateY(-100px)")};
+    opacity: ${(p) => (p.$open ? "1" : "0")};
 `;
 
 export const Wrapper = styled.div`

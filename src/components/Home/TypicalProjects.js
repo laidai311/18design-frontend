@@ -38,19 +38,19 @@ export const TypicalProject = () => {
                 <TabWrap>
                     <NavTabList>
                         <NavTabItem
-                            actived={activedTab === 1}
+                            $actived={activedTab === 1}
                             onClick={() => setActivedTab(1)}
                         >
                             <span>Thiết kế nội thất</span>
                         </NavTabItem>
                         <NavTabItem
-                            actived={activedTab === 2}
+                            $actived={activedTab === 2}
                             onClick={() => setActivedTab(2)}
                         >
                             <span>Thiết kế kiến trúc</span>
                         </NavTabItem>
                     </NavTabList>
-                    <TabContent actived={activedTab === 1}>
+                    <TabContent $actived={activedTab === 1}>
                         <CardList>
                             <CardItem {...data1} />
                             <CardItem {...data1} />
@@ -66,7 +66,7 @@ export const TypicalProject = () => {
                             </ViewMoreLink>
                         </ContentBottom>
                     </TabContent>
-                    <TabContent actived={activedTab === 2}>
+                    <TabContent $actived={activedTab === 2}>
                         <CardList>
                             <CardItem {...data2} />
                             <CardItem {...data2} />

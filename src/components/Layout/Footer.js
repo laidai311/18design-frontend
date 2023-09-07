@@ -27,7 +27,7 @@ export default function Footer({ onContactClick }) {
                 <Inner>
                     <Container>
                         <Content>
-                            <ContentItem center>
+                            <ContentItem $center>
                                 <FooterLogo>
                                     <Link href={"/"}>
                                         <Img

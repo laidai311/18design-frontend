@@ -17,10 +17,10 @@ const Main = styled.main`
     min-height: 80vh;
 
     ${media.lg(css`
-        padding-top: ${(p) => (p.isHomePage ? 0 : p.theme.headerHeight)};
+        padding-top: ${(p) => (p.$transparent ? 0 : p.theme.headerHeight)};
     `)}
     padding-top: ${(p) =>
-        p.isHomePage ? 0 : `calc(${p.theme.headerHeight} + 63px)`};
+        p.$transparent ? 0 : `calc(${p.theme.headerHeight} + 63px)`};
 `;
 
 export default function DefaultLayout({ children }) {
@@ -52,20 +52,17 @@ export default function DefaultLayout({ children }) {
     }, []);
 
     useEffect(() => {
-        setIsHomePage(["/"].includes(window.location.pathname));
+        setIsHomePage(["/"].includes(router.pathname));
     }, [router.pathname]);
 
     return (
         <>
             <Header isHomePage={isHomePage} />
-            <Main isHomePage={isHomePage}>{children}</Main>
+            <Main $transparent={isHomePage}>{children}</Main>
             <FloatButton onContactClick={() => setOpen(true)} />
-            <Modal open={open ? open : undefined}>
-                <ModalOverlay
-                    open={open ? open : undefined}
-                    onClick={() => setOpen(false)}
-                />
-                <ModalContent open={open ? open : undefined}>
+            <Modal $open={open}>
+                <ModalOverlay $open={open} onClick={() => setOpen(false)} />
+                <ModalContent $open={open}>
                     <ContactForm onClose={() => setOpen(false)} />
                 </ModalContent>
             </Modal>

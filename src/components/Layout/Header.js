@@ -48,7 +48,7 @@ export default function Header({ isHomePage }) {
     return (
         <>
             <Wrapper id="header">
-                <Main sticky={sticky ? sticky : undefined}>
+                <Main $sticky={sticky}>
                     <Inner>
                         <OpenMenuWrap>
                             <button onClick={() => setOpenSidebar(true)}>
@@ -62,7 +62,7 @@ export default function Header({ isHomePage }) {
                             />
                         </LogoLink>
                         <DrawerOverlay
-                            open={openSidebar}
+                            $open={openSidebar}
                             onClick={() => {
                                 setOpenSidebar(false);
                             }}
@@ -74,11 +74,11 @@ export default function Header({ isHomePage }) {
                             </CloseMenuWrap>
                         </DrawerOverlay>
                         <Drawer
-                            open={openSidebar}
-                            sticky={sticky ? sticky : undefined}
-                            isHomePage={isHomePage}
+                            $open={openSidebar}
+                            $sticky={sticky}
+                            $transparent={isHomePage}
                         >
-                            <Nav sticky={sticky ? sticky : undefined}>
+                            <Nav>
                                 <NavList>
                                     <NavItem>
                                         <NavItemLink href="/">
@@ -100,9 +100,7 @@ export default function Header({ isHomePage }) {
                                             <IconChevronDown width={14} />
                                         </NavItemWrap>
                                         <NavItemInput id="open-1" />
-                                        <NavChildList
-                                            sticky={sticky ? sticky : undefined}
-                                        >
+                                        <NavChildList $sticky={sticky}>
                                             <NavChildItem>
                                                 <NavItemLink href="/thiet-ke-noi-that">
                                                     Sửa nhà trọn gói
@@ -126,9 +124,7 @@ export default function Header({ isHomePage }) {
                                             <IconChevronDown width={14} />
                                         </NavItemWrap>
                                         <NavItemInput id="open-2" />
-                                        <NavChildList
-                                            sticky={sticky ? sticky : undefined}
-                                        >
+                                        <NavChildList $sticky={sticky}>
                                             <NavChildItem>
                                                 <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất biệt thự
@@ -177,9 +173,7 @@ export default function Header({ isHomePage }) {
                                             <IconChevronDown width={14} />
                                         </NavItemWrap>
                                         <NavItemInput id="open-3" />
-                                        <NavChildList
-                                            sticky={sticky ? sticky : undefined}
-                                        >
+                                        <NavChildList $sticky={sticky}>
                                             <NavChildItem>
                                                 <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế kiến trúc biệt thự
@@ -198,9 +192,7 @@ export default function Header({ isHomePage }) {
                                             <IconChevronDown width={14} />
                                         </NavItemWrap>
                                         <NavItemInput id="open-4" />
-                                        <NavChildList
-                                            sticky={sticky ? sticky : undefined}
-                                        >
+                                        <NavChildList $sticky={sticky}>
                                             <NavChildItem>
                                                 <NavItemLink href="/thiet-ke-noi-that">
                                                     Chia sẻ kiến thức
@@ -244,7 +236,7 @@ export default function Header({ isHomePage }) {
                             </Nav>
                         </Drawer>
                     </Inner>
-                    <SearchWrap open={openSearch}>
+                    <SearchWrap $open={openSearch}>
                         <SearchForm
                             onSubmit={(value) => {
                                 console.log(value);

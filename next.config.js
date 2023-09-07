@@ -8,6 +8,9 @@ const nextConfig = {
             fileName: false,
         },
     },
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 };
 
 module.exports = nextConfig;

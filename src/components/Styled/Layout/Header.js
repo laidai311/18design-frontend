@@ -28,32 +28,27 @@ export const Main = styled.div`
     width: 100%;
     box-shadow: 0 0 10px rgb(0 0 0 / 30%);
     transition: all 0.3s ease-out;
-
     background-color: white;
     ${media.lg(css`
         background-color: transparent;
     `)}
-
-    ${({ sticky }) =>
-        sticky &&
+    ${(p) =>
+        p.$sticky &&
         css`
             position: fixed;
             animation: ${stuckMoveDown} 0.6s;
             box-shadow: 0 0 10px rgb(0 0 0 / 15%);
             background-color: white !important;
         `}
-
     & .header_inner {
         position: relative;
         height: 100%;
         padding-inline: 15px;
         max-width: ${screens.xl};
         margin-inline: auto;
-
         display: flex;
         align-items: stretch;
         justify-content: center;
-
         ${media.lg(css`
             justify-content: space-between;
         `)}
@@ -175,7 +170,7 @@ export const NavItem = styled.li`
         `)}
     }
     ul {
-        ${(p) => (p.open ? visible : invisible)}
+        ${(p) => (p.$open ? visible : invisible)}
     }
     ${media.lg(css`
         &:hover > ul {
@@ -224,12 +219,11 @@ export const NavChildList = styled.ul`
         border-bottom-left-radius: ${spacing["2"]};
         border-bottom-right-radius: ${spacing["2"]};
         ${(p) =>
-            p.sticky
-                ? null
-                : css`
-                      border-top-left-radius: ${spacing["2"]};
-                      border-top-right-radius: ${spacing["2"]};
-                  `}
+            !p.$sticky &&
+            css`
+                border-top-left-radius: ${spacing["2"]};
+                border-top-right-radius: ${spacing["2"]};
+            `}
     `)}
 `;
 
@@ -270,8 +264,8 @@ export const OpenMenuWrap = styled.div`
     position: absolute;
     left: ${spacing["5"]};
     color: ${(p) =>
-        "sticky" in p
-            ? p.sticky
+        "$sticky" in p
+            ? p.$sticky
                 ? colors["text-header-sticky"]
                 : colors["text-header-top"]
             : "inherit"};
@@ -308,7 +302,7 @@ export const Drawer = styled.div`
     position: fixed;
     top: 0;
     bottom: 0;
-    left: ${(p) => (p.open ? 0 : "-280px")};
+    left: ${(p) => (p.$open ? 0 : "-280px")};
     width: 280px;
     transition: left 0.15s ease-out;
     z-index: 100;
@@ -327,10 +321,10 @@ export const Drawer = styled.div`
         bottom: unset;
         background-color: transparent;
         color: ${(p) =>
-            "sticky" in p
-                ? p.sticky
+            "$sticky" in p
+                ? p.$sticky
                     ? colors["text-header-sticky"]
-                    : p.isHomePage
+                    : p.$transparent
                     ? colors["text-header-top"]
                     : colors["text-header-sticky"]
                 : "inherit"};
@@ -342,7 +336,7 @@ export const DrawerOverlay = styled.div`
     position: fixed;
     inset: 0;
     z-index: 99;
-    display: ${(p) => (p.open ? "block" : "none")};
+    display: ${(p) => (p.$open ? "block" : "none")};
     background-color: ${colors.overlay};
 
     ${media.lg(css`
@@ -354,7 +348,7 @@ export const SearchWrap = styled.div`
     max-width: ${screens.xl};
     margin-inline: auto;
     ${media.lg(css`
-        display: ${(p) => (p.open ? "flex" : "none")};
+        display: ${(p) => (p.$open ? "flex" : "none")};
         justify-content: flex-end;
     `)}
 `;

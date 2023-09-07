@@ -19,5 +19,8 @@
     "react-hook-form": "^7.45.4",
     "styled-components": "^6.0.7",
     "swiper": "^10.2.0"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^2.1.4"
   }
 }

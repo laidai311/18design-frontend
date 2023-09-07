@@ -5,13 +5,13 @@ import { colors } from "../../theme";
 export const FloatLeft = styled.div`
     position: fixed;
     left: 20px;
-    bottom: ${(p) => (typeof p.bottom === "number" ? p.bottom + "px" : 0)};
+    bottom: ${(p) => (typeof p.$bottom === "number" ? p.$bottom + "px" : 0)};
     z-index: 9;
 `;
 export const FloatRight = styled.div`
     position: fixed;
     right: 20px;
-    bottom: ${(p) => (typeof p.bottom === "number" ? p.bottom + "px" : 0)};
+    bottom: ${(p) => (typeof p.$bottom === "number" ? p.$bottom + "px" : 0)};
     z-index: 9;
 `;
 

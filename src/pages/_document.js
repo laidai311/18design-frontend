@@ -1,16 +1,24 @@
-import Document, {Html, Head, Main, NextScript} from 'next/document'
-import {ServerStyleSheet} from "styled-components";
+import Document, { Html, Head, Main, NextScript } from "next/document";
+import { ServerStyleSheet } from "styled-components";
 
 export default function MyDocument() {
     return (
-        <Html lang="en">
-            <Head/>
+        <Html lang="vi">
+            <Head>
+                <meta key="robots" name="robots" content="noindex,follow" />
+                <meta
+                    key="googlebot"
+                    name="googlebot"
+                    content="noindex,follow"
+                />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <body>
-            <Main/>
-            <NextScript/>
+                <Main />
+                <NextScript />
             </body>
         </Html>
-    )
+    );
 }
 
 MyDocument.getInitialProps = async (ctx) => {
@@ -20,7 +28,8 @@ MyDocument.getInitialProps = async (ctx) => {
     try {
         ctx.renderPage = () =>
             originalRenderPage({
-                enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
+                enhanceApp: (App) => (props) =>
+                    sheet.collectStyles(<App {...props} />),
             });
 
         const initialProps = await Document.getInitialProps(ctx);

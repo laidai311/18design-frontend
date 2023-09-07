@@ -49,7 +49,7 @@ export const NavTabItem = styled.li`
     cursor: pointer;
 
     ${(p) =>
-        p.actived
+        p.$actived
             ? css`
                   background: #bd8b1b;
                   color: #fff;
@@ -60,7 +60,7 @@ export const NavTabItem = styled.li`
 
 export const TabContent = styled.div`
     position: relative;
-    display: ${(p) => (p.actived ? "block" : "none")};
+    display: ${(p) => (p.$actived ? "block" : "none")};
 `;
 
 export const ViewMoreLink = styled(Link)`

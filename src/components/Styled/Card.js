@@ -68,7 +68,7 @@ export const CardDescription = styled.div`
 
 export const Space = styled.div`
     ${(p) =>
-        typeof p.center &&
+        p.$center &&
         css`
             display: flex;
             align-items: center;

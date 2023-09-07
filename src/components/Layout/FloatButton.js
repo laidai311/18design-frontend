@@ -10,7 +10,7 @@ import {
 export default function FloatButton({ onContactClick }) {
     return (
         <>
-            <FloatLeft bottom={170}>
+            <FloatLeft $bottom={170}>
                 <a href="tel:0838586444" className="tooltip">
                     <FloatIcon>
                         <PulseRing />
@@ -23,7 +23,7 @@ export default function FloatButton({ onContactClick }) {
                     <span className="tooltiptext">Gọi ngay: 0838586444</span>
                 </a>
             </FloatLeft>
-            <FloatLeft bottom={110}>
+            <FloatLeft $bottom={110}>
                 <a href="mailto:arch18designs@gmail.com" className="tooltip">
                     <FloatIcon>
                         <IconEnvelope width={24} height={24} />
@@ -31,7 +31,7 @@ export default function FloatButton({ onContactClick }) {
                     <span className="tooltiptext">arch18designs@gmail.com</span>
                 </a>
             </FloatLeft>
-            <FloatLeft bottom={50}>
+            <FloatLeft $bottom={50}>
                 <a
                     target="_blank"
                     href="https://zalo.me/0838586444"
