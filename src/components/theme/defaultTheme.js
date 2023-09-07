@@ -6,6 +6,7 @@ import { media } from "@/components/theme/media";
 export const defaultTheme = {
     name: "default",
     rounded: spacing[3],
+    headerHeight: "90px",
     colors,
     screens,
     spacing,

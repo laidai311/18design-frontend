@@ -34,7 +34,7 @@ import {
 } from "@/components/Styled/Layout/Header";
 import { spacing } from "../theme";
 
-export default function Header({}) {
+export default function Header({ isHomePage }) {
     const [sticky, setSticky] = useState(false);
     const [openSidebar, setOpenSidebar] = useState(false);
     const [openSearch, openSetSearch] = useState(false);
@@ -50,9 +50,7 @@ export default function Header({}) {
             <Wrapper id="header">
                 <Main sticky={sticky ? sticky : undefined}>
                     <Inner>
-                        <OpenMenuWrap
-                        // sticky={sticky ? sticky : undefined}
-                        >
+                        <OpenMenuWrap>
                             <button onClick={() => setOpenSidebar(true)}>
                                 <IconMenu width={20} height={20} />
                             </button>
@@ -78,6 +76,7 @@ export default function Header({}) {
                         <Drawer
                             open={openSidebar}
                             sticky={sticky ? sticky : undefined}
+                            isHomePage={isHomePage}
                         >
                             <Nav sticky={sticky ? sticky : undefined}>
                                 <NavList>

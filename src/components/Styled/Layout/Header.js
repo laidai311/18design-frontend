@@ -330,7 +330,9 @@ export const Drawer = styled.div`
             "sticky" in p
                 ? p.sticky
                     ? colors["text-header-sticky"]
-                    : colors["text-header-top"]
+                    : p.isHomePage
+                    ? colors["text-header-top"]
+                    : colors["text-header-sticky"]
                 : "inherit"};
         overflow-y: unset;
     `)}

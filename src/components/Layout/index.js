@@ -1,40 +1,60 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import FloatButton from "./FloatButton";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Modal,
     ModalContent,
     ModalOverlay,
 } from "../Styled/Layout/ContactForm";
 import ContactForm from "./ContactForm";
-import { useEventListener, useLockBodyScroll } from "@/hooks";
+import { useLockBodyScroll } from "@/hooks";
+import { css, styled } from "styled-components";
+import { media } from "../theme";
+
+const Main = styled.main`
+    ${media.lg(css`
+        padding-top: ${(p) => (p.isHomePage ? 0 : p.theme.headerHeight)};
+    `)}
+    padding-top: ${(p) =>
+        p.isHomePage ? 0 : `calc(${p.theme.headerHeight} + 63px)`};
+`;
 
 export default function DefaultLayout({ children }) {
     const [open, setOpen] = useState(false);
-    const [once, setOnce] = useState(true);
-    const sto = useRef();
+    const [isHomePage, setIsHomePage] = useState(true);
 
     useLockBodyScroll(open);
 
-    useEventListener("scroll", (e) => {
-        if (window.outerHeight - window.scrollY < 300 && once) {
-            sto.current = setTimeout(() => {
-                setOpen(true);
-            }, 1000);
-            setOnce(false);
-        } else {
-            if (sto.current && once) {
-                clearTimeout(sto.current);
-                sto.current = undefined;
+    useEffect(() => {
+        const sto = setTimeout(() => {
+            setOpen(true);
+        }, 5000);
+
+        localStorage.openpages = Date.now();
+        const onLocalStorageEvent = (e) => {
+            if (e.key == "openpages") {
+                // Listen if anybody else is opening the same page!
+                localStorage.page_available = Date.now();
             }
-        }
-    });
+            if (e.key == "page_available") {
+                setOpen(false);
+                if (sto) {
+                    clearTimeout(sto);
+                }
+            }
+        };
+        window.addEventListener("storage", onLocalStorageEvent, false);
+    }, []);
+
+    useEffect(() => {
+        setIsHomePage(["/"].includes(window.location.pathname));
+    }, []);
 
     return (
         <>
-            <Header />
-            {children}
+            <Header isHomePage={isHomePage} />
+            <Main isHomePage={isHomePage}>{children}</Main>
             <FloatButton onContactClick={() => setOpen(true)} />
             <Modal open={open ? open : undefined}>
                 <ModalOverlay

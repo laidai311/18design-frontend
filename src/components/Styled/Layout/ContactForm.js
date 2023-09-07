@@ -105,8 +105,8 @@ export const Main = styled.div`
 // đóng close
 export const CloseWrap = styled.div`
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 10px;
+    right: 10px;
 
     button {
         padding: 5px;
