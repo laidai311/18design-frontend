@@ -15,7 +15,6 @@ export const Modal = styled.div`
     opacity: ${(p) => (p.open ? "1" : "0")};
     pointer-events: ${(p) => (p.open ? "all" : "none")};
 `;
-/* display: ${(p) => (p.open ? "flex" : "none")}; */
 
 export const ModalOverlay = styled.div`
     position: absolute;

@@ -29,7 +29,7 @@ export default function DefaultLayout({ children }) {
     useEffect(() => {
         const sto = setTimeout(() => {
             setOpen(true);
-        }, 5000);
+        }, 8000);
 
         localStorage.openpages = Date.now();
         const onLocalStorageEvent = (e) => {

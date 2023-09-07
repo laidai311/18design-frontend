@@ -36,6 +36,7 @@ export const TabWrap = styled.div`
 export const NavTabList = styled.ul`
     display: flex;
     justify-content: center;
+    margin-bottom: 12px;
 `;
 
 export const NavTabItem = styled.li`
@@ -65,7 +66,7 @@ export const TabContent = styled.div`
 export const ViewMoreLink = styled(Link)`
     background-color: ${colors["actived-bottom"]};
     transition: all 0.3s ease;
-    padding: 5px 20px;
+    padding: 12px 20px;
     border: 1px solid transparent;
     font-weight: 500;
     color: white;
@@ -75,4 +76,20 @@ export const ViewMoreLink = styled(Link)`
     > svg {
         display: none;
     }
+`;
+
+export const ContetnList = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+        flex-basis: calc(100% / 3);
+        padding: 12px;
+    }
+`;
+
+export const ContentBottom = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
 `;
