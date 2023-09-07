@@ -22,6 +22,11 @@ export const media = {
             ${inner};
         }
     `,
+    maxlg: (inner) => css`
+        @media (max-width: ${screens.lg}) {
+            ${inner};
+        }
+    `,
     xl: (inner) => css`
         @media (min-width: ${screens.xl}) {
             ${inner};

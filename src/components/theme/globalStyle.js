@@ -31,6 +31,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     font-family: "Open Sans", sans-serif;
+    font-size: 1rem;
   }
 
   html,
@@ -42,6 +43,7 @@ export const GlobalStyle = createGlobalStyle`
   a {
     color: inherit;
     text-decoration: none;
+    display: inline-block;
   }
 
   table {
@@ -54,6 +56,33 @@ export const GlobalStyle = createGlobalStyle`
     height: auto;
     max-width: 100%;
     vertical-align: middle;
+  }
+
+  ul, ol {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  nav {
+    display: block;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+    color: currentColor;
+  }
+
+  input {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    appearance: none;
+    -webkit-appearance: none;
   }
 
   //@media (prefers-color-scheme: dark) {

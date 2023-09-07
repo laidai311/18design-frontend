@@ -1,98 +1,288 @@
 import { useState } from "react";
-import { Button } from "@/components/UI";
 import {
     IconChevronDown,
-    IconHome,
     IconMenu,
     IconSearch,
+    IconXmark,
 } from "@/components/Icons";
-import { useEventListener } from "@/hooks";
+import { useEventListener, useLockBodyScroll } from "@/hooks";
 import {
-    Inner,
+    Wrapper,
     Main,
+    Inner,
+    OpenMenuWrap,
     LogoImg,
     LogoLink,
+    Nav,
     NavList,
+    NavItem,
     NavItemLink,
-    NavListChild,
-    MenuWrap,
-    NavItemButton,
-    NavChild,
-    Wrapper,
+    NavItemWrap,
+    NavChildList,
+    NavChildItem,
+    Drawer,
+    NavSearchButton,
+    CloseMenuWrap,
+    DrawerOverlay,
+    NavItemInput,
+    NavIconHome,
+    NavTextHome,
+    SearchForm,
+    SearchInput,
+    SearchButton,
+    SearchWrap,
 } from "@/components/Styled/Header";
+import { spacing } from "../theme";
 
 export default function Header({}) {
-    const [headerSticky, setHeaderSticky] = useState(false);
+    const [sticky, setSticky] = useState(false);
+    const [openSidebar, setOpenSidebar] = useState(false);
+    const [openSearch, openSetSearch] = useState(false);
+
+    useLockBodyScroll(openSidebar);
 
     useEventListener("scroll", (e) => {
-        setHeaderSticky(window.scrollY > (headerSticky ? 0 : 90));
+        setSticky(window.scrollY > (sticky ? 0 : 90));
     });
 
     return (
-        <Wrapper>
-            <Main sticky={headerSticky ? headerSticky : undefined}>
-                <Inner>
-                    <MenuWrap>
-                        <Button>
-                            <IconMenu width={20} height={20} />
-                        </Button>
-                    </MenuWrap>
-                    <LogoLink href={"/"}>
-                        <LogoImg
-                            alt={"logo"}
-                            data-src={"./images/18-design-cut.png"}
-                        />
-                    </LogoLink>
-                    <NavList>
-                        <NavItemLink href={"/"}>
-                            <IconHome
-                                width={18}
-                                height={18}
-                                color={"#E6BC67"}
+        <>
+            <Wrapper id="header">
+                <Main sticky={sticky ? sticky : undefined}>
+                    <Inner>
+                        <OpenMenuWrap
+                        // sticky={sticky ? sticky : undefined}
+                        >
+                            <button onClick={() => setOpenSidebar(true)}>
+                                <IconMenu width={20} height={20} />
+                            </button>
+                        </OpenMenuWrap>
+                        <LogoLink href={"/"}>
+                            <LogoImg
+                                alt={"logo"}
+                                data-src={"./images/18-design-cut.png"}
                             />
-                        </NavItemLink>
-                        <NavItemLink href={"/"}>Về chúng tôi</NavItemLink>
-                        <NavListChild>
-                            <NavItemLink href={"/"}>Dự án</NavItemLink>
-                            <IconChevronDown width={14} />
-                            <NavChild
-                                aria-expanded="false"
-                                className={"header-nav-popover"}
-                            >
-                                <NavItemLink href={"/"}>
-                                    Sửa nhà trọn gói
-                                </NavItemLink>
-                                <NavItemLink href={"/"}>
-                                    Xây nhà trọn gói
-                                </NavItemLink>
-                                <NavItemLink href={"/"}>
-                                    Thi công nội thất
-                                </NavItemLink>
-                            </NavChild>
-                        </NavListChild>
-                        <NavListChild>
-                            <NavItemLink href={"/"}>
-                                Thiết kế nội thất
-                            </NavItemLink>
-                            <IconChevronDown width={14} />
-                        </NavListChild>
-                        <NavListChild>
-                            <NavItemLink href={"/"}>
-                                Thiết kế kiến trúc
-                            </NavItemLink>
-                            <IconChevronDown width={14} />
-                        </NavListChild>
-                        <NavListChild>
-                            <NavItemLink href={"/"}>Tin tức</NavItemLink>
-                            <IconChevronDown width={14} />
-                        </NavListChild>
-                        <NavItemLink href={"/"}>Liên hệ</NavItemLink>
-                        <NavItemButton>
-                            <IconSearch width={18} height={18} />
-                        </NavItemButton>
-                    </NavList>
-                </Inner>
-            </Main>
-        </Wrapper>
+                        </LogoLink>
+                        <DrawerOverlay
+                            open={openSidebar}
+                            onClick={() => {
+                                setOpenSidebar(false);
+                            }}
+                        >
+                            <CloseMenuWrap hidden={!openSidebar}>
+                                <button onClick={() => setOpenSidebar(false)}>
+                                    <IconXmark width={24} height={24} />
+                                </button>
+                            </CloseMenuWrap>
+                        </DrawerOverlay>
+                        <Drawer
+                            open={openSidebar}
+                            sticky={sticky ? sticky : undefined}
+                        >
+                            <Nav sticky={sticky ? sticky : undefined}>
+                                <NavList>
+                                    <NavItem>
+                                        <NavItemLink href="/">
+                                            <NavIconHome
+                                                width={spacing["4.5"]}
+                                                height={spacing["4.5"]}
+                                            />
+                                            <NavTextHome>Trang chủ</NavTextHome>
+                                        </NavItemLink>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavItemLink href="/">
+                                            Về chúng tôi
+                                        </NavItemLink>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavItemWrap htmlFor="open-1">
+                                            <span>Dự án</span>
+                                            <IconChevronDown width={14} />
+                                        </NavItemWrap>
+                                        <NavItemInput id="open-1" />
+                                        <NavChildList
+                                            sticky={sticky ? sticky : undefined}
+                                        >
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Sửa nhà trọn gói
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Xây nhà trọn gói
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thi công nội thất
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                        </NavChildList>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavItemWrap htmlFor="open-2">
+                                            <span>Thiết kế nội thất</span>
+                                            <IconChevronDown width={14} />
+                                        </NavItemWrap>
+                                        <NavItemInput id="open-2" />
+                                        <NavChildList
+                                            sticky={sticky ? sticky : undefined}
+                                        >
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế nội thất biệt thự
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế nội thất nhà phố
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế nội thất chung cư
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế nội thất văn phòng
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế nội thất khách sạn
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế nội thất nhà hàng
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế nội thất quán Cafe
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế nội thất spa
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                        </NavChildList>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavItemWrap htmlFor="open-3">
+                                            <span>Thiết kế kiến trúc</span>
+                                            <IconChevronDown width={14} />
+                                        </NavItemWrap>
+                                        <NavItemInput id="open-3" />
+                                        <NavChildList
+                                            sticky={sticky ? sticky : undefined}
+                                        >
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế kiến trúc biệt thự
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Thiết kế kiến trúc nhà phố
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                        </NavChildList>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavItemWrap htmlFor="open-4">
+                                            <span>Tin tức</span>
+                                            <IconChevronDown width={14} />
+                                        </NavItemWrap>
+                                        <NavItemInput id="open-4" />
+                                        <NavChildList
+                                            sticky={sticky ? sticky : undefined}
+                                        >
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Chia sẻ kiến thức
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Tuyển dụng kinh doanh
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Tuyển dụng giám sát
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                            <NavChildItem>
+                                                <NavItemLink href="/">
+                                                    Tuyển dụng thiết kế
+                                                </NavItemLink>
+                                            </NavChildItem>
+                                        </NavChildList>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavItemLink href="/">
+                                            Liên hệ
+                                        </NavItemLink>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavSearchButton
+                                            onClick={() =>
+                                                openSetSearch(!openSearch)
+                                            }
+                                        >
+                                            <IconSearch
+                                                width={18}
+                                                height={18}
+                                            />
+                                        </NavSearchButton>
+                                    </NavItem>
+                                </NavList>
+                            </Nav>
+                        </Drawer>
+                    </Inner>
+                    <SearchWrap open={openSearch}>
+                        <SearchForm
+                            onSubmit={(value) => {
+                                console.log(value);
+                            }}
+                        >
+                            <SearchInput
+                                name="search"
+                                placeholder="Bạn đang tìm kiếm gì ...?"
+                            />
+                            <SearchButton type="submit">
+                                <IconSearch width={18} height={18} />
+                            </SearchButton>
+                        </SearchForm>
+                    </SearchWrap>
+                </Main>
+            </Wrapper>
+        </>
     );
 }
+
+const Search = () => {
+    return (
+        <SearchWrap>
+            <SearchForm
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    console.log(e);
+                }}
+            >
+                <SearchInput
+                    name="search"
+                    placeholder="Bạn đang tìm kiếm gì ...?"
+                />
+                <SearchButton type="submit">
+                    <IconSearch width={18} height={18} />
+                </SearchButton>
+            </SearchForm>
+        </SearchWrap>
+    );
+};

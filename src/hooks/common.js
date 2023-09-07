@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
+import {
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from "react";
 
 export function useDidUpdate(fn, dependencies) {
     const mounted = useRef(false);
@@ -28,7 +34,7 @@ export function useClickOutside(handler, events, nodes) {
 
     useEffect(() => {
         const listener = (event) => {
-            const {target} = event ?? {};
+            const { target } = event ?? {};
             if (Array.isArray(nodes)) {
                 const shouldIgnore =
                     target?.hasAttribute("data-ignore-outside-clicks") ||
@@ -58,32 +64,32 @@ export function useClickOutside(handler, events, nodes) {
 }
 
 export const useIsomorphicLayoutEffect =
-    typeof window !== 'undefined' ? useLayoutEffect : useEffect
+    typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export function useEventListener(eventName, handler, element, options,) {
+export function useEventListener(eventName, handler, element, options) {
     // Create a ref that stores handler
-    const savedHandler = useRef(handler)
+    const savedHandler = useRef(handler);
 
     useIsomorphicLayoutEffect(() => {
-        savedHandler.current = handler
-    }, [handler])
+        savedHandler.current = handler;
+    }, [handler]);
 
     useEffect(() => {
         // Define the listening target
-        const targetElement = element?.current ?? window
+        const targetElement = element?.current ?? window;
 
-        if (!(targetElement && targetElement.addEventListener)) return
+        if (!(targetElement && targetElement.addEventListener)) return;
 
         // Create event listener that calls handler function stored in ref
-        const listener = event => savedHandler.current(event)
+        const listener = (event) => savedHandler.current(event);
 
-        targetElement.addEventListener(eventName, listener, options)
+        targetElement.addEventListener(eventName, listener, options);
 
         // Remove event listener on cleanup
         return () => {
-            targetElement.removeEventListener(eventName, listener, options)
-        }
-    }, [eventName, element, options])
+            targetElement.removeEventListener(eventName, listener, options);
+        };
+    }, [eventName, element, options]);
 }
 
 export function useHover() {
@@ -106,7 +112,7 @@ export function useHover() {
         return undefined;
     }, []);
 
-    return {ref, hovered};
+    return { ref, hovered };
 }
 
 function attachMediaListener(query, callback) {
@@ -134,7 +140,7 @@ function getInitialValue(query, initialValue) {
 export function useMediaQuery(
     query,
     initialValue,
-    {getInitialValueInEffect} = {
+    { getInitialValueInEffect } = {
         getInitialValueInEffect: true,
     }
 ) {
@@ -160,33 +166,37 @@ export function useMediaQuery(
     return matches;
 }
 
-export const useDetectKeyboardOpen = (minKeyboardHeight = 300, defaultValue = false) => {
+export const useDetectKeyboardOpen = (
+    minKeyboardHeight = 300,
+    defaultValue = false
+) => {
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(defaultValue);
 
     useEffect(() => {
         const listener = () => {
             const newState =
-                (window.screen.height - minKeyboardHeight) > window.visualViewport.height;
+                window.screen.height - minKeyboardHeight >
+                window.visualViewport.height;
             if (isKeyboardOpen !== newState) {
                 setIsKeyboardOpen(newState);
             }
         };
 
-        if (typeof visualViewport != 'undefined') {
-            window.visualViewport.addEventListener('resize', listener);
+        if (typeof visualViewport != "undefined") {
+            window.visualViewport.addEventListener("resize", listener);
         }
 
         const handleOff = () => {
             setIsKeyboardOpen(false);
         };
 
-        document.addEventListener('focusout', handleOff);
+        document.addEventListener("focusout", handleOff);
 
         return () => {
-            if (typeof visualViewport != 'undefined') {
-                window.visualViewport.removeEventListener('resize', listener);
+            if (typeof visualViewport != "undefined") {
+                window.visualViewport.removeEventListener("resize", listener);
             }
-            document.removeEventListener('focusout', handleOff);
+            document.removeEventListener("focusout", handleOff);
         };
     }, []);
 
@@ -197,33 +207,92 @@ export const useWindowHeight = () => {
     const isDetectKeyboardOpen = useDetectKeyboardOpen();
     useEffect(() => {
         const isMobile =
-            typeof window === 'object'
+            typeof window === "object"
                 ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                    window.navigator.userAgent
-                )
+                      window.navigator.userAgent
+                  )
                 : false;
         const syncHeight = () => {
             if (isDetectKeyboardOpen && isMobile) return;
 
             document.documentElement.style.setProperty(
-                '--window-height',
+                "--window-height",
                 `${window.innerHeight}px`
             );
         };
         syncHeight();
 
         window.addEventListener(
-            'orientationchange',
+            "orientationchange",
             function () {
                 // Generate a resize event if the device doesn't do it
-                window.dispatchEvent(new Event('resize'));
+                window.dispatchEvent(new Event("resize"));
             },
             false
         );
 
-        window.addEventListener('resize', syncHeight);
+        window.addEventListener("resize", syncHeight);
         return () => {
-            window.removeEventListener('resize', syncHeight);
+            window.removeEventListener("resize", syncHeight);
         };
     }, []);
+};
+
+export const useLockBodyScroll = (isLocked) => {
+    const prevOverflow = useRef();
+    const scrollY = useRef();
+    const scrollX = useRef();
+
+    const setOverflowHidden = useCallback(() => {
+        if (prevOverflow.current === undefined) {
+            prevOverflow.current = {
+                overflow: document.documentElement.style.overflow,
+                paddingRight: document.documentElement.style.paddingRight,
+                scrollBarGap:
+                    window.innerWidth - document.documentElement.clientWidth,
+                getPaddingRight: parseInt(
+                    window.getComputedStyle(document.documentElement)
+                        .paddingRight,
+                    10
+                ),
+            };
+            scrollY.current = window.scrollY;
+            scrollX.current = window.scrollX;
+
+            document.documentElement.style.overflow = "hidden";
+            document.documentElement.style.paddingRight =
+                prevOverflow.current?.scrollBarGap +
+                prevOverflow.current?.getPaddingRight +
+                "px";
+        }
+    }, []);
+
+    const restoreOverflowHiddenSetting = useCallback(() => {
+        if (prevOverflow.current !== undefined) {
+            document.documentElement.style.overflow =
+                prevOverflow.current?.overflow;
+            document.documentElement.style.paddingRight =
+                prevOverflow.current?.paddingRight;
+
+            window.scrollTo(scrollX.current, scrollY.current);
+
+            scrollX.current = undefined;
+            scrollY.current = undefined;
+            prevOverflow.current = undefined;
+        }
+    }, []);
+
+    const disableBodyScroll = useCallback(() => {
+        setOverflowHidden();
+    }, [setOverflowHidden]);
+
+    const enableBodyScroll = useCallback(() => {
+        restoreOverflowHiddenSetting();
+    }, [restoreOverflowHiddenSetting]);
+
+    useIsomorphicLayoutEffect(() => {
+        isLocked ? disableBodyScroll() : enableBodyScroll();
+
+        return () => enableBodyScroll();
+    }, [isLocked]);
 };
