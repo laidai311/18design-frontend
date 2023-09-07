@@ -50,7 +50,7 @@ const data1 = {
         "https://noithatdreamhome.vn/wp-content/uploads/2023/05/z4389761188843_6f7f985f1f3ef8c0c72da06dee551b7e.jpg",
     title: "Hoàn Thiện Nội Thất Chung Cư Season Avenue-115m2",
     total_view: 20474,
-    location: "/",
+    location: "/thiet-ke-noi-that/hoan-thien-noi-that-chung-cu",
 };
 
 export default function Page() {

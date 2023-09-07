@@ -9,7 +9,7 @@ export const CardItem = ({ image_link, title, total_view, location }) => {
         <div>
             <Card>
                 <CardMedia className="card-media">
-                    <Link href="/">
+                    <Link href={location || "/"}>
                         <Img data-src={image_link || ""} />
                     </Link>
                 </CardMedia>
@@ -22,7 +22,7 @@ export const CardItem = ({ image_link, title, total_view, location }) => {
                             <IconEye />
                             <span>{total_view}</span>
                         </Space>
-                        <Link href="/">
+                        <Link href={location || "/"}>
                             <Space center>
                                 <span>Chi tiết</span>
                                 <IconAnglesRight />

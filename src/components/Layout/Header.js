@@ -207,17 +207,17 @@ export default function Header({ isHomePage }) {
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that/hoan-thien-noi-that-chung-cu">
                                                     Tuyển dụng kinh doanh
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that/hoan-thien-noi-that-chung-cu">
                                                     Tuyển dụng giám sát
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that/hoan-thien-noi-that-chung-cu">
                                                     Tuyển dụng thiết kế
                                                 </NavItemLink>
                                             </NavChildItem>

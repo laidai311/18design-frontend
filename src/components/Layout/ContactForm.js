@@ -2,14 +2,17 @@ import { IconXmark } from "../Icons";
 import { CloseWrap, Main, Wrapper } from "../Styled/Layout/ContactForm";
 import { Form } from "../UI";
 
-export default function ContactForm({ onClose }) {
+export default function ContactForm({ onClose, closeButton = true }) {
     return (
         <Wrapper>
-            <CloseWrap>
-                <button onClick={onClose || null}>
-                    <IconXmark width={24} height={24} />
-                </button>
-            </CloseWrap>
+            {closeButton ? (
+                <CloseWrap>
+                    <button onClick={onClose || null}>
+                        <IconXmark width={24} height={24} />
+                    </button>
+                </CloseWrap>
+            ) : null}
+
             <Form
                 style={{ width: "100%", height: "100%" }}
                 onSubmit={(value) => {
