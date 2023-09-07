@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { colors } from "./colors";
 
 export const GlobalStyle = createGlobalStyle`
   :root {
@@ -40,6 +41,12 @@ export const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
   }
 
+  //@media (prefers-color-scheme: dark) {
+  //  html {
+  //    color-scheme: dark;
+  //  }
+  //}
+
   a {
     color: inherit;
     text-decoration: none;
@@ -68,26 +75,66 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   button {
-    background-color: transparent;
     border: none;
     outline: none;
+    background-color: transparent;
     padding: 0;
     cursor: pointer;
     color: currentColor;
+    font-size: 1rem;
   }
 
-  input {
+  input, select {
     outline: none;
     border: none;
     background-color: transparent;
     font-size: 1rem;
-    appearance: none;
-    -webkit-appearance: none;
   }
 
-  //@media (prefers-color-scheme: dark) {
-  //  html {
-  //    color-scheme: dark;
-  //  }
-  //}
+  input {
+     appearance: none;
+    -webkit-appearance: none; 
+  }
+ 
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: fit-content;
+    background-color: ${colors["cta-bottom"]};
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 9px 15px;
+    border-radius: 4px;
+    white-space: nowrap;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+            0 4px 6px -4px rgb(0 0 0 / 0.1);
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 1px;
+    left: 125%;
+    
+  }
+  
+  .tooltip .tooltiptext::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #bd8b1b transparent transparent;
+    position: absolute;
+    left: -10px;
+    top: 8px;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
 `;

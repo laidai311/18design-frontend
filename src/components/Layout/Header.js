@@ -254,6 +254,8 @@ export default function Header({}) {
                             <SearchInput
                                 name="search"
                                 placeholder="Bạn đang tìm kiếm gì ...?"
+                                inputMode="search"
+                                autoCapitalize="off"
                             />
                             <SearchButton type="submit">
                                 <IconSearch width={18} height={18} />
@@ -265,24 +267,3 @@ export default function Header({}) {
         </>
     );
 }
-
-const Search = () => {
-    return (
-        <SearchWrap>
-            <SearchForm
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    console.log(e);
-                }}
-            >
-                <SearchInput
-                    name="search"
-                    placeholder="Bạn đang tìm kiếm gì ...?"
-                />
-                <SearchButton type="submit">
-                    <IconSearch width={18} height={18} />
-                </SearchButton>
-            </SearchForm>
-        </SearchWrap>
-    );
-};

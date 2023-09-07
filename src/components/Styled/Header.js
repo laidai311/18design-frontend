@@ -283,12 +283,11 @@ export const OpenMenuWrap = styled.div`
         display: none;
     `)}
 `;
-// đóng
+// đóng close
 export const CloseMenuWrap = styled.div`
     position: absolute;
-    top: ${spacing["5"]};
-    right: ${spacing["7"]};
-    ${navItemHover}
+    top: 20px;
+    right: 20px;
 
     ${media.lg(css`
         display: none;
@@ -300,6 +299,7 @@ export const CloseMenuWrap = styled.div`
 
         &:hover {
             background: #0000000d;
+            border-radius: 99px;
         }
     }
 `;
@@ -335,13 +335,13 @@ export const Drawer = styled.div`
         overflow-y: unset;
     `)}
 `;
-// bóng mờ
+// bóng mờ - overlay
 export const DrawerOverlay = styled.div`
     position: fixed;
     inset: 0;
     z-index: 99;
     display: ${(p) => (p.open ? "block" : "none")};
-    background-color: #00000099;
+    background-color: ${colors.overlay};
 
     ${media.lg(css`
         display: none;

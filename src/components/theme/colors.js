@@ -9,4 +9,6 @@ export const colors = {
     ["bg-sidebar"]: "#bd8b1b",
     ["text-sidebar"]: "#ffffff",
     ["cta-bottom"]: "#bd8b1b",
+    ["pulse-ring"]: "#bc8b1b9c",
+    ["overlay"]: "#00000099",
 };

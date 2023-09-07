@@ -5,8 +5,10 @@ export const useStore = create((set) => ({
     increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
     removeAllBears: () => set({ bears: 0 }),
 }));
+
 export const useOpen = create((set) => ({
     form: 0,
+    contactForm: false,
     onOpen: () => set(() => ({ form: true })),
     removeAllBears: () => set({ bears: 0 }),
 }));

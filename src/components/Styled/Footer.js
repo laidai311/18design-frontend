@@ -1,10 +1,5 @@
-import styled, { css, keyframes } from "styled-components";
-import { Form, Img } from "@/components/UI";
-import { screens, spacing, media, colors } from "@/components/theme";
-import Link from "next/link";
-import { AbsCenterY } from "../Css";
-import { IconHome } from "../Icons";
-import { Container } from "./Core";
+import styled, { css } from "styled-components";
+import { spacing, media, colors } from "@/components/theme";
 
 export const Wrapper = styled.footer`
     position: relative;
@@ -20,6 +15,7 @@ export const FooterBG = styled.div`
     background-repeat: no-repeat;
     background-size: cover;
 `;
+// overlay
 export const FooterBGOverlay = styled.div`
     height: 100%;
     width: 100%;
@@ -83,7 +79,7 @@ export const FooterAdviceButton = styled.button`
     border-radius: 8px;
     font-weight: 600;
     font-size: 1rem;
-    transition: all 0.3 ease-out;
+    transition: all 0.3s ease-out;
     &:active {
         transform: scale(0.95);
     }

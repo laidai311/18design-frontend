@@ -17,7 +17,7 @@ import {
 } from "../Styled/Footer";
 import { Img } from "../UI";
 
-export default function Footer() {
+export default function Footer({ onContactClick }) {
     return (
         <Wrapper id="footer">
             <Seasion>
@@ -45,7 +45,9 @@ export default function Footer() {
                                     được hàng trăm ngàn khách hàng tin tưởng sử
                                     dụng dịch vụ&rdquo;
                                 </FooterDescription>
-                                <FooterAdviceButton>
+                                <FooterAdviceButton
+                                    onClick={onContactClick || null}
+                                >
                                     <IconBook />
                                     <span>Nhận tư vấn thiết kế</span>
                                 </FooterAdviceButton>
