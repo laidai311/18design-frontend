@@ -8,11 +8,11 @@ import {
     TabContent,
     NavTabItem,
     ViewMoreLink,
-    ContetnList,
     ContentBottom,
 } from "../Styled/Home/TypicalProjects";
 import { IconChevronRight } from "../Icons";
 import { CardItem } from "../Common";
+import { CardList } from "../Styled/Card";
 
 const data1 = {
     image_link:
@@ -51,14 +51,14 @@ export const TypicalProject = () => {
                         </NavTabItem>
                     </NavTabList>
                     <TabContent actived={activedTab === 1}>
-                        <ContetnList>
+                        <CardList>
                             <CardItem {...data1} />
                             <CardItem {...data1} />
                             <CardItem {...data1} />
                             <CardItem {...data1} />
                             <CardItem {...data1} />
                             <CardItem {...data1} />
-                        </ContetnList>
+                        </CardList>
                         <ContentBottom>
                             <ViewMoreLink href={"/thiet-ke-noi-that"}>
                                 <span>Xem thêm</span>
@@ -67,14 +67,14 @@ export const TypicalProject = () => {
                         </ContentBottom>
                     </TabContent>
                     <TabContent actived={activedTab === 2}>
-                        <ContetnList>
+                        <CardList>
                             <CardItem {...data2} />
                             <CardItem {...data2} />
                             <CardItem {...data2} />
                             <CardItem {...data2} />
                             <CardItem {...data2} />
                             <CardItem {...data2} />
-                        </ContetnList>
+                        </CardList>
                         <ContentBottom>
                             <ViewMoreLink href={"/thiet-ke-kien-truc"}>
                                 <span>Xem thêm</span>

@@ -1,4 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
+import { media } from "../theme";
 
 const circle = keyframes`
     0%{opacity:1}
@@ -76,5 +77,21 @@ export const Space = styled.div`
     > * + * {
         margin-left: ${(p) =>
             typeof p.size === "number" ? p.size + "px" : "8px"};
+    }
+`;
+
+export const CardList = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+        padding: 12px;
+        flex-basis: 100%;
+        ${media.sm(css`
+            flex-basis: calc(100% / 2);
+        `)}
+        ${media.lg(css`
+            flex-basis: calc(100% / 3);
+        `)}
     }
 `;

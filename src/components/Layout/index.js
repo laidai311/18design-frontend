@@ -13,6 +13,8 @@ import { css, styled } from "styled-components";
 import { media } from "../theme";
 
 const Main = styled.main`
+    min-height: 80vh;
+
     ${media.lg(css`
         padding-top: ${(p) => (p.isHomePage ? 0 : p.theme.headerHeight)};
     `)}
