@@ -11,6 +11,7 @@ import ContactForm from "./ContactForm";
 import { useLockBodyScroll } from "@/hooks";
 import { css, styled } from "styled-components";
 import { media } from "../theme";
+import { useRouter } from "next/router";
 
 const Main = styled.main`
     min-height: 80vh;
@@ -25,6 +26,7 @@ const Main = styled.main`
 export default function DefaultLayout({ children }) {
     const [open, setOpen] = useState(false);
     const [isHomePage, setIsHomePage] = useState(true);
+    const router = useRouter();
 
     useLockBodyScroll(open);
 
@@ -51,7 +53,7 @@ export default function DefaultLayout({ children }) {
 
     useEffect(() => {
         setIsHomePage(["/"].includes(window.location.pathname));
-    }, []);
+    }, [router.pathname]);
 
     return (
         <>

@@ -104,17 +104,17 @@ export default function Header({ isHomePage }) {
                                             sticky={sticky ? sticky : undefined}
                                         >
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Sửa nhà trọn gói
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Xây nhà trọn gói
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thi công nội thất
                                                 </NavItemLink>
                                             </NavChildItem>
@@ -130,42 +130,42 @@ export default function Header({ isHomePage }) {
                                             sticky={sticky ? sticky : undefined}
                                         >
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất biệt thự
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất nhà phố
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất chung cư
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất văn phòng
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất khách sạn
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất nhà hàng
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất quán Cafe
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế nội thất spa
                                                 </NavItemLink>
                                             </NavChildItem>
@@ -181,12 +181,12 @@ export default function Header({ isHomePage }) {
                                             sticky={sticky ? sticky : undefined}
                                         >
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế kiến trúc biệt thự
                                                 </NavItemLink>
                                             </NavChildItem>
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Thiết kế kiến trúc nhà phố
                                                 </NavItemLink>
                                             </NavChildItem>
@@ -202,7 +202,7 @@ export default function Header({ isHomePage }) {
                                             sticky={sticky ? sticky : undefined}
                                         >
                                             <NavChildItem>
-                                                <NavItemLink href="/">
+                                                <NavItemLink href="/thiet-ke-noi-that">
                                                     Chia sẻ kiến thức
                                                 </NavItemLink>
                                             </NavChildItem>
@@ -224,7 +224,7 @@ export default function Header({ isHomePage }) {
                                         </NavChildList>
                                     </NavItem>
                                     <NavItem>
-                                        <NavItemLink href="/">
+                                        <NavItemLink href="/lien-he">
                                             Liên hệ
                                         </NavItemLink>
                                     </NavItem>
