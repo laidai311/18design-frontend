@@ -35,6 +35,9 @@ const SwiperWrapper = styled.div`
         transition: opacity 0.3s;
         background-color: #fff;
     }
+    & .swiper-slide img {
+        width: 100%;
+    }
     & .swiper .swiper-pagination-bullet.swiper-pagination-bullet-active {
         opacity: 1;
     }
