@@ -29,6 +29,11 @@ export const ModalContent = styled.div`
     transition: all 0.15s ease-out;
     transform: ${(p) => (p.$open ? "translateY(0px)" : "translateY(-100px)")};
     opacity: ${(p) => (p.$open ? "1" : "0")};
+    width: 100%;
+
+    ${media.md(css`
+        width: auto;
+    `)}
 `;
 
 export const Wrapper = styled.div`
@@ -74,28 +79,6 @@ export const Main = styled.div`
         font-weight: 600;
         font-size: 17px;
         margin-bottom: 12px;
-    }
-
-    button {
-        padding: 12px 12px;
-        color: white;
-        text-transform: uppercase;
-        font-size: 17px;
-        font-weight: 600;
-        border-radius: 8px;
-        background: linear-gradient(
-            90deg,
-            rgba(189, 139, 27, 1) 6%,
-            rgba(235, 206, 100, 1) 50%,
-            rgba(189, 139, 27, 1) 100%
-        );
-    }
-
-    input,
-    select {
-        border: thin solid #ccc;
-        border-radius: 8px;
-        padding: 12px 12px;
     }
 `;
 

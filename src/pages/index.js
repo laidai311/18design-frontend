@@ -9,6 +9,7 @@ import {
 import { Slide } from "@/components/Home/Slide";
 import { Pricing } from "@/components/Home/Pricing";
 import { Partner } from "@/components/Home/Partner";
+import Whychoose from "@/components/Home/Whychoose";
 
 export default function Home() {
     return (
@@ -29,7 +30,7 @@ export default function Home() {
             <Seasion2 />
             <TypicalProject />
             <Pricing />
-            <Introduct />
+            <Whychoose />
             <Partner />
         </>
     );

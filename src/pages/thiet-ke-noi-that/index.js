@@ -2,8 +2,9 @@ import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
 import { styled } from "styled-components";
 import { Container } from "@/components/Styled";
-import { CardItem } from "@/components/Common";
+import { Card } from "@/components/Card";
 import { CardList } from "@/components/Styled/Card";
+import unfetch from "isomorphic-unfetch";
 
 const Wrapper = styled.div`
     position: relative;
@@ -45,15 +46,7 @@ const DescriptionList = styled.ul`
     }
 `;
 
-const data1 = {
-    image_link:
-        "https://noithatdreamhome.vn/wp-content/uploads/2023/05/z4389761188843_6f7f985f1f3ef8c0c72da06dee551b7e.jpg",
-    title: "Hoàn Thiện Nội Thất Chung Cư Season Avenue-115m2",
-    total_view: 20474,
-    location: "/thiet-ke-noi-that/hoan-thien-noi-that-chung-cu",
-};
-
-export default function Page() {
+export default function Page({ posts, pagination, error }) {
     return (
         <>
             <Head>
@@ -67,8 +60,8 @@ export default function Page() {
                     content="width=device-width, initial-scale=1"
                 />
             </Head>
-            <Wrapper>
-                <Container>
+            <section className="min-h-screen pt-8">
+                <div className="container max-w-7xl mx-auto">
                     <PageTitle>CATEGORY ARCHIVES: THIẾT KẾ NỘI THẤT</PageTitle>
                     <PageDescription>
                         <p>
@@ -120,18 +113,40 @@ export default function Page() {
                             </li>
                         </DescriptionList>
                     </PageDescription>
-                    <CardList>
-                        <CardItem {...data1} />
-                        <CardItem {...data1} />
-                        <CardItem {...data1} />
-                        <CardItem {...data1} />
-                        <CardItem {...data1} />
-                        <CardItem {...data1} />
-                    </CardList>
-                </Container>
-            </Wrapper>
+                    {posts?.length ? (
+                        <div className="-m-4 flex flex-wrap">
+                            {posts.map((itm) => (
+                                <Card
+                                    {...itm.attributes}
+                                    key={itm.id}
+                                    className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                />
+                            ))}
+                        </div>
+                    ) : null}
+                </div>
+            </section>
         </>
     );
+}
+
+export async function getServerSideProps() {
+    const { NEXT_PUBLIC_API_URL } = process.env;
+
+    const res = await unfetch(NEXT_PUBLIC_API_URL + "/api/posts?populate=*");
+    const data = await res.json();
+
+    const posts = data.data ? data.data : null;
+    const pagination = data.meta ? data.meta.pagination : null;
+    const error = data.error ? data.error : null;
+
+    return {
+        props: {
+            posts,
+            pagination,
+            error,
+        },
+    };
 }
 
 Page.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;

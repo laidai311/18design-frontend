@@ -24,17 +24,15 @@ export default function Footer({ onContactClick }) {
                 <FooterBG>
                     <FooterBGOverlay />
                 </FooterBG>
-                <Inner>
-                    <Container>
-                        <Content>
-                            <ContentItem $center>
+                <div className="relative pt-8">
+                    <div className="container mx-auto max-w-7xl">
+                        <div className="-mx-4 flex flex-wrap text-white">
+                            <div className="w-full p-4 md:w-1/2 lg:w-1/3 flex flex-col items-center">
                                 <FooterLogo>
                                     <Link href={"/"}>
                                         <Img
                                             alt={"logo"}
-                                            data-src={
-                                                "./images/18-design-cut.png"
-                                            }
+                                            src={"./images/18-design-cut.png"}
                                         />
                                     </Link>
                                 </FooterLogo>
@@ -45,40 +43,55 @@ export default function Footer({ onContactClick }) {
                                     được hàng trăm ngàn khách hàng tin tưởng sử
                                     dụng dịch vụ&rdquo;
                                 </FooterDescription>
-                                <FooterAdviceButton
+                                <button
                                     onClick={onContactClick || null}
+                                    className="px-5 py-3 font-medium text-white hover:bg-primary/90 rounded-lg hover:shadow inline-flex space-x-2 items-center justify-center bg-primary transition-all active:scale-95"
                                 >
                                     <IconBook />
                                     <span>Nhận tư vấn thiết kế</span>
-                                </FooterAdviceButton>
-                            </ContentItem>
-                            <ContentItem>
-                                <h3>THÔNG TIN LIÊN HỆ</h3>
+                                </button>
+                            </div>
+                            <div className="w-full p-4 md:w-1/2 lg:w-1/3">
+                                <h3 className="font-semibold mb-3 uppercase">
+                                    Thông tin liên hệ
+                                </h3>
 
-                                <h4>
+                                <h4 className="mb-4">
                                     CÔNG TY CỔ PHẦN KIẾN TRÚC VÀ ĐẦU TƯ XÂY DỰNG
                                     18 DESIGN
                                 </h4>
-                                <FooterContactWrap>
-                                    <div>
+                                <div className="flex flex-col space-y-2">
+                                    <div className="flex items-center space-x-2">
                                         <IconLocationDot />
                                         <span>
                                             Số 1, Nguyễn Cảnh Dị, Đại Kim, Hoàng
                                             Mai, TP. Hà Nội
                                         </span>
                                     </div>
-                                    <a href="tel:0838586444">
-                                        <IconPhone />
-                                        <span>083.8586.444</span>
+                                    <a
+                                        href="tel:0838586444"
+                                        className="hover:underline"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <IconPhone />
+                                            <span>083.8586.444</span>
+                                        </div>
                                     </a>
-                                    <a href="mailto:arch18designs@gmail.com">
-                                        <IconEnvelope />
-                                        <span>arch18designs@gmail.com</span>
+                                    <a
+                                        href="mailto:arch18designs@gmail.com"
+                                        className="hover:underline"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <IconEnvelope />
+                                            <span>arch18designs@gmail.com</span>
+                                        </div>
                                     </a>
-                                </FooterContactWrap>
-                            </ContentItem>
-                            <ContentItem>
-                                <h3>FANPAGE FACEBOOK</h3>
+                                </div>
+                            </div>
+                            <div className="w-full p-4 md:w-1/2 lg:w-1/3">
+                                <h3 className="font-semibold mb-3 uppercase">
+                                    Fanpage Facebook
+                                </h3>
                                 <iframe
                                     src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FDreamHomeNoiThat&amp;tabs=timeline&amp;width=340&amp;height=500&amp;small_header=false&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=true&amp;appId=450550055455892"
                                     width="100%"
@@ -90,10 +103,10 @@ export default function Footer({ onContactClick }) {
                                     allowFullScreen
                                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                                 />
-                            </ContentItem>
-                        </Content>
-                    </Container>
-                </Inner>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </Seasion>
             <FooterBottom>
                 <Container>

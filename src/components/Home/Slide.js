@@ -66,25 +66,25 @@ export function Slide() {
                 <SwiperSlide>
                     <Image
                         alt="pic1"
-                        data-src="https://noithatdreamhome.vn/wp-content/uploads/2022/11/z3033311065157_e5753f88c6c08f577611858ef55e00a2-1536x922.jpg"
+                        src="https://noithatdreamhome.vn/wp-content/uploads/2022/11/z3033311065157_e5753f88c6c08f577611858ef55e00a2-1536x922.jpg"
                     />
                 </SwiperSlide>
                 <SwiperSlide>
                     <Image
                         alt="pic2"
-                        data-src="https://noithatdreamhome.vn/wp-content/uploads/2022/11/b69a589a2a34ec6ab525-1536x903.jpg"
+                        src="https://noithatdreamhome.vn/wp-content/uploads/2022/11/b69a589a2a34ec6ab525-1536x903.jpg"
                     />
                 </SwiperSlide>
                 <SwiperSlide>
                     <Image
                         alt="pic3"
-                        data-src="https://noithatdreamhome.vn/wp-content/uploads/2022/11/z2927210368490_e5e0e2a306424e94bdf20d0423cdb22e-1536x1056.jpg"
+                        src="https://noithatdreamhome.vn/wp-content/uploads/2022/11/z2927210368490_e5e0e2a306424e94bdf20d0423cdb22e-1536x1056.jpg"
                     />
                 </SwiperSlide>
                 <SwiperSlide>
                     <Image
                         alt="pic4"
-                        data-src="https://noithatdreamhome.vn/wp-content/uploads/2022/11/z3879772922008_81cc318845a506112c7ad50eaf9c6f29-1536x1097.jpg"
+                        src="https://noithatdreamhome.vn/wp-content/uploads/2022/11/z3879772922008_81cc318845a506112c7ad50eaf9c6f29-1536x1097.jpg"
                     />
                 </SwiperSlide>
             </Swiper>

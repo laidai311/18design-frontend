@@ -44,10 +44,13 @@ export default function FloatButton({ onContactClick }) {
                 </a>
             </FloatLeft>
             <FloatRight>
-                <FloatAdviceButton onClick={onContactClick || null}>
+                <button
+                    onClick={onContactClick || null}
+                    className="px-5 py-3 font-medium text-white rounded-t-lg hover:shadow inline-flex space-x-2 items-center justify-center bg-primary transition-colors"
+                >
                     <IconBook />
                     <span>Nhận tư vấn thiết kế</span>
-                </FloatAdviceButton>
+                </button>
             </FloatRight>
         </>
     );

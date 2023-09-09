@@ -7,11 +7,12 @@ import {
     ModalContent,
     ModalOverlay,
 } from "../Styled/Layout/ContactForm";
-import ContactForm from "./ContactForm";
+import ContactForm from "../ContactForm";
 import { useLockBodyScroll } from "@/hooks";
 import { css, styled } from "styled-components";
 import { media } from "../theme";
 import { useRouter } from "next/router";
+import { IconXmark } from "../Icons";
 
 export default function DefaultLayout({ children }) {
     const [open, setOpen] = useState(false);
@@ -54,7 +55,29 @@ export default function DefaultLayout({ children }) {
             <Modal $open={open}>
                 <ModalOverlay $open={open} onClick={() => setOpen(false)} />
                 <ModalContent $open={open}>
-                    <ContactForm onClose={() => setOpen(false)} />
+                    <div
+                        className={
+                            "relative bg-white p-7 rounded-xl max-h-screen overflow-y-auto"
+                        }
+                    >
+                        <div className="absolute top-3 right-3">
+                            <button
+                                onClick={() => setOpen(false)}
+                                className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+                            >
+                                <IconXmark width={24} height={24} />
+                            </button>
+                        </div>
+                        <div className="w-full md:min-w-[450px] space-y-4 flex flex-col">
+                            <h3 className="font-semibold uppercase text-center text-lg">
+                                MIỄN PHÍ 100% <br /> PHÍ THIẾT KẾ NỘI THẤT
+                            </h3>
+                            <h4 className="uppercase text-center font-semibold">
+                                TRONG DUY NHẤT HÔM NAY
+                            </h4>
+                            <ContactForm onClose={() => setOpen(false)} />
+                        </div>
+                    </div>
                 </ModalContent>
             </Modal>
         </>

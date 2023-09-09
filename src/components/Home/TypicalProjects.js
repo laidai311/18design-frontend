@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { Container } from "../Styled/Common";
 import {
     NavTabList,
-    HomeTitle,
-    Wrapper,
     TabWrap,
     TabContent,
     NavTabItem,
@@ -11,8 +8,7 @@ import {
     ContentBottom,
 } from "../Styled/Home/TypicalProjects";
 import { IconChevronRight } from "../Icons";
-import { CardItem } from "../Common";
-import { CardList } from "../Styled/Card";
+import { Card } from "../Card";
 
 const data1 = {
     image_link:
@@ -32,9 +28,11 @@ export const TypicalProject = () => {
     const [activedTab, setActivedTab] = useState(1);
 
     return (
-        <Wrapper>
-            <Container>
-                <HomeTitle>Công trình tiêu biểu</HomeTitle>
+        <div className="bg-white pt-10 relative">
+            <div className="container max-w-7xl mx-auto">
+                <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                    Công trình tiêu biểu
+                </h2>
                 <TabWrap>
                     <NavTabList>
                         <NavTabItem
@@ -51,14 +49,32 @@ export const TypicalProject = () => {
                         </NavTabItem>
                     </NavTabList>
                     <TabContent $actived={activedTab === 1}>
-                        <CardList>
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                        </CardList>
+                        <div className="-m-4 flex flex-wrap">
+                            <Card
+                                {...data1}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data1}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data1}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data1}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data1}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data1}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                        </div>
                         <ContentBottom>
                             <ViewMoreLink href={"/thiet-ke-noi-that"}>
                                 <span>Xem thêm</span>
@@ -67,14 +83,32 @@ export const TypicalProject = () => {
                         </ContentBottom>
                     </TabContent>
                     <TabContent $actived={activedTab === 2}>
-                        <CardList>
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                        </CardList>
+                        <div className="-m-4 flex flex-wrap">
+                            <Card
+                                {...data2}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data2}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data2}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data2}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data2}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                            <Card
+                                {...data2}
+                                className="w-full p-4 md:w-1/2 lg:w-1/3"
+                            />
+                        </div>
                         <ContentBottom>
                             <ViewMoreLink href={"/thiet-ke-noi-that"}>
                                 <span>Xem thêm</span>
@@ -83,7 +117,7 @@ export const TypicalProject = () => {
                         </ContentBottom>
                     </TabContent>
                 </TabWrap>
-            </Container>
-        </Wrapper>
+            </div>
+        </div>
     );
 };

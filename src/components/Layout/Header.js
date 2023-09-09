@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import {
     IconChevronDown,
@@ -11,7 +12,6 @@ import {
     Main,
     Inner,
     OpenMenuWrap,
-    LogoImg,
     LogoLink,
     Nav,
     NavList,
@@ -31,7 +31,7 @@ import {
 } from "@/components/Styled/Layout/Header";
 import { spacing } from "../theme";
 import SearchForm from "../SearchForm";
-import { shadow } from "../Css";
+import clsx from "clsx";
 
 export default function Header({ isHomePage }) {
     const [sticky, setSticky] = useState(false);
@@ -55,9 +55,21 @@ export default function Header({ isHomePage }) {
                             </button>
                         </OpenMenuWrap>
                         <LogoLink href={"/"}>
-                            <LogoImg
+                            <img
+                                alt={"logo-white"}
+                                src={"./images/18-design-cut.png"}
+                                className={clsx({ "lg:hidden": isHomePage })}
+                            />
+                            <img
                                 alt={"logo"}
-                                data-src={"./images/18-design-cut.png"}
+                                src={
+                                    sticky
+                                        ? "./images/18-design-cut.png"
+                                        : "./images/18-design-cut-white.png"
+                                }
+                                className={
+                                    isHomePage ? "hidden lg:block" : "hidden"
+                                }
                             />
                         </LogoLink>
                         <DrawerOverlay
