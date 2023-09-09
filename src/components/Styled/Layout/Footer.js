@@ -3,6 +3,7 @@ import { spacing, media, colors } from "@/components/theme";
 
 export const Wrapper = styled.footer`
     position: relative;
+    margin: 30px 0 0;
 `;
 export const Seasion = styled.section`
     background-color: #666;

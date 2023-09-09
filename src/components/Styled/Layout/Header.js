@@ -2,7 +2,7 @@ import styled, { css, keyframes } from "styled-components";
 import { Form, Img } from "@/components/UI";
 import { screens, spacing, media, colors } from "@/components/theme";
 import Link from "next/link";
-import { AbsCenterY } from "../../Css";
+import { AbsCenterY, shadow } from "../../Css";
 import { IconHome } from "../../Icons";
 
 export const Wrapper = styled.header`
@@ -347,38 +347,18 @@ export const DrawerOverlay = styled.div`
 export const SearchWrap = styled.div`
     max-width: ${screens.xl};
     margin-inline: auto;
+    border-top: thin solid #ccc;
+    > * {
+        padding: 12px;
+        background-color: white;
+        border-radius: 8px;
+        ${shadow.lg}
+    }
+
     ${media.lg(css`
         display: ${(p) => (p.$open ? "flex" : "none")};
         justify-content: flex-end;
     `)}
-`;
-export const SearchForm = styled(Form)`
-    border-top: thin solid #ccc;
-    background-color: white;
-    padding: ${spacing[3]} ${spacing[5]};
-    display: flex;
-    align-items: center;
-    ${media.lg(css`
-        padding: 0;
-        border-radius: 8px;
-        background-color: transparent;
-    `)}
-`;
-export const SearchInput = styled.input`
-    padding: 5px 8px;
-    border: thin solid #ccc;
-    width: 100%;
-    height: 39px;
-    border-radius: 8px 0 0 8px;
-    background-color: white;
-`;
-export const SearchButton = styled.button`
-    padding: 0px 11px;
-    border-left: none;
-    height: 39px;
-    border-radius: 0 8px 8px 0;
-    background-color: #333;
-    color: white;
 `;
 
 export const NavItemInput = styled.input.attrs(() => ({

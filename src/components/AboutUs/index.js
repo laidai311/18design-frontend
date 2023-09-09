@@ -4,40 +4,50 @@ import { Img } from "../UI";
 
 const About = styled.div`
     padding-top: 50px;
+    line-height: 1.6;
+    font-size: 1rem;
 
-    & h2 {
+    h2 {
         font-size: 28px;
         text-transform: uppercase;
         margin-bottom: 20px;
     }
 
-    & h3 {
+    h3 {
         text-align: center;
         font-size: 24px;
         text-transform: uppercase;
         margin-bottom: 20px;
     }
-    & h4 {
+    h4 {
         font-size: 24px;
         text-transform: uppercase;
         margin-bottom: 20px;
     }
-    & p {
+    p {
         margin-bottom: 20px;
         font-weight: 300;
     }
 
-    & ul {
+    ul {
         list-style: inside;
         padding-left: 10px;
 
-        & li {
+        li {
             font-weight: 300;
             margin-bottom: 10px;
         }
     }
-    & img {
+
+    img {
         margin-bottom: 20px;
+    }
+
+    a {
+        color: blue;
+        &:hover {
+            text-decoration: underline;
+        }
     }
 `;
 

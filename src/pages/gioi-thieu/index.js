@@ -18,7 +18,11 @@ export default function Page({ introduction, error }) {
                     content="width=device-width, initial-scale=1"
                 />
             </Head>
-            {error ? <Component404 {...error} /> : <AboutUs {...introduction} />}
+            {error ? (
+                <Component404 {...error} />
+            ) : (
+                <AboutUs {...introduction} />
+            )}
         </>
     );
 }
@@ -26,7 +30,7 @@ export default function Page({ introduction, error }) {
 export async function getServerSideProps() {
     const { NEXT_PUBLIC_API_URL } = process.env;
 
-    const res = await fetch(`${NEXT_PUBLIC_API_URL}/api/introduction`);
+    const res = await fetch(`${NEXT_PUBLIC_API_URL}/api/about`);
     const data = await res.json();
 
     const introduction = data.data ? data.data.attributes : null;

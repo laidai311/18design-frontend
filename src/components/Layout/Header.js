@@ -27,17 +27,16 @@ import {
     NavItemInput,
     NavIconHome,
     NavTextHome,
-    SearchForm,
-    SearchInput,
-    SearchButton,
     SearchWrap,
 } from "@/components/Styled/Layout/Header";
 import { spacing } from "../theme";
+import SearchForm from "../SearchForm";
+import { shadow } from "../Css";
 
 export default function Header({ isHomePage }) {
     const [sticky, setSticky] = useState(false);
     const [openSidebar, setOpenSidebar] = useState(false);
-    const [openSearch, openSetSearch] = useState(false);
+    const [openSearch, setOpenSearch] = useState(false);
 
     useLockBodyScroll(openSidebar);
 
@@ -223,7 +222,7 @@ export default function Header({ isHomePage }) {
                                     <NavItem>
                                         <NavSearchButton
                                             onClick={() =>
-                                                openSetSearch(!openSearch)
+                                                setOpenSearch(!openSearch)
                                             }
                                         >
                                             <IconSearch
@@ -238,20 +237,8 @@ export default function Header({ isHomePage }) {
                     </Inner>
                     <SearchWrap $open={openSearch}>
                         <SearchForm
-                            onSubmit={(value) => {
-                                console.log(value);
-                            }}
-                        >
-                            <SearchInput
-                                name="search"
-                                placeholder="Bạn đang tìm kiếm gì ...?"
-                                inputMode="search"
-                                autoCapitalize="off"
-                            />
-                            <SearchButton type="submit">
-                                <IconSearch width={18} height={18} />
-                            </SearchButton>
-                        </SearchForm>
+                            onClickOutside={() => setOpenSearch(false)}
+                        />
                     </SearchWrap>
                 </Main>
             </Wrapper>
