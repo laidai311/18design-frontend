@@ -5,7 +5,12 @@ import {
     useLayoutEffect,
     useRef,
     useState,
+    useMemo,
 } from "react";
+import { range } from "@/utils";
+
+export const useIsomorphicLayoutEffect =
+    typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export function useDidUpdate(fn, dependencies) {
     const mounted = useRef(false);
@@ -62,9 +67,6 @@ export function useClickOutside(handler, events, nodes) {
 
     return ref;
 }
-
-export const useIsomorphicLayoutEffect =
-    typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export function useEventListener(eventName, handler, element, options) {
     // Create a ref that stores handler
@@ -296,3 +298,185 @@ export const useLockBodyScroll = (isLocked) => {
         return () => enableBodyScroll();
     }, [isLocked]);
 };
+
+/**
+ *
+ * @param {object = {current: Element}} ref from useRef()
+ * @param {object = {root: Element, rootMargin: String, threshold: Number}} options opts
+ * @returns Boolean
+ */
+export const useInView = (ref, options = {}) => {
+    const [isIntersecting, setIsIntersecting] = useState(false);
+    const [observer, setObserver] = useState(null);
+
+    useEffect(() => {
+        const callback = (entries) => {
+            setIsIntersecting(entries[0].isIntersecting);
+        };
+
+        observer?.disconnect();
+
+        if (ref.current) {
+            const _observer = new IntersectionObserver(callback, options);
+            _observer.observe(ref);
+            setObserver(_observer);
+        }
+
+        return () => {
+            observer?.disconnect();
+        };
+    }, [ref.current, options.root, options.rootMargin, options.threshold]);
+
+    return isIntersecting;
+};
+
+export const useLocalStorage = (key, defaultValue) => {
+    const [oldKey, setOldKey] = useState(key);
+    const [value, setValue] = useState(() => {
+        const item = localStorage.getItem(key);
+        if (item !== null) {
+            try {
+                return JSON.parse(item);
+            } catch {
+                return defaultValue;
+            }
+        }
+        return defaultValue;
+    });
+
+    useEffect(() => {
+        const rawValue = JSON.stringify(value);
+        localStorage.setItem(key, rawValue);
+        localStorage.removeItem(oldKey);
+        setOldKey(key);
+    }, [key, value]);
+
+    return [value, setValue];
+};
+
+/**
+ *
+ * @param {void, boolean} value Value for controlled state
+ * @param {void, boolean} defaultValue Initial value for uncontrolled state
+ * @param {void, boolean} finalValue Final value for uncontrolled state when value and defaultValue are not provided
+ * @param {void} onChange ontrolled state onChange handler
+ * @returns
+ */
+export function useUncontrolled({
+    value,
+    defaultValue,
+    finalValue,
+    onChange = () => {},
+}) {
+    const [uncontrolledValue, setUncontrolledValue] = useState(
+        defaultValue !== undefined ? defaultValue : finalValue
+    );
+
+    const handleUncontrolledChange = (val) => {
+        setUncontrolledValue(val);
+        onChange?.(val);
+    };
+
+    if (value !== undefined) {
+        return [value, onChange, true];
+    }
+
+    return [uncontrolledValue, handleUncontrolledChange, false];
+}
+
+export const DOTS = "dots";
+
+/**
+ *
+ * @param {number} total Page selected on initial render, defaults to 1
+ * @param {number} initialPage Controlled active page number
+ * @param {number} page Total amount of pages
+ * @param {number} siblings Siblings amount on left/right side of selected page, defaults to 1
+ * @param {number} boundaries Amount of elements visible on left/right edges, defaults to 1
+ * @param {void} onChange Callback fired after change of each page
+ * @returns
+ */
+export function usePagination({
+    total,
+    siblings = 1,
+    boundaries = 1,
+    page,
+    initialPage = 1,
+    onChange,
+}) {
+    const _total = Math.max(Math.trunc(total), 0);
+    const [activePage, setActivePage] = useUncontrolled({
+        value: page,
+        onChange,
+        defaultValue: initialPage,
+        finalValue: initialPage,
+    });
+
+    const setPage = (pageNumber) => {
+        if (pageNumber <= 0) {
+            setActivePage(1);
+        } else if (pageNumber > _total) {
+            setActivePage(_total);
+        } else {
+            setActivePage(pageNumber);
+        }
+    };
+
+    const next = () => setPage(activePage + 1);
+    const previous = () => setPage(activePage - 1);
+    const first = () => setPage(1);
+    const last = () => setPage(_total);
+
+    const paginationRange = useMemo(() => {
+        const totalPageNumbers = siblings * 2 + 3 + boundaries * 2;
+        if (totalPageNumbers >= _total) {
+            return range(1, _total);
+        }
+
+        const leftSiblingIndex = Math.max(activePage - siblings, boundaries);
+        const rightSiblingIndex = Math.min(
+            activePage + siblings,
+            _total - boundaries
+        );
+
+        const shouldShowLeftDots = leftSiblingIndex > boundaries + 2;
+        const shouldShowRightDots =
+            rightSiblingIndex < _total - (boundaries + 1);
+
+        if (!shouldShowLeftDots && shouldShowRightDots) {
+            const leftItemCount = siblings * 2 + boundaries + 2;
+            return [
+                ...range(1, leftItemCount),
+                DOTS,
+                ...range(_total - (boundaries - 1), _total),
+            ];
+        }
+
+        if (shouldShowLeftDots && !shouldShowRightDots) {
+            const rightItemCount = boundaries + 1 + 2 * siblings;
+            return [
+                ...range(1, boundaries),
+                DOTS,
+                ...range(_total - rightItemCount, _total),
+            ];
+        }
+
+        return [
+            ...range(1, boundaries),
+            DOTS,
+            ...range(leftSiblingIndex, rightSiblingIndex),
+            DOTS,
+            ...range(_total - boundaries + 1, _total),
+        ];
+    }, [_total, siblings, activePage]);
+
+    return {
+        range: paginationRange,
+        active: activePage,
+        setPage,
+        next,
+        previous,
+        first,
+        last,
+    };
+}

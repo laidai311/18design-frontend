@@ -1,12 +1,14 @@
 import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
 import { AboutUs } from "@/components/AboutUs";
+import fetch from "isomorphic-unfetch";
+import Component404 from "@/components/404";
 
-export default function Home() {
+export default function Page({ introduction, error }) {
     return (
         <>
             <Head>
-                <title>CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN</title>
+                <title>18 Design</title>
                 <meta
                     name="description"
                     content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"
@@ -15,11 +17,27 @@ export default function Home() {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
-            <AboutUs/>
+            {error ? <Component404 {...error} /> : <AboutUs {...introduction} />}
         </>
     );
 }
 
-Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
+export async function getServerSideProps() {
+    const { NEXT_PUBLIC_API_URL } = process.env;
+
+    const res = await fetch(`${NEXT_PUBLIC_API_URL}/api/introduction`);
+    const data = await res.json();
+
+    const introduction = data.data ? data.data.attributes : null;
+    const error = data.error ? data.error : null;
+
+    return {
+        props: {
+            introduction,
+            error,
+        },
+    };
+}
+
+Page.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;

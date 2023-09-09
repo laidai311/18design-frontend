@@ -4,6 +4,8 @@ import "swiper/css/pagination";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle, defaultTheme } from "@/components/theme";
 import { StoreProvider } from "@/stores";
+import SEO from '../../next-seo.config';
+import { DefaultSeo } from "next-seo";
 
 export default function App({ Component, pageProps }) {
     const getLayout = Component.getLayout || ((page) => page);
@@ -11,6 +13,7 @@ export default function App({ Component, pageProps }) {
     return (
         <StoreProvider>
             <GlobalStyle />
+            <DefaultSeo {...SEO} />
             <ThemeProvider theme={defaultTheme}>
                 {getLayout(<Component {...pageProps} />)}
             </ThemeProvider>

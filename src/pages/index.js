@@ -14,7 +14,7 @@ export default function Home() {
     return (
         <>
             <Head>
-                <title>CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN</title>
+                <title>18 Design</title>
                 <meta
                     name="description"
                     content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"

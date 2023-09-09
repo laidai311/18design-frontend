@@ -57,7 +57,7 @@ export default function Page() {
     return (
         <>
             <Head>
-                <title>Thiết kế nội thất | 18 DESIGN</title>
+                <title>Thiết kế nội thất | 18 Design</title>
                 <meta
                     name="description"
                     content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"
@@ -66,7 +66,6 @@ export default function Page() {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
             <Wrapper>
                 <Container>

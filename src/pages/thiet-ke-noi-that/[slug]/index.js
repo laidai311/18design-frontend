@@ -2,8 +2,6 @@ import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
 import { css, styled } from "styled-components";
 import { Container } from "@/components/Styled";
-import { CardItem } from "@/components/Common";
-import { CardList } from "@/components/Styled/Card";
 import ContactForm from "@/components/Layout/ContactForm";
 import { Img } from "@/components/UI";
 import { media } from "@/components/theme";
@@ -60,7 +58,7 @@ export default function Page() {
         <>
             <Head>
                 <title>
-                    Hoàn Thiện Nội Thất Chung Cư Season Avenue-115m2 | 18 DESIGN
+                    Hoàn Thiện Nội Thất Chung Cư Season Avenue-115m2 | 18 Design
                 </title>
                 <meta
                     name="description"

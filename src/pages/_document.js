@@ -5,12 +5,6 @@ export default function MyDocument() {
     return (
         <Html lang="vi">
             <Head>
-                <meta key="robots" name="robots" content="noindex,follow" />
-                <meta
-                    key="googlebot"
-                    name="googlebot"
-                    content="noindex,follow"
-                />
                 <link
                     rel="shortcut icon"
                     href="/favicon.ico"

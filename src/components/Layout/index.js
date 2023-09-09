@@ -13,16 +13,6 @@ import { css, styled } from "styled-components";
 import { media } from "../theme";
 import { useRouter } from "next/router";
 
-const Main = styled.main`
-    min-height: 80vh;
-
-    ${media.lg(css`
-        padding-top: ${(p) => (p.$transparent ? 0 : p.theme.headerHeight)};
-    `)}
-    padding-top: ${(p) =>
-        p.$transparent ? 0 : `calc(${p.theme.headerHeight} + 63px)`};
-`;
-
 export default function DefaultLayout({ children }) {
     const [open, setOpen] = useState(false);
     const [isHomePage, setIsHomePage] = useState(true);
@@ -59,6 +49,7 @@ export default function DefaultLayout({ children }) {
         <>
             <Header isHomePage={isHomePage} />
             <Main $transparent={isHomePage}>{children}</Main>
+            <Footer onContactClick={() => setOpen(true)} />
             <FloatButton onContactClick={() => setOpen(true)} />
             <Modal $open={open}>
                 <ModalOverlay $open={open} onClick={() => setOpen(false)} />
@@ -66,7 +57,16 @@ export default function DefaultLayout({ children }) {
                     <ContactForm onClose={() => setOpen(false)} />
                 </ModalContent>
             </Modal>
-            <Footer onContactClick={() => setOpen(true)} />
         </>
     );
 }
+
+const Main = styled.main`
+    min-height: 80vh;
+
+    ${media.lg(css`
+        padding-top: ${(p) => (p.$transparent ? 0 : p.theme.headerHeight)};
+    `)}
+    padding-top: ${(p) =>
+        p.$transparent ? 0 : `calc(${p.theme.headerHeight} + 63px)`};
+`;

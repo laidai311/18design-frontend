@@ -90,7 +90,7 @@ export default function Header({ isHomePage }) {
                                         </NavItemLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavItemLink href="/">
+                                        <NavItemLink href="/gioi-thieu">
                                             Về chúng tôi
                                         </NavItemLink>
                                     </NavItem>
