@@ -90,6 +90,5 @@ const Main = styled.main`
     ${media.lg(css`
         padding-top: ${(p) => (p.$transparent ? 0 : p.theme.headerHeight)};
     `)}
-    padding-top: ${(p) =>
-        p.$transparent ? 0 : `calc(${p.theme.headerHeight} + 63px)`};
+    padding-top: ${(p) => `calc(${p.theme.headerHeight} + 63px)`};
 `;

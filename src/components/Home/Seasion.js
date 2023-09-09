@@ -269,7 +269,7 @@ export function Seasion1() {
         <Content>
             <Row>
                 <div>
-                    <div className="bg-[#949599] text-center h-full flex items-center justify-center">
+                    <div className="bg-[#949599] text-center h-full flex items-center justify-center py-20 px-3">
                         <TextAction className="text-action">
                             <TItleH4>
                                 Bạn đang ấp ủ ý tưởng về ngôi nhà của mình?

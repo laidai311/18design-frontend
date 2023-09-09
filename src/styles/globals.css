@@ -54,7 +54,7 @@
     border-color: transparent #bd8b1b transparent transparent;
     position: absolute;
     left: -10px;
-    top: 8px;
+    top: 10px;
   }
 
   .tooltip:hover .tooltiptext {

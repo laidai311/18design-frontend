@@ -21,7 +21,10 @@ export const Card = ({
 
     const image_name = cover ? cover.data.attributes.formats.medium.name : null;
 
-    const url = router.pathname + "/" + slug;
+    const url =
+        router.pathname === "/"
+            ? router.pathname + slug
+            : router.pathname + "/" + slug;
 
     return (
         <CardStyled className={className || ""}>

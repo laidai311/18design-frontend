@@ -16,6 +16,7 @@ import {
     FooterContactWrap,
 } from "../Styled/Layout/Footer";
 import { Img } from "../UI";
+import { FacebookProvider, EmbeddedPost } from "react-facebook";
 
 export default function Footer({ onContactClick }) {
     return (
@@ -27,7 +28,7 @@ export default function Footer({ onContactClick }) {
                 <div className="relative pt-8">
                     <div className="container mx-auto max-w-7xl">
                         <div className="-mx-4 flex flex-wrap text-white">
-                            <div className="w-full p-4 md:w-1/2 lg:w-1/3 flex flex-col items-center">
+                            <div className="w-full p-7 md:w-1/2 lg:w-1/3 flex flex-col items-center">
                                 <FooterLogo>
                                     <Link href={"/"}>
                                         <Img
@@ -51,7 +52,7 @@ export default function Footer({ onContactClick }) {
                                     <span>Nhận tư vấn thiết kế</span>
                                 </button>
                             </div>
-                            <div className="w-full p-4 md:w-1/2 lg:w-1/3">
+                            <div className="w-full p-7 md:w-1/2 lg:w-1/3">
                                 <h3 className="font-semibold mb-3 uppercase">
                                     Thông tin liên hệ
                                 </h3>
@@ -88,12 +89,18 @@ export default function Footer({ onContactClick }) {
                                     </a>
                                 </div>
                             </div>
-                            <div className="w-full p-4 md:w-1/2 lg:w-1/3">
+                            <div className="w-full p-7 md:w-1/2 lg:w-1/3">
                                 <h3 className="font-semibold mb-3 uppercase">
                                     Fanpage Facebook
                                 </h3>
-                                <iframe
-                                    src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FDreamHomeNoiThat&amp;tabs=timeline&amp;width=340&amp;height=500&amp;small_header=false&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=true&amp;appId=450550055455892"
+                                <FacebookProvider appId="108497754023928">
+                                    <EmbeddedPost
+                                        href="http://www.facebook.com"
+                                        width="500"
+                                    />
+                                </FacebookProvider>
+                                {/* <iframe
+                                    src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F18designsAI&amp;tabs=timeline&amp;width=340&amp;height=340&amp;small_header=false&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=true&amp;appId=108497754023928"
                                     width="100%"
                                     height={315}
                                     style={{
@@ -102,7 +109,7 @@ export default function Footer({ onContactClick }) {
                                     }}
                                     allowFullScreen
                                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                                />
+                                /> */}
                             </div>
                         </div>
                     </div>
