@@ -6,8 +6,10 @@ import {
     useRef,
     useState,
     useMemo,
+    useReducer,
 } from "react";
 import { range } from "@/utils";
+import { useRouter } from "next/router";
 
 export const useIsomorphicLayoutEffect =
     typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -112,9 +114,9 @@ export function useHover() {
         }
 
         return undefined;
-    }, []);
+    }, [ref.current]);
 
-    return { ref, hovered };
+    return { ref, hovered, setHovered };
 }
 
 function attachMediaListener(query, callback) {
@@ -168,7 +170,7 @@ export function useMediaQuery(
     return matches;
 }
 
-export const useDetectKeyboardOpen = (
+export const useDetectKeyboard = (
     minKeyboardHeight = 300,
     defaultValue = false
 ) => {
@@ -206,7 +208,7 @@ export const useDetectKeyboardOpen = (
 };
 
 export const useWindowHeight = () => {
-    const isDetectKeyboardOpen = useDetectKeyboardOpen();
+    const isDetectKeyboardOpen = useDetectKeyboard();
     useEffect(() => {
         const isMobile =
             typeof window === "object"
@@ -479,4 +481,60 @@ export function usePagination({
         first,
         last,
     };
+}
+
+export const useRouteChangeStart = (fn) => {
+    const router = useRouter();
+
+    useEffect(() => {
+        router.events.on("routeChangeStart", fn || null);
+        // If the component is unmounted, unsubscribe
+        // from the event with the `off` method:
+        return () => {
+            router.events.off("routeChangeStart", fn || null);
+        };
+    }, [router]);
+};
+
+export function useToggle(options = [false, true]) {
+    const [[option], toggle] = useReducer((state, action) => {
+        const value = action instanceof Function ? action(state[0]) : action;
+        const index = Math.abs(state.indexOf(value));
+
+        return state.slice(index).concat(state.slice(0, index));
+    }, options);
+
+    return [option, toggle];
+}
+
+export function useWindowEvent(type, listener, options) {
+    useEffect(() => {
+        window.addEventListener(type, listener, options);
+        return () => window.removeEventListener(type, listener, options);
+    }, [type, listener]);
+}
+
+const eventListerOptions = {
+    passive: true,
+};
+
+export function useViewportSize(listener) {
+    const [windowSize, setWindowSize] = useState({
+        width: 0,
+        height: 0,
+    });
+
+    const setSize = useCallback((e) => {
+        setWindowSize({
+            width: window.innerWidth || 0,
+            height: window.innerHeight || 0,
+        });
+        if (typeof listener === "function") listener(e);
+    }, []);
+
+    useWindowEvent("resize", setSize, eventListerOptions);
+    useWindowEvent("orientationchange", setSize, eventListerOptions);
+    useEffect(setSize, []);
+
+    return windowSize;
 }

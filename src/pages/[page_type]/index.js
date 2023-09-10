@@ -130,23 +130,30 @@ export default function Page({ posts, pagination, error }) {
     );
 }
 
-export async function getServerSideProps() {
-    const { NEXT_PUBLIC_API_URL } = process.env;
+export async function getServerSideProps(context) {
+    try {
+        const { NEXT_PUBLIC_API_URL } = process.env;
+        const { page_type } = context.params;
 
-    const res = await unfetch(NEXT_PUBLIC_API_URL + "/api/posts?populate=*");
-    const data = await res.json();
+        const res = await unfetch(
+            NEXT_PUBLIC_API_URL + "/api/posts?populate=*"
+        );
+        const data = await res.json();
 
-    const posts = data.data ? data.data : null;
-    const pagination = data.meta ? data.meta.pagination : null;
-    const error = data.error ? data.error : null;
-
-    return {
-        props: {
-            posts,
-            pagination,
-            error,
-        },
-    };
+        return {
+            props: {
+                posts: data.data ? data.data : null,
+                pagination: data.meta ? data.meta.pagination : null,
+                error: data.error ? data.error : null,
+            },
+        };
+    } catch (error) {
+        return {
+            props: {
+                error: { message: error.message },
+            },
+        };
+    }
 }
 
 Page.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;

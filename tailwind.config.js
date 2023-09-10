@@ -12,14 +12,27 @@ module.exports = {
                     "40%": { opacity: 1 },
                     "100%": { width: "200%", height: "200%", opacity: 0 },
                 },
+                stuckMoveDown: {
+                    "0%": {
+                        transform: "translateY(-100%)",
+                    },
+                    "100%": {
+                        transform: "translateY(0)",
+                    },
+                },
             },
             colors: {
                 primary: "#bd8b1b",
+                hover: "#E6BC67",
+                initial: "initial",
+                sidebar: "#bd8b1b",
             },
             backgroundImage: {
-                "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
                 "cta-button":
                     "linear-gradient(90deg,rgba(189, 139, 27, 1) 6%,rgba(235, 206, 100, 1) 50%,rgba(189, 139, 27, 1) 100%)",
+            },
+            spacing: {
+                header: 90,
             },
         },
     },

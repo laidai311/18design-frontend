@@ -54,7 +54,7 @@ const ContentWrap = styled.div`
     }
 `;
 
-export default function Page({ post, error }) {
+export default function Page({ post = {}, error }) {
     const { title = "", content = "" } = post;
 
     return (

@@ -69,24 +69,24 @@ export default function Footer({ onContactClick }) {
                                             Mai, TP. Hà Nội
                                         </span>
                                     </div>
-                                    <a
-                                        href="tel:0838586444"
-                                        className="hover:underline"
-                                    >
-                                        <div className="flex items-center space-x-2">
+                                    <div>
+                                        <a
+                                            href="tel:0838586444"
+                                            className="flex items-center space-x-2 hover:underline"
+                                        >
                                             <IconPhone />
                                             <span>083.8586.444</span>
-                                        </div>
-                                    </a>
-                                    <a
-                                        href="mailto:arch18designs@gmail.com"
-                                        className="hover:underline"
-                                    >
-                                        <div className="flex items-center space-x-2">
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a
+                                            href="mailto:arch18designs@gmail.com"
+                                            className="flex items-center space-x-2 hover:underline"
+                                        >
                                             <IconEnvelope />
                                             <span>arch18designs@gmail.com</span>
-                                        </div>
-                                    </a>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <div className="w-full p-7 md:w-1/2 lg:w-1/3">

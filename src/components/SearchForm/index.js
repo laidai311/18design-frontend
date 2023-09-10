@@ -1,11 +1,7 @@
-import { css, styled } from "styled-components";
 import { IconSearch } from "../Icons";
 import { useForm } from "react-hook-form";
-import { media } from "../theme";
-import { useClickOutside } from "@/hooks";
 
-function SearchForm({ onClickOutside, ...props }) {
-    const ref = useClickOutside(() => onClickOutside?.());
+function SearchForm({ ...props }) {
     const {
         register,
         handleSubmit,
@@ -16,51 +12,27 @@ function SearchForm({ onClickOutside, ...props }) {
     const onSubmit = (data) => console.log(data);
 
     return (
-        <SearchFormStyled ref={ref} {...props}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <div {...props}>
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex items-center"
+            >
                 <input
                     {...register("search")}
                     placeholder="Bạn đang tìm kiếm gì ...?"
                     inputMode="search"
                     autoCapitalize="off"
+                    className="grow focus:outline-none appearance-none"
                 />
-                <button type="submit">
+                <button
+                    type="submit"
+                    className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-gray-600"
+                >
                     <IconSearch width={18} height={18} />
                 </button>
             </form>
-        </SearchFormStyled>
+        </div>
     );
 }
 
 export default SearchForm;
-
-const SearchFormStyled = styled.div`
-    form {
-        background-color: white;
-        display: flex;
-        align-items: center;
-        ${media.lg(css`
-            padding: 0;
-            border-radius: 8px;
-            background-color: transparent;
-        `)}
-    }
-
-    input {
-        padding: 5px 8px;
-        border: thin solid #ccc;
-        width: 100%;
-        height: 39px;
-        border-radius: 8px 0 0 8px;
-        background-color: white;
-    }
-
-    button {
-        padding: 0px 11px;
-        border-left: none;
-        height: 39px;
-        border-radius: 0 8px 8px 0;
-        background-color: #333;
-        color: white;
-    }
-`;
