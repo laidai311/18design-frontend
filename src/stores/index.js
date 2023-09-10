@@ -18,6 +18,8 @@ export const StoreProvider = (props) => {
     const [stickyHeader, setStickyHeader] = useState(false);
     // bật tìm kiếm
     const [openSearch, setOpenSearch] = useState(false);
+    // bật from liên hệ
+    const [openContactForm, setOpenContactForm] = useState(false);
 
     const router = useRouter();
     const md = useMediaQuery("(min-width: 768px)");
@@ -41,7 +43,7 @@ export const StoreProvider = (props) => {
         setOpenSidebar(false);
     });
     // khóa cuộn body
-    useLockBodyScroll(openSidebar || openSearch);
+    useLockBodyScroll(openSidebar || openSearch || openContactForm);
     // sự kiện cuộn window
     useWindowEvent("scroll", () => {
         setStickyHeader(window.scrollY > (stickyHeader ? 0 : 90));
@@ -56,6 +58,8 @@ export const StoreProvider = (props) => {
     const pathNameDynamic = router.query?.page_type
         ? "/" + router.query.page_type
         : null;
+
+    const isHomePage = router.pathname === "/";
 
     return (
         <StoreContext.Provider
@@ -72,6 +76,9 @@ export const StoreProvider = (props) => {
                 openSearch,
                 setOpenSearch,
                 pathNameDynamic,
+                openContactForm,
+                setOpenContactForm,
+                isHomePage,
             }}
             {...props}
         />
@@ -91,6 +98,9 @@ export const StoreContext = createContext({
     openSearch: false,
     setOpenSearch() {},
     pathNameDynamic: "",
+    openContactForm: {},
+    setOpenContactForm() {},
+    isHomePage: true,
 });
 
 export const useStore = () => useContext(StoreContext);

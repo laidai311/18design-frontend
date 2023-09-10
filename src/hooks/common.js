@@ -538,3 +538,74 @@ export function useViewportSize(listener) {
 
     return windowSize;
 }
+
+// the required distance between touchStart and touchEnd to be detected as a swipe
+const minSwipeDistance = 50;
+
+export function useSwipesHoriziontal(options = { onLeftSwipe, onRightSwipe }) {
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchEnd, setTouchEnd] = useState(null);
+    const ref = useRef(null);
+    const onTouchstart = useCallback((e) => {
+        setTouchEnd(null); // otherwise the swipe is fired even with usual touch events
+        setTouchStart(e.targetTouches[0].clientX);
+    }, []);
+    const onTouchmove = useCallback(
+        (e) => setTouchEnd(e.targetTouches[0].clientX),
+        []
+    );
+    const onTouchend = useCallback(() => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+        if (isLeftSwipe || isRightSwipe) {
+            if (isLeftSwipe) {
+                if (typeof options.onLeftSwipe === "function")
+                    options.onLeftSwipe();
+            } else {
+                if (typeof options.onRightSwipe === "function")
+                    options.onRightSwipe();
+            }
+        }
+    }, [touchStart, touchEnd]);
+
+    useEffect(() => {
+        if (ref.current) {
+            ref.current.addEventListener("touchstart", onTouchstart);
+            ref.current.addEventListener("touchmove", onTouchmove);
+            ref.current.addEventListener("touchend", onTouchend);
+
+            return () => {
+                ref.current?.removeEventListener("touchstart", onTouchstart);
+                ref.current?.removeEventListener("touchmove", onTouchmove);
+                ref.current?.removeEventListener("touchend", onTouchend);
+            };
+        }
+
+        return undefined;
+    }, [ref.current, touchStart, touchEnd]);
+
+    return ref;
+}
+
+export function useThrottle(value, interval = 500) {
+    const [throttledValue, setThrottledValue] = useState(value);
+    const lastExecuted = useRef(Date.now());
+
+    useEffect(() => {
+        if (Date.now() >= lastExecuted.current + interval) {
+            lastExecuted.current = Date.now();
+            setThrottledValue(value);
+        } else {
+            const timerId = setTimeout(() => {
+                lastExecuted.current = Date.now();
+                setThrottledValue(value);
+            }, interval);
+
+            return () => clearTimeout(timerId);
+        }
+    }, [value, interval]);
+
+    return throttledValue;
+}

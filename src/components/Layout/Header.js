@@ -2,13 +2,14 @@
 import { IconMenu } from "@/components/Icons";
 import SearchForm from "../SearchForm";
 import clsx from "clsx";
-import { menu } from "./data";
+import { menu as fakeMenu } from "./data";
 import Menu from "./Menu";
 import { useStore } from "@/stores";
 import Link from "next/link";
 import CloseButton from "../CloseButton";
+import { useSwipesHoriziontal } from "@/hooks";
 
-export default function Header({ isHomePage }) {
+export default function Header({ isHomePage, menu = fakeMenu }) {
     const {
         openSidebar,
         setOpenSidebar,
@@ -18,10 +19,15 @@ export default function Header({ isHomePage }) {
         responsive,
     } = useStore();
 
+    const drawRef = useSwipesHoriziontal({
+        onLeftSwipe: () => {
+            setOpenSidebar(false);
+        },
+    });
+
     return (
         <header id="header">
             <div
-                $sticky={stickyHeader}
                 className={clsx(
                     "flex flex-col absolute top-0 left-0 right-0 z-10 shadow-lg transition-all",
                     isHomePage ? "bg-transparent" : "bg-white",
@@ -32,7 +38,7 @@ export default function Header({ isHomePage }) {
                 )}
             >
                 <div className="relative container max-w-7xl mx-auto flex justify-center lg:justify-between items-stretch h-header px-3">
-                    <div className="lg:hidden absolute left-5 top-1/2 -translate-y-1/2">
+                    <div className="lg:hidden absolute top-0 left-0 h-header w-header flex items-center justify-center">
                         <button
                             onClick={() => setOpenSidebar(true)}
                             className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10"
@@ -69,22 +75,33 @@ export default function Header({ isHomePage }) {
                             }
                         )}
                     >
-                        <div className="absolute top-5 right-5">
+                        <div className="absolute top-0 right-0 h-header w-header flex items-center justify-center">
                             <CloseButton
                                 onClick={() => setOpenSidebar(false)}
                             />
                         </div>
                     </div>
                     <div
+                        ref={drawRef}
                         className={clsx(
+                            "flex items-stretch flex-col lg:flex-row",
                             {
-                                "fixed top-0 left-0 z-30 w-72 h-full transition-all duration-300 transform -translate-x-full bg-sidebar text-white lg:text-black lg:bg-white shadow-lg py-8 lg:py-0 overflow-y-auto opacity-0":
+                                "fixed top-0 left-0 z-30 w-72 h-full transition-all duration-300 transform -translate-x-full bg-sidebar text-white lg:text-black lg:bg-white shadow-lg lg:py-0 overflow-y-auto opacity-0 overscroll-contain":
                                     !responsive.lg,
                             },
                             { "!translate-x-0 opacity-100": openSidebar },
                             { "lg:text-white": isHomePage && !stickyHeader }
                         )}
                     >
+                        <Link
+                            href={"/"}
+                            className="w-40 h-header lg:hidden px-5 flex items-center"
+                        >
+                            <img
+                                alt={"logo-white"}
+                                src={"./images/18-design-cut-white.png"}
+                            />
+                        </Link>
                         <Menu menu={menu} />
                     </div>
                 </div>

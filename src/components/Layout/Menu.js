@@ -83,7 +83,7 @@ const MenuItems = ({ items, hasHome, hasSearch, ...props }) => {
 
     return Array.isArray(items) ? (
         <ul
-            className="h-full flex lg:flex-wrap items-stretch flex-col lg:flex-row divide-y lg:divide-y-0 uppercase lg:font-semibold"
+            className="flex lg:flex-wrap items-stretch flex-col lg:flex-row divide-y lg:divide-y-0 uppercase lg:font-semibold"
             {...props}
         >
             {hasHome ? (
@@ -133,7 +133,7 @@ const MenuItems = ({ items, hasHome, hasSearch, ...props }) => {
                         href={itm?.url || "/#"}
                         target={itm?.target || null}
                         className={clsx(
-                            "grow h-full flex items-center lg:hover:text-hover px-5 lg:px-0 py-3 lg:py-2",
+                            "transition-colors grow h-full flex items-center lg:hover:text-hover px-5 lg:px-0 py-3 lg:py-2",
                             {
                                 "lg:!text-hover":
                                     router.pathname === itm?.url ||

@@ -17,7 +17,7 @@ export default function App({ Component, pageProps, router }) {
         <StoreProvider>
             <DefaultSeo {...SEO} />
             <ThemeProvider theme={defaultTheme}>
-                {getLayout(<Component {...pageProps} />)}
+                {getLayout(<Component {...pageProps} />, pageProps)}
             </ThemeProvider>
         </StoreProvider>
     );
