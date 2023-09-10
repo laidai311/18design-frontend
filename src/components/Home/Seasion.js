@@ -187,6 +187,7 @@ const Discount = styled.div`
     background-image: url("http://phattrienweb.tapato.org/files_upload/frame_06_delay-0.03s_cleanup.jpg");
     background-repeat: no-repeat !important;
     background-size: cover !important;
+    background-position: 50%;
 `;
 const DiscountInfo = styled.div`
     text-align: center;

@@ -107,7 +107,7 @@ export default function Header({ isHomePage, menu = fakeMenu }) {
                 </div>
                 <div
                     className={clsx(
-                        "transition-all opacity-0 backdrop-blur-md bg-white/20 fixed inset-0 z-50 pointer-events-none",
+                        "transition-all opacity-0 backdrop-blur-md  bg-slate-900/25 fixed inset-0 z-50 pointer-events-none",
                         { "!pointer-events-auto opacity-100": openSearch }
                     )}
                     onClick={() => setOpenSearch(false)}
@@ -120,14 +120,13 @@ export default function Header({ isHomePage, menu = fakeMenu }) {
                     className={clsx(
                         "transition-all py-2 px-3 overflow-hidden lg:p-0 lg:h-0 border-t lg:border-t-0",
                         {
-                            "fixed top-32 left-1/2 -translate-x-1/2 z-50 !h-auto transition-none w-full max-w-screen-md":
+                            "fixed top-32 left-1/2 -translate-x-1/2 z-50 !h-auto transition-none w-full max-w-screen-sm":
                                 openSearch,
                         }
                     )}
                 >
                     <div className="lg:px-5 lg:py-3 bg-white rounded-lg divide-y w-full">
                         <SearchForm className="py-1" />
-                        <div className="h-32 hidden lg:block"></div>
                     </div>
                 </div>
             </div>

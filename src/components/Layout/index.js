@@ -2,11 +2,6 @@ import Header from "./Header";
 import Footer from "./Footer";
 import FloatButton from "./FloatButton";
 import { useEffect } from "react";
-import {
-    Modal as Modal2,
-    ModalContent,
-    ModalOverlay,
-} from "../Styled/Layout/ContactForm";
 import ContactForm from "../ContactForm";
 import { css, styled } from "styled-components";
 import { media } from "../theme";
@@ -14,7 +9,7 @@ import { IconXmark } from "../Icons";
 import { useStore } from "@/stores";
 import Modal from "../Modal";
 
-export default function DefaultLayout({ children, menu }) {
+export default function DefaultLayout({ children, property }) {
     const { openContactForm, setOpenContactForm, isHomePage } = useStore();
 
     useEffect(() => {
@@ -40,7 +35,7 @@ export default function DefaultLayout({ children, menu }) {
 
     return (
         <>
-            <Header isHomePage={isHomePage} menu={menu} />
+            <Header isHomePage={isHomePage} menu={property?.menu} />
             <Main $transparent={isHomePage}>{children}</Main>
             <Footer onContactClick={() => setOpenContactForm(true)} />
             <FloatButton onContactClick={() => setOpenContactForm(true)} />

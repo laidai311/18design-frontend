@@ -26,7 +26,7 @@ function SearchForm({ ...props }) {
                 />
                 <button
                     type="submit"
-                    className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-gray-600"
+                    className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-gray-400"
                 >
                     <IconSearch width={18} height={18} />
                 </button>
