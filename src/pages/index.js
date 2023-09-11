@@ -1,5 +1,5 @@
 import DefaultLayout from "@/components/Layout";
-import { Quote, Seasion1, Seasion2, TypicalProject } from "@/components/Home";
+import { Quote, Seasion2, TypicalProject } from "@/components/Home";
 import { Slider } from "@/components/Home/Slider";
 import { Pricing } from "@/components/Home/Pricing";
 import { Partner } from "@/components/Home/Partner";
@@ -16,6 +16,10 @@ export default function Page({
 }) {
     return (
         <>
+            {/* <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                /> */}
             <NextSeo
                 title={seo_body?.meta_title || site_name}
                 description={seo_body?.meta_description || ""}
@@ -32,9 +36,9 @@ export default function Page({
 }
 
 export async function getServerSideProps() {
-    try {
-        const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
+    const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
 
+    try {
         const res = await unfetch(NEXT_PUBLIC_API_URL + "/api/home?populate=*");
         const data = await res.json();
 

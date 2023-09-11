@@ -21,9 +21,9 @@ export default function Page({ site_name, message, seo_body, ...props }) {
 }
 
 export async function getServerSideProps() {
-    try {
-        const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
+    const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
 
+    try {
         const res = await unfetch(
             NEXT_PUBLIC_API_URL + "/api/about?populate=*"
         );

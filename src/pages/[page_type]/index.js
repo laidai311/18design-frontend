@@ -131,10 +131,10 @@ export default function Page({ posts, pagination, error }) {
 }
 
 export async function getServerSideProps(context) {
-    try {
-        const { NEXT_PUBLIC_API_URL } = process.env;
-        const { page_type } = context.params;
+    const { NEXT_PUBLIC_API_URL } = process.env;
+    const { page_type } = context.params;
 
+    try {
         const res = await unfetch(
             NEXT_PUBLIC_API_URL + "/api/posts?populate=*"
         );
