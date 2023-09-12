@@ -2,11 +2,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import { styled } from "styled-components";
 import { Img } from "../UI";
-import { fakeImages } from "./data";
+import { SLIDER_LIST } from "@/constant/slider-list";
 
-export function Slider({ images }) {
-    const { NEXT_PUBLIC_API_URL } = process.env;
-
+export function Slider({ slider_list, api_url }) {
     return (
         <StyledSwiper>
             <Swiper
@@ -22,19 +20,17 @@ export function Slider({ images }) {
                 modules={[Pagination, Navigation, Autoplay]}
                 className="mySwiper"
             >
-                {images
-                    ? images.data.map((itm, idx) => (
+                {slider_list?.data
+                    ? slider_list.data.map((itm, idx) => (
                           <SwiperSlide key={idx}>
                               <Img
                                   alt={itm?.attributes?.name || ""}
-                                  src={
-                                      NEXT_PUBLIC_API_URL + itm?.attributes?.url
-                                  }
+                                  src={api_url + itm?.attributes?.url}
                                   className={"select-none w-full h-full"}
                               />
                           </SwiperSlide>
                       ))
-                    : fakeImages.map((itm, idx) => (
+                    : SLIDER_LIST.map((itm, idx) => (
                           <SwiperSlide key={idx}>
                               <Img
                                   alt={itm.name}

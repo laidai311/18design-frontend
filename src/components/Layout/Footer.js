@@ -4,27 +4,54 @@ import { Container } from "../Styled/Common";
 import {
     FooterBottom,
     Wrapper,
-    Content,
-    Inner,
     Seasion,
     FooterBG,
     FooterBGOverlay,
     FooterDescription,
-    ContentItem,
     FooterLogo,
-    FooterAdviceButton,
-    FooterContactWrap,
 } from "../Styled/Layout/Footer";
 import { Img } from "../UI";
-import { FacebookProvider, EmbeddedPost } from "react-facebook";
+import {
+    ADDRESS,
+    COLOR_LOGO_URL,
+    COMPANY_NAME,
+    COPYRIGHT,
+    EMAIL,
+    FACEBOOK_PAGE_IFRAME,
+    FOOTER_BG,
+    FOOTER_DESCRIPTION,
+    PHONE,
+} from "@/constant/default";
 
-export default function Footer({ onContactClick }) {
+export default function Footer({
+    onContactClick,
+    property,
+    color_logo,
+    api_url,
+    footer_bg,
+}) {
+    const colorLogoUrl = color_logo?.data?.attributes?.url
+        ? api_url + color_logo?.data?.attributes?.url
+        : COLOR_LOGO_URL;
+    const colorLogoName = color_logo?.data?.attributes?.name || LOGO_NAME;
+    const footerBG = footer_bg?.data?.attributes?.url
+        ? api_url + footer_bg?.data?.attributes?.url
+        : FOOTER_BG;
+
     return (
         <Wrapper id="footer">
             <Seasion>
-                <FooterBG>
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        backgroundImage: `url(${footerBG})`,
+                        backgroundPosition: "50% 50%",
+                        backgroundRepeat: "no-repeat",
+                        backgroundSize: "cover",
+                    }}
+                >
                     <FooterBGOverlay />
-                </FooterBG>
+                </div>
                 <div className="relative pt-8">
                     <div className="container mx-auto max-w-7xl">
                         <div className="-mx-4 flex flex-wrap text-white">
@@ -32,17 +59,14 @@ export default function Footer({ onContactClick }) {
                                 <FooterLogo>
                                     <Link href={"/"}>
                                         <Img
-                                            alt={"logo"}
-                                            src={"./images/18-design-cut.png"}
+                                            alt={colorLogoName}
+                                            src={colorLogoUrl}
                                         />
                                     </Link>
                                 </FooterLogo>
                                 <FooterDescription>
-                                    &ldquo;18 DESIGN luôn nằm trong TOP 5 đơn vị
-                                    thiết kế & thi công nội thất hàng đầu tại
-                                    khu vực phía Bắc và miền Trung - Việt Nam,
-                                    được hàng trăm ngàn khách hàng tin tưởng sử
-                                    dụng dịch vụ&rdquo;
+                                    {property?.footer_description ||
+                                        FOOTER_DESCRIPTION}
                                 </FooterDescription>
                                 <button
                                     onClick={onContactClick || null}
@@ -58,15 +82,13 @@ export default function Footer({ onContactClick }) {
                                 </h3>
 
                                 <h4 className="mb-4">
-                                    CÔNG TY CỔ PHẦN KIẾN TRÚC VÀ ĐẦU TƯ XÂY DỰNG
-                                    18 DESIGN
+                                    {property?.company_name || COMPANY_NAME}
                                 </h4>
                                 <div className="flex flex-col space-y-2">
                                     <div className="flex items-center space-x-2">
                                         <IconLocationDot />
                                         <span>
-                                            Số 1, Nguyễn Cảnh Dị, Đại Kim, Hoàng
-                                            Mai, TP. Hà Nội
+                                            {property?.address || ADDRESS}
                                         </span>
                                     </div>
                                     <div>
@@ -75,7 +97,9 @@ export default function Footer({ onContactClick }) {
                                             className="flex items-center space-x-2 hover:underline"
                                         >
                                             <IconPhone />
-                                            <span>083.8586.444</span>
+                                            <span>
+                                                {property?.phone || PHONE}
+                                            </span>
                                         </a>
                                     </div>
                                     <div>
@@ -84,7 +108,9 @@ export default function Footer({ onContactClick }) {
                                             className="flex items-center space-x-2 hover:underline"
                                         >
                                             <IconEnvelope />
-                                            <span>arch18designs@gmail.com</span>
+                                            <span>
+                                                {property?.email || EMAIL}
+                                            </span>
                                         </a>
                                     </div>
                                 </div>
@@ -93,23 +119,13 @@ export default function Footer({ onContactClick }) {
                                 <h3 className="font-semibold mb-3 uppercase">
                                     Fanpage Facebook
                                 </h3>
-                                <FacebookProvider appId="108497754023928">
-                                    <EmbeddedPost
-                                        href="http://www.facebook.com"
-                                        width="500"
-                                    />
-                                </FacebookProvider>
-                                {/* <iframe
-                                    src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F18designsAI&amp;tabs=timeline&amp;width=340&amp;height=340&amp;small_header=false&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=true&amp;appId=108497754023928"
-                                    width="100%"
-                                    height={315}
-                                    style={{
-                                        border: "none",
-                                        overflow: "hidden",
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html:
+                                            property?.facebook_page_iframe ||
+                                            FACEBOOK_PAGE_IFRAME,
                                     }}
-                                    allowFullScreen
-                                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                                /> */}
+                                />
                             </div>
                         </div>
                     </div>
@@ -117,7 +133,9 @@ export default function Footer({ onContactClick }) {
             </Seasion>
             <FooterBottom>
                 <Container>
-                    <p>Copyright 2023 © 18Design - 083.8586.444</p>
+                    <p>
+                        {property.copyright ? property?.copyright : COPYRIGHT}
+                    </p>
                 </Container>
             </FooterBottom>
         </Wrapper>

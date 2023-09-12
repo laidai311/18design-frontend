@@ -55,8 +55,6 @@ const ContentWrap = styled.div`
 `;
 
 export default function Page({ post = {}, error }) {
-    const { title = "", content = "" } = post;
-
     return (
         <>
             <Head>
@@ -77,11 +75,11 @@ export default function Page({ post = {}, error }) {
                         <MainContent>
                             <ContentContainer>
                                 <ContentWrap>
-                                    <h1 className="">{title}</h1>
+                                    <h1 className="">{post.title}</h1>
 
                                     <div
                                         dangerouslySetInnerHTML={{
-                                            __html: content,
+                                            __html: post.content,
                                         }}
                                     />
                                 </ContentWrap>

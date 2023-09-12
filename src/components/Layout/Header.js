@@ -2,14 +2,21 @@
 import { IconMenu } from "@/components/Icons";
 import SearchForm from "../SearchForm";
 import clsx from "clsx";
-import { menu as fakeMenu } from "./data";
 import Menu from "./Menu";
 import { useStore } from "@/stores";
 import Link from "next/link";
 import CloseButton from "../CloseButton";
 import { useSwipesHoriziontal } from "@/hooks";
+import { MENU } from "@/constant/menu";
+import { COLOR_LOGO_URL, LOGO_NAME, WHITE_LOGO_URL } from "@/constant/default";
 
-export default function Header({ isHomePage, menu = fakeMenu }) {
+export default function Header({
+    isHomePage,
+    property,
+    white_logo,
+    color_logo,
+    api_url,
+}) {
     const {
         openSidebar,
         setOpenSidebar,
@@ -24,6 +31,15 @@ export default function Header({ isHomePage, menu = fakeMenu }) {
             setOpenSidebar(false);
         },
     });
+
+    const colorLogoUrl = color_logo?.data?.attributes?.url
+        ? api_url + color_logo?.data?.attributes?.url
+        : COLOR_LOGO_URL;
+    const whiteLogoUrl = white_logo?.data?.attributes?.url
+        ? api_url + white_logo?.data?.attributes?.url
+        : WHITE_LOGO_URL;
+    const colorLogoName = color_logo?.data?.attributes?.name || LOGO_NAME;
+    const whiteLogoName = white_logo?.data?.attributes?.name || LOGO_NAME;
 
     return (
         <header id="header">
@@ -49,17 +65,15 @@ export default function Header({ isHomePage, menu = fakeMenu }) {
                     <div className="shrink-0 mr-3 flex items-center">
                         <Link href={"/"} className="w-40">
                             <img
-                                alt={"logo-white"}
-                                src={"./images/18-design-cut.png"}
+                                alt={colorLogoName}
+                                src={colorLogoUrl}
                                 className={clsx({ "lg:hidden": isHomePage })}
                             />
                             <img
-                                alt={"logo"}
-                                src={
-                                    stickyHeader
-                                        ? "./images/18-design-cut.png"
-                                        : "./images/18-design-cut-white.png"
+                                alt={
+                                    stickyHeader ? colorLogoName : whiteLogoName
                                 }
+                                src={stickyHeader ? colorLogoUrl : whiteLogoUrl}
                                 className={
                                     isHomePage ? "hidden lg:block" : "hidden"
                                 }
@@ -74,13 +88,7 @@ export default function Header({ isHomePage, menu = fakeMenu }) {
                                 "pointer-events-auto opacity-100": openSidebar,
                             }
                         )}
-                    >
-                        <div className="absolute top-0 right-0 h-header w-header flex items-center justify-center">
-                            <CloseButton
-                                onClick={() => setOpenSidebar(false)}
-                            />
-                        </div>
-                    </div>
+                    />
                     <div
                         ref={drawRef}
                         className={clsx(
@@ -102,7 +110,12 @@ export default function Header({ isHomePage, menu = fakeMenu }) {
                                 src={"./images/18-design-cut-white.png"}
                             />
                         </Link>
-                        <Menu menu={menu} />
+                        <div className="absolute top-0 right-2 h-header flex items-center justify-center lg:hidden">
+                            <CloseButton
+                                onClick={() => setOpenSidebar(false)}
+                            />
+                        </div>
+                        <Menu menu={property?.menu || MENU} />
                     </div>
                 </div>
                 <div

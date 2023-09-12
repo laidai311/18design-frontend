@@ -1,4 +1,4 @@
-export const menu = [
+export const MENU = [
     {
         title: "Về chúng tôi",
         url: "/gioi-thieu",

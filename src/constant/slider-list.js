@@ -1,4 +1,4 @@
-export const fakeImages = [
+export const SLIDER_LIST = [
     {
         url: "./images/slider-1.jpg",
         name: "pic-1",

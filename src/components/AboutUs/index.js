@@ -7,7 +7,7 @@ const About = styled.div`
     line-height: 1.6;
     font-size: 1rem;
 
-    h2 {
+    /* h2 {
         font-size: 28px;
         text-transform: uppercase;
         margin-bottom: 20px;
@@ -48,7 +48,7 @@ const About = styled.div`
         &:hover {
             text-decoration: underline;
         }
-    }
+    } */
 `;
 
 export function AboutUs({ title, content }) {
@@ -56,7 +56,10 @@ export function AboutUs({ title, content }) {
         <About>
             <Container>
                 <h2>{title}</h2>
-                <div dangerouslySetInnerHTML={{ __html: content }} />
+                <div
+                    className="ck-content"
+                    dangerouslySetInnerHTML={{ __html: content }}
+                />
             </Container>
         </About>
     );

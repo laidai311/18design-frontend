@@ -3,6 +3,7 @@ import { AboutUs } from "@/components/AboutUs";
 import Component404 from "@/components/404";
 import unfetch from "isomorphic-unfetch";
 import { NextSeo } from "next-seo";
+import { updateImgSrc } from "@/utils";
 
 export default function Page({ site_name, message, seo_body, ...props }) {
     return (
@@ -30,6 +31,8 @@ export async function getServerSideProps() {
         const data = await res.json();
 
         const attributes = data?.data?.attributes || {};
+
+        attributes.content = updateImgSrc(attributes?.content);
 
         return {
             props: {

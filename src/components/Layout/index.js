@@ -9,7 +9,7 @@ import { IconXmark } from "../Icons";
 import { useStore } from "@/stores";
 import Modal from "../Modal";
 
-export default function DefaultLayout({ children, property }) {
+export default function DefaultLayout({ children, ...props }) {
     const { openContactForm, setOpenContactForm, isHomePage } = useStore();
 
     useEffect(() => {
@@ -35,9 +35,12 @@ export default function DefaultLayout({ children, property }) {
 
     return (
         <>
-            <Header isHomePage={isHomePage} menu={property?.menu} />
+            <Header isHomePage={isHomePage} {...props} />
             <Main $transparent={isHomePage}>{children}</Main>
-            <Footer onContactClick={() => setOpenContactForm(true)} />
+            <Footer
+                onContactClick={() => setOpenContactForm(true)}
+                {...props}
+            />
             <FloatButton onContactClick={() => setOpenContactForm(true)} />
             <Modal
                 open={openContactForm}

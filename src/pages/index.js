@@ -2,35 +2,32 @@ import DefaultLayout from "@/components/Layout";
 import { Quote, Seasion2, TypicalProject } from "@/components/Home";
 import { Slider } from "@/components/Home/Slider";
 import { Pricing } from "@/components/Home/Pricing";
-import { Partner } from "@/components/Home/Partner";
+import { OutPartner } from "@/components/Home/OutPartner";
 import Whychoose from "@/components/Home/Whychoose";
 import { NextSeo } from "next-seo";
 import unfetch from "isomorphic-unfetch";
 
-export default function Page({
-    site_name,
-    message,
-    seo_body,
-    image_slider,
-    ...props
-}) {
+export default function Page({ site_name, message, seo_body, ...props }) {
     return (
         <>
-            {/* <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                /> */}
             <NextSeo
                 title={seo_body?.meta_title || site_name}
                 description={seo_body?.meta_description || ""}
+                additionalMetaTags={[
+                    {
+                        name: "viewport",
+                        content:
+                            "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no",
+                    },
+                ]}
             />
-            <Slider images={image_slider} />
+            <Slider {...props} />
             <Quote />
             <Seasion2 />
             <TypicalProject />
             <Pricing />
             <Whychoose />
-            <Partner />
+            <OutPartner {...props} />
         </>
     );
 }
@@ -50,6 +47,7 @@ export async function getServerSideProps() {
                 meta: data?.meta || {},
                 message: data?.error?.message || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
             },
         };
     } catch (error) {
@@ -57,6 +55,7 @@ export async function getServerSideProps() {
             props: {
                 message: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
             },
         };
     }
