@@ -1,12 +1,18 @@
 import DefaultLayout from "@/components/Layout";
-import { Quote, Seasion2, TypicalProject } from "@/components/Home";
+import { Quote, About, TypicalProject } from "@/components/Home";
 import { Slider } from "@/components/Home/Slider";
-import { Pricing } from "@/components/Home/Pricing";
+import { Contact } from "@/components/Home/Contact";
 import { OutPartner } from "@/components/Home/OutPartner";
 import Whychoose from "@/components/Home/Whychoose";
 import { NextSeo } from "next-seo";
 import unfetch from "isomorphic-unfetch";
-import { get, getArrayStrapi } from "@/utils";
+import { get, getArrayStrapi, getImageStrapi } from "@/utils";
+import {
+    ABOUT_BACKGROUND_LINK,
+    CONTACT_BACKGROUND_LINK,
+    CONTACT_BACKGROUND_NAME,
+} from "@/constant/default";
+import { ABOUT_LIST } from "@/constant/about-list";
 
 export default function Page({ site_name, message, seo_body, ...props }) {
     return (
@@ -24,9 +30,9 @@ export default function Page({ site_name, message, seo_body, ...props }) {
             />
             <Slider {...props} />
             <Quote />
-            <Seasion2 />
+            <About {...props} />
             <TypicalProject />
-            <Pricing />
+            <Contact {...props} />
             <Whychoose {...props} />
             <OutPartner {...props} />
         </>
@@ -56,6 +62,36 @@ export async function getServerSideProps() {
                           get(why_choose_icons, { name: item?.icon_name })?.url,
                   }))
                 : null;
+
+        attributes.contact_background_link = getImageStrapi(
+            attributes?.contact_background,
+            "url",
+            CONTACT_BACKGROUND_LINK
+        );
+        attributes.contact_background_name = getImageStrapi(
+            attributes?.contact_background,
+            "name",
+            CONTACT_BACKGROUND_NAME
+        );
+
+        attributes.about_background_link = getImageStrapi(
+            attributes?.about_background,
+            "url",
+            ABOUT_BACKGROUND_LINK
+        );
+
+        const about_icons = getArrayStrapi(attributes?.about_icons?.data);
+
+        attributes.about_list =
+            "why_choose_list" in attributes &&
+            Array.isArray(attributes.about_list)
+                ? attributes.about_list.map((item) => ({
+                      ...item,
+                      icon_link:
+                          NEXT_PUBLIC_API_URL +
+                          get(about_icons, { name: item?.icon_name })?.url,
+                  }))
+                : ABOUT_LIST;
 
         return {
             props: {

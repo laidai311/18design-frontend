@@ -1,4 +1,4 @@
 export * from "./Slider";
-export * from "./Seasion";
+export * from "./About";
 export * from "./TypicalProjects";
 export * from "./Quote";

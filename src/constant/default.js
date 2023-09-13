@@ -13,3 +13,10 @@ export const FOOTER_DESCRIPTION =
     "“18 DESIGN luôn nằm trong TOP 5 đơn vị thiết kế & thi công nội thất hàng đầu tại khu vực phía Bắc và miền Trung - Việt Nam, được hàng trăm ngàn khách hàng tin tưởng sử dụng dịch vụ”";
 export const FOOTER_BG = "./images/footer-bg.png";
 export const WHY_CHOOSE_BG = "./images/seasion-bg-1.jpg";
+export const CONTACT_BACKGROUND_LINK = "./images/seasion-bg-2.jpg";
+export const CONTACT_BACKGROUND_NAME = "sesion-bg-2";
+export const ABOUT_TITLE =
+    "18 design - công ty cổ phần kiến trúc và đầu tư xây dựng 18 design";
+export const ABOUT_DESCRIPTION =
+    'Với slogan "KIẾN TRÚC KHÁC BIỆT - KHÔNG GIAN ĐẶC BIỆT", chúng tôi đề cao sáng tạo, đổi mới và cung cấp ý tưởng thiết kế ra những không gian sống ý nghĩa, mang dấu ấn cá nhân, xứng tầm với phong cách, tầm nhìn của mọi gia chủ bằng tâm huyết, bằng kinh nghiệm, sự nhiệt tình và sáng tạo của đổi ngũ 18 design';
+export const ABOUT_BACKGROUND_LINK = "./images/seasion-bg-2.jpg";

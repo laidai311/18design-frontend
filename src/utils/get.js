@@ -14,10 +14,10 @@ export function get(collection, path, defaultValue) {
     return result === undefined ? defaultValue : result;
 }
 
-export function getArrayStrapi(data, defaultValue) {
+export function getArrayStrapi(arr, defaultValue) {
     let result;
-    if (Array.isArray(data)) {
-        result = data.map((item) => {
+    if (Array.isArray(arr)) {
+        result = arr.map((item) => {
             if ("attributes" in item && typeof item?.attributes === "object") {
                 return {
                     id: item?.id,
@@ -26,5 +26,23 @@ export function getArrayStrapi(data, defaultValue) {
             }
         });
     }
+    return result === undefined ? defaultValue : result;
+}
+
+export function getImageStrapi(value, path, defaultValue) {
+    let result =
+        typeof path === "string"
+            ? value?.data?.attributes?.[path] || undefined
+            : undefined;
+
+    switch (path) {
+        case "url":
+            result =
+                result === undefined
+                    ? undefined
+                    : process.env?.NEXT_PUBLIC_API_URL + result;
+            break;
+    }
+
     return result === undefined ? defaultValue : result;
 }
