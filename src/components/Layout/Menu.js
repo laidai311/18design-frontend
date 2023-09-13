@@ -38,7 +38,7 @@ const SubMenuItem = ({
         >
             <div
                 className={clsx(
-                    "lg:h-full flex items-center justify-between lg:justify-start group",
+                    "lg:h-full flex items-center justify-between lg:justify-start group lg:-mr-2",
                     className || ""
                 )}
                 {...props}
@@ -83,7 +83,7 @@ const MenuItems = ({ items, hasHome, hasSearch, ...props }) => {
 
     return Array.isArray(items) ? (
         <ul
-            className="flex lg:flex-wrap items-stretch flex-col lg:flex-row divide-y lg:divide-y-0 uppercase lg:font-semibold"
+            className="flex lg:flex-wrap items-stretch flex-col lg:flex-row divide-y lg:divide-y-0 uppercase lg:font-medium"
             {...props}
         >
             {hasHome ? (

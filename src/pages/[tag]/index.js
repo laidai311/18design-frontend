@@ -131,29 +131,40 @@ export default function Page({ posts, pagination, error }) {
 }
 
 export async function getServerSideProps(context) {
-    const { NEXT_PUBLIC_API_URL } = process.env;
-    const { page_type } = context.params;
+    const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
+    const { tag } = context.params;
 
     try {
-        const res = await unfetch(
-            NEXT_PUBLIC_API_URL + "/api/posts?populate=*"
+        const [property] = await Promise.all(
+            ["/api/property?populate=*"].map(async (url) => {
+                const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+                return res.json();
+            })
         );
-        const data = await res.json();
+
+        const propertyAttr = property?.data?.attributes || {};
 
         return {
             props: {
-                posts: data.data ? data.data : null,
-                pagination: data.meta ? data.meta.pagination : null,
-                error: data.error ? data.error : null,
+                // ...aboutAttr,
+                property: propertyAttr,
+                // meta: aboutAttr?.meta || {},
+                // message: aboutAttr?.error?.message || "",
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
             },
         };
     } catch (error) {
         return {
             props: {
-                error: { message: error.message },
+                message: error.message,
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
             },
         };
     }
 }
 
-Page.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
+Page.getLayout = (page, pageProps) => (
+    <DefaultLayout {...pageProps}>{page}</DefaultLayout>
+);

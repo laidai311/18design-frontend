@@ -43,20 +43,27 @@ export async function getServerSideProps() {
     const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
 
     try {
-        const res = await unfetch(NEXT_PUBLIC_API_URL + "/api/home?populate=*");
-        const data = await res.json();
+        const [property, home] = await Promise.all(
+            ["/api/property?populate=*", "/api/home?populate=*"].map(
+                async (url) => {
+                    const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+                    return res.json();
+                }
+            )
+        );
 
-        const attributes = data?.data?.attributes || {};
+        const propertyAttr = property?.data?.attributes || {};
+        const homeAttr = home?.data?.attributes || {};
 
         const why_choose_icons = getArrayStrapi(
-            attributes?.why_choose_icons?.data,
+            homeAttr?.why_choose_icons?.data,
             []
         );
 
-        attributes.why_choose_list =
-            "why_choose_list" in attributes &&
-            Array.isArray(attributes.why_choose_list)
-                ? attributes.why_choose_list.map((item) => ({
+        homeAttr.why_choose_list =
+            "why_choose_list" in homeAttr &&
+            Array.isArray(homeAttr.why_choose_list)
+                ? homeAttr.why_choose_list.map((item) => ({
                       ...item,
                       icon_link:
                           NEXT_PUBLIC_API_URL +
@@ -64,29 +71,28 @@ export async function getServerSideProps() {
                   }))
                 : null;
 
-        attributes.contact_background_link = getImageStrapi(
-            attributes?.contact_background,
+        homeAttr.contact_background_link = getImageStrapi(
+            homeAttr?.contact_background,
             "url",
             CONTACT_BACKGROUND_LINK
         );
-        attributes.contact_background_name = getImageStrapi(
-            attributes?.contact_background,
+        homeAttr.contact_background_name = getImageStrapi(
+            homeAttr?.contact_background,
             "name",
             CONTACT_BACKGROUND_NAME
         );
 
-        attributes.about_background_link = getImageStrapi(
-            attributes?.about_background,
+        homeAttr.about_background_link = getImageStrapi(
+            homeAttr?.about_background,
             "url",
             ABOUT_BACKGROUND_LINK
         );
 
-        const about_icons = getArrayStrapi(attributes?.about_icons?.data, []);
+        const about_icons = getArrayStrapi(homeAttr?.about_icons?.data, []);
 
-        attributes.about_list =
-            "why_choose_list" in attributes &&
-            Array.isArray(attributes.about_list)
-                ? attributes.about_list.map((item) => ({
+        homeAttr.about_list =
+            "why_choose_list" in homeAttr && Array.isArray(homeAttr.about_list)
+                ? homeAttr.about_list.map((item) => ({
                       ...item,
                       icon_link:
                           NEXT_PUBLIC_API_URL +
@@ -94,9 +100,9 @@ export async function getServerSideProps() {
                   }))
                 : ABOUT_LIST;
 
-        if (Array.isArray(attributes?.post_tab)) {
-            attributes.post_group = await Promise.all(
-                attributes.post_tab.map(async (tab) => {
+        if (Array.isArray(homeAttr?.post_tab)) {
+            homeAttr.post_group = await Promise.all(
+                homeAttr.post_tab.map(async (tab) => {
                     const resp = await unfetch(
                         NEXT_PUBLIC_API_URL +
                             `/api/posts?populate=*&filters[tag][$eq]=${tab?.tag}`
@@ -106,17 +112,17 @@ export async function getServerSideProps() {
             );
         }
 
-        attributes.post_group = attributes.post_tab.map((item, index) => ({
+        homeAttr.post_group = homeAttr.post_tab.map((item, index) => ({
             ...item,
-            items:
-                getArrayStrapi(attributes.post_group?.[index]?.data, []) || [],
+            items: getArrayStrapi(homeAttr.post_group?.[index]?.data, []) || [],
         }));
 
         return {
             props: {
-                ...attributes,
-                meta: data?.meta || {},
-                message: data?.error?.message || "",
+                ...homeAttr,
+                property: propertyAttr,
+                meta: home?.meta || {},
+                message: home?.error?.message || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
             },

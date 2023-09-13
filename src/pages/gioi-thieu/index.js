@@ -25,21 +25,28 @@ export async function getServerSideProps() {
     const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
 
     try {
-        const res = await unfetch(
-            NEXT_PUBLIC_API_URL + "/api/about?populate=*"
+        const [property, about] = await Promise.all(
+            ["/api/property?populate=*", "/api/about?populate=*"].map(
+                async (url) => {
+                    const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+                    return res.json();
+                }
+            )
         );
-        const data = await res.json();
 
-        const attributes = data?.data?.attributes || {};
+        const propertyAttr = property?.data?.attributes || {};
+        const aboutAttr = about?.data?.attributes || {};
 
-        attributes.content = updateImgSrc(attributes?.content);
+        aboutAttr.content = updateImgSrc(aboutAttr?.content);
 
         return {
             props: {
-                ...attributes,
-                meta: data?.meta || {},
-                message: data?.error?.message || "",
+                ...aboutAttr,
+                property: propertyAttr,
+                meta: aboutAttr?.meta || {},
+                message: aboutAttr?.error?.message || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
             },
         };
     } catch (error) {
@@ -47,6 +54,7 @@ export async function getServerSideProps() {
             props: {
                 message: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
             },
         };
     }

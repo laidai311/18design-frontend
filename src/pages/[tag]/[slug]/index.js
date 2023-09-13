@@ -96,21 +96,40 @@ export default function Page({ post = {}, error }) {
 }
 
 export async function getServerSideProps(context) {
-    const { NEXT_PUBLIC_API_URL } = process.env;
-    const { slug } = context.query;
+    const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
+    const { slug } = context.params;
+console.log(context.params);
+    try {
+        const [property] = await Promise.all(
+            ["/api/property?populate=*"].map(async (url) => {
+                const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+                return res.json();
+            })
+        );
 
-    const res = await unfetch(NEXT_PUBLIC_API_URL + "/api/posts/" + slug);
-    const data = await res.json();
+        const propertyAttr = property?.data?.attributes || {};
 
-    const post = data.data ? data.data.attributes : null;
-    const error = data.error ? data.error : null;
-
-    return {
-        props: {
-            post,
-            error,
-        },
-    };
+        return {
+            props: {
+                // ...aboutAttr,
+                property: propertyAttr,
+                // meta: aboutAttr?.meta || {},
+                // message: aboutAttr?.error?.message || "",
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
+            },
+        };
+    } catch (error) {
+        return {
+            props: {
+                message: error.message,
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
+            },
+        };
+    }
 }
 
-Page.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
+Page.getLayout = (page, pageProps) => (
+    <DefaultLayout {...pageProps}>{page}</DefaultLayout>
+);
