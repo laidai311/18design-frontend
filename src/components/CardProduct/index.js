@@ -1,3 +1,5 @@
+import { formatCurrency } from "@/utils";
+import Link from "next/link";
 import { styled } from "styled-components";
 
 const CardProduct = styled.div`
@@ -48,28 +50,20 @@ export function CardProductItem() {
   return (
     <CardProduct>
       <div>
-        <a href="#">
+        <Link href="#">
           <img src="https://img.freepik.com/free-photo/chairs-prepared-group-therapy_23-2148856209.jpg?w=1480&t=st=1694603886~exp=1694604486~hmac=078a50c7f583e9afca21c5de04456d6849e39620946c9c27e2be8b7cce149934" />
-        </a>
+        </Link>
       </div>
       <CardDescription>
-        <a href="#">
+        <Link href="#">
           <h3>Bàn học</h3>
-
           <div className="group__price">
             <p className="price">{formatCurrency(price)}</p>
             <p className="strike-price">{formatCurrency(price)}</p>
           </div>
-        </a>
+        </Link>
         <a className="detail__product-info">Chi tiết</a>
       </CardDescription>
     </CardProduct>
   );
 }
-
-export const formatCurrency = (amount) => {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(amount);
-};
