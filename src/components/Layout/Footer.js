@@ -5,7 +5,6 @@ import {
     FooterBottom,
     Wrapper,
     Seasion,
-    FooterBG,
     FooterBGOverlay,
     FooterDescription,
     FooterLogo,
@@ -20,6 +19,7 @@ import {
     FACEBOOK_PAGE_IFRAME,
     FOOTER_BG,
     FOOTER_DESCRIPTION,
+    LOGO_NAME,
     PHONE,
 } from "@/constant/default";
 
@@ -28,14 +28,14 @@ export default function Footer({
     property,
     color_logo,
     api_url,
-    footer_bg,
+    footer_background,
 }) {
     const colorLogoUrl = color_logo?.data?.attributes?.url
         ? api_url + color_logo?.data?.attributes?.url
         : COLOR_LOGO_URL;
     const colorLogoName = color_logo?.data?.attributes?.name || LOGO_NAME;
-    const footerBG = footer_bg?.data?.attributes?.url
-        ? api_url + footer_bg?.data?.attributes?.url
+    const footerBG = footer_background?.data?.attributes?.url
+        ? api_url + footer_background?.data?.attributes?.url
         : FOOTER_BG;
 
     return (
@@ -133,9 +133,7 @@ export default function Footer({
             </Seasion>
             <FooterBottom>
                 <Container>
-                    <p>
-                        {property.copyright ? property?.copyright : COPYRIGHT}
-                    </p>
+                    <p>{property?.copyright || COPYRIGHT}</p>
                 </Container>
             </FooterBottom>
         </Wrapper>

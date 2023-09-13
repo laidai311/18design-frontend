@@ -6,6 +6,7 @@ import { OutPartner } from "@/components/Home/OutPartner";
 import Whychoose from "@/components/Home/Whychoose";
 import { NextSeo } from "next-seo";
 import unfetch from "isomorphic-unfetch";
+import { get, getArrayStrapi } from "@/utils";
 
 export default function Page({ site_name, message, seo_body, ...props }) {
     return (
@@ -26,7 +27,7 @@ export default function Page({ site_name, message, seo_body, ...props }) {
             <Seasion2 />
             <TypicalProject />
             <Pricing />
-            <Whychoose />
+            <Whychoose {...props} />
             <OutPartner {...props} />
         </>
     );
@@ -40,6 +41,20 @@ export async function getServerSideProps() {
         const data = await res.json();
 
         const attributes = data?.data?.attributes || {};
+
+        const why_choose_icons = getArrayStrapi(
+            attributes?.why_choose_icons?.data
+        );
+
+        attributes.why_choose_list =
+            "why_choose_list" in attributes
+                ? attributes.why_choose_list.map((item) => ({
+                      ...item,
+                      icon_link:
+                          NEXT_PUBLIC_API_URL +
+                          get(why_choose_icons, { name: item?.icon_name })?.url,
+                  }))
+                : null;
 
         return {
             props: {

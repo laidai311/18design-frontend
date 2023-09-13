@@ -12,3 +12,4 @@ export const COMPANY_NAME =
 export const FOOTER_DESCRIPTION =
     "“18 DESIGN luôn nằm trong TOP 5 đơn vị thiết kế & thi công nội thất hàng đầu tại khu vực phía Bắc và miền Trung - Việt Nam, được hàng trăm ngàn khách hàng tin tưởng sử dụng dịch vụ”";
 export const FOOTER_BG = "./images/footer-bg.png";
+export const WHY_CHOOSE_BG = "./images/seasion-bg-1.jpg";
