@@ -2,7 +2,7 @@ import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
 import { Banner, Contact, FollowUs, Social } from "@/components/Contact/Banner";
 
-export default function Home() {
+export default function ContactPage() {
     return (
         <>
             <Head>
@@ -24,4 +24,4 @@ export default function Home() {
     );
 }
 
-Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
+ContactPage.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
