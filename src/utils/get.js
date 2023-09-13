@@ -18,9 +18,9 @@ export function getArrayStrapi(data, defaultValue) {
     let result;
     if (Array.isArray(data)) {
         result = data.map((item) => {
-            if ("attributes" in item) {
+            if ("attributes" in item && typeof item?.attributes === "object") {
                 return {
-                    id: item.id,
+                    id: item?.id,
                     ...item.attributes,
                 };
             }

@@ -47,7 +47,8 @@ export async function getServerSideProps() {
         );
 
         attributes.why_choose_list =
-            "why_choose_list" in attributes
+            "why_choose_list" in attributes &&
+            Array.isArray(attributes.why_choose_list)
                 ? attributes.why_choose_list.map((item) => ({
                       ...item,
                       icon_link:
