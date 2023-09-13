@@ -3,13 +3,18 @@ import { WHY_CHOOSE_BG } from "@/constant/default";
 import { WHY_CHOOSE_LIST } from "@/constant/why-choose_list";
 
 export default function Whychoose({
-    why_choose_list = WHY_CHOOSE_LIST,
+    why_choose_list,
     why_choose_background,
     api_url,
 }) {
     const whyChooseBG = why_choose_background?.data?.attributes?.url
         ? api_url + why_choose_background?.data?.attributes?.url
         : WHY_CHOOSE_BG;
+
+    const whyChooseList =
+        Array.isArray(why_choose_list) && why_choose_list?.length
+            ? why_choose_list
+            : WHY_CHOOSE_LIST;
 
     return (
         <section
@@ -27,7 +32,7 @@ export default function Whychoose({
                     Tại sao chọn 18 Design
                 </h3>
                 <div className="relative -mx-4 flex flex-wrap pb-10">
-                    {why_choose_list.map((itm, idx) => (
+                    {whyChooseList.map((itm, idx) => (
                         <div
                             key={idx}
                             className="w-full p-4 md:w-1/2 lg:w-1/3 space-y-3"
