@@ -1,25 +1,57 @@
-import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
 import { AboutUs } from "@/components/AboutUs";
+import Component404 from "@/components/404";
+import unfetch from "isomorphic-unfetch";
+import { NextSeo } from "next-seo";
+import { updateImgSrc } from "@/utils";
 
-export default function Home() {
+export default function Page({ site_name, message, seo_body, ...props }) {
     return (
         <>
-            <Head>
-                <title>CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN</title>
-                <meta
-                    name="description"
-                    content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"
-                />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <AboutUs/>
+            <NextSeo
+                title={seo_body?.meta_title + " - " + site_name}
+                description={seo_body?.meta_description || ""}
+            />
+            {message ? (
+                <Component404 message={message} />
+            ) : (
+                <AboutUs {...props} />
+            )}
         </>
     );
 }
 
-Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
+export async function getServerSideProps() {
+    const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
+
+    try {
+        const res = await unfetch(
+            NEXT_PUBLIC_API_URL + "/api/about?populate=*"
+        );
+        const data = await res.json();
+
+        const attributes = data?.data?.attributes || {};
+
+        attributes.content = updateImgSrc(attributes?.content);
+
+        return {
+            props: {
+                ...attributes,
+                meta: data?.meta || {},
+                message: data?.error?.message || "",
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+            },
+        };
+    } catch (error) {
+        return {
+            props: {
+                message: error.message,
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+            },
+        };
+    }
+}
+
+Page.getLayout = (page, pageProps) => (
+    <DefaultLayout {...pageProps}>{page}</DefaultLayout>
+);

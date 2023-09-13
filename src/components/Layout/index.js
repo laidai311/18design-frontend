@@ -1,38 +1,20 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import FloatButton from "./FloatButton";
-import { useEffect, useState } from "react";
-import {
-    Modal,
-    ModalContent,
-    ModalOverlay,
-} from "../Styled/Layout/ContactForm";
-import ContactForm from "./ContactForm";
-import { useLockBodyScroll } from "@/hooks";
+import { useEffect } from "react";
+import ContactForm from "../ContactForm";
 import { css, styled } from "styled-components";
 import { media } from "../theme";
-import { useRouter } from "next/router";
+import { IconXmark } from "../Icons";
+import { useStore } from "@/stores";
+import Modal from "../Modal";
 
-const Main = styled.main`
-    min-height: 80vh;
-
-    ${media.lg(css`
-        padding-top: ${(p) => (p.$transparent ? 0 : p.theme.headerHeight)};
-    `)}
-    padding-top: ${(p) =>
-        p.$transparent ? 0 : `calc(${p.theme.headerHeight} + 63px)`};
-`;
-
-export default function DefaultLayout({ children }) {
-    const [open, setOpen] = useState(false);
-    const [isHomePage, setIsHomePage] = useState(true);
-    const router = useRouter();
-
-    useLockBodyScroll(open);
+export default function DefaultLayout({ children, ...props }) {
+    const { openContactForm, setOpenContactForm, isHomePage } = useStore();
 
     useEffect(() => {
         const sto = setTimeout(() => {
-            setOpen(true);
+            setOpenContactForm(true);
         }, 8000);
 
         localStorage.openpages = Date.now();
@@ -42,7 +24,7 @@ export default function DefaultLayout({ children }) {
                 localStorage.page_available = Date.now();
             }
             if (e.key == "page_available") {
-                setOpen(false);
+                setOpenContactForm(false);
                 if (sto) {
                     clearTimeout(sto);
                 }
@@ -51,22 +33,53 @@ export default function DefaultLayout({ children }) {
         window.addEventListener("storage", onLocalStorageEvent, false);
     }, []);
 
-    useEffect(() => {
-        setIsHomePage(["/"].includes(router.pathname));
-    }, [router.pathname]);
-
     return (
         <>
-            <Header isHomePage={isHomePage} />
+            <Header isHomePage={isHomePage} {...props} />
             <Main $transparent={isHomePage}>{children}</Main>
-            <FloatButton onContactClick={() => setOpen(true)} />
-            <Modal $open={open}>
-                <ModalOverlay $open={open} onClick={() => setOpen(false)} />
-                <ModalContent $open={open}>
-                    <ContactForm onClose={() => setOpen(false)} />
-                </ModalContent>
+            <Footer
+                onContactClick={() => setOpenContactForm(true)}
+                {...props}
+            />
+            <FloatButton
+                {...props}
+                onContactClick={() => setOpenContactForm(true)}
+            />
+            <Modal
+                open={openContactForm}
+                onClose={() => setOpenContactForm(false)}
+            >
+                <div className={"relative bg-white p-7 rounded-xl"}>
+                    <div className="absolute top-3 right-3">
+                        <button
+                            onClick={() => setOpenContactForm(false)}
+                            className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+                        >
+                            <IconXmark width={24} height={24} />
+                        </button>
+                    </div>
+                    <div className="w-full md:min-w-[450px] space-y-4 flex flex-col">
+                        <h3 className="font-semibold uppercase text-center text-lg">
+                            MIỄN PHÍ 100% <br /> PHÍ THIẾT KẾ NỘI THẤT
+                        </h3>
+                        <h4 className="uppercase text-center font-semibold">
+                            TRONG DUY NHẤT HÔM NAY
+                        </h4>
+                        <ContactForm
+                            onClose={() => setOpenContactForm(false)}
+                        />
+                    </div>
+                </div>
             </Modal>
-            <Footer onContactClick={() => setOpen(true)} />
         </>
     );
 }
+
+const Main = styled.main`
+    min-height: 80vh;
+
+    ${media.lg(css`
+        padding-top: ${(p) => (p.$transparent ? 0 : p.theme.headerHeight)};
+    `)}
+    padding-top: ${(p) => `calc(${p.theme.headerHeight} + 63px)`};
+`;

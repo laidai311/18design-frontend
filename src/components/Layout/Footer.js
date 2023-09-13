@@ -4,100 +4,136 @@ import { Container } from "../Styled/Common";
 import {
     FooterBottom,
     Wrapper,
-    Content,
-    Inner,
     Seasion,
-    FooterBG,
     FooterBGOverlay,
     FooterDescription,
-    ContentItem,
     FooterLogo,
-    FooterAdviceButton,
-    FooterContactWrap,
 } from "../Styled/Layout/Footer";
 import { Img } from "../UI";
+import {
+    ADDRESS,
+    COLOR_LOGO_URL,
+    COMPANY_NAME,
+    COPYRIGHT,
+    EMAIL,
+    FACEBOOK_PAGE_IFRAME,
+    FOOTER_BG,
+    FOOTER_DESCRIPTION,
+    LOGO_NAME,
+    PHONE,
+} from "@/constant/default";
 
-export default function Footer({ onContactClick }) {
+export default function Footer({
+    onContactClick,
+    property,
+    color_logo,
+    api_url,
+    footer_background,
+}) {
+    const colorLogoUrl = color_logo?.data?.attributes?.url
+        ? api_url + color_logo?.data?.attributes?.url
+        : COLOR_LOGO_URL;
+    const colorLogoName = color_logo?.data?.attributes?.name || LOGO_NAME;
+    const footerBG = footer_background?.data?.attributes?.url
+        ? api_url + footer_background?.data?.attributes?.url
+        : FOOTER_BG;
+
     return (
         <Wrapper id="footer">
             <Seasion>
-                <FooterBG>
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        backgroundImage: `url(${footerBG})`,
+                        backgroundPosition: "50% 50%",
+                        backgroundRepeat: "no-repeat",
+                        backgroundSize: "cover",
+                    }}
+                >
                     <FooterBGOverlay />
-                </FooterBG>
-                <Inner>
-                    <Container>
-                        <Content>
-                            <ContentItem $center>
+                </div>
+                <div className="relative pt-8">
+                    <div className="container mx-auto max-w-7xl">
+                        <div className="-mx-4 flex flex-wrap text-white">
+                            <div className="w-full p-7 md:w-1/2 lg:w-1/3 flex flex-col items-center">
                                 <FooterLogo>
                                     <Link href={"/"}>
                                         <Img
-                                            alt={"logo"}
-                                            data-src={
-                                                "./images/18-design-cut.png"
-                                            }
+                                            alt={colorLogoName}
+                                            src={colorLogoUrl}
                                         />
                                     </Link>
                                 </FooterLogo>
                                 <FooterDescription>
-                                    &ldquo;18 DESIGN luôn nằm trong TOP 5 đơn vị
-                                    thiết kế & thi công nội thất hàng đầu tại
-                                    khu vực phía Bắc và miền Trung - Việt Nam,
-                                    được hàng trăm ngàn khách hàng tin tưởng sử
-                                    dụng dịch vụ&rdquo;
+                                    {property?.footer_description ||
+                                        FOOTER_DESCRIPTION}
                                 </FooterDescription>
-                                <FooterAdviceButton
+                                <button
                                     onClick={onContactClick || null}
+                                    className="px-5 py-3 font-medium text-white hover:bg-primary/90 rounded-lg hover:shadow inline-flex space-x-2 items-center justify-center bg-primary transition-all active:scale-95"
                                 >
                                     <IconBook />
                                     <span>Nhận tư vấn thiết kế</span>
-                                </FooterAdviceButton>
-                            </ContentItem>
-                            <ContentItem>
-                                <h3>THÔNG TIN LIÊN HỆ</h3>
+                                </button>
+                            </div>
+                            <div className="w-full p-7 md:w-1/2 lg:w-1/3">
+                                <h3 className="font-semibold mb-3 uppercase">
+                                    Thông tin liên hệ
+                                </h3>
 
-                                <h4>
-                                    CÔNG TY CỔ PHẦN KIẾN TRÚC VÀ ĐẦU TƯ XÂY DỰNG
-                                    18 DESIGN
+                                <h4 className="mb-4">
+                                    {property?.company_name || COMPANY_NAME}
                                 </h4>
-                                <FooterContactWrap>
-                                    <div>
+                                <div className="flex flex-col space-y-2">
+                                    <div className="flex items-center space-x-2">
                                         <IconLocationDot />
                                         <span>
-                                            Số 1, Nguyễn Cảnh Dị, Đại Kim, Hoàng
-                                            Mai, TP. Hà Nội
+                                            {property?.address || ADDRESS}
                                         </span>
                                     </div>
-                                    <a href="tel:0838586444">
-                                        <IconPhone />
-                                        <span>083.8586.444</span>
-                                    </a>
-                                    <a href="mailto:arch18designs@gmail.com">
-                                        <IconEnvelope />
-                                        <span>arch18designs@gmail.com</span>
-                                    </a>
-                                </FooterContactWrap>
-                            </ContentItem>
-                            <ContentItem>
-                                <h3>FANPAGE FACEBOOK</h3>
-                                <iframe
-                                    src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FDreamHomeNoiThat&amp;tabs=timeline&amp;width=340&amp;height=500&amp;small_header=false&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=true&amp;appId=450550055455892"
-                                    width="100%"
-                                    height={315}
-                                    style={{
-                                        border: "none",
-                                        overflow: "hidden",
+                                    <div>
+                                        <a
+                                            href="tel:0838586444"
+                                            className="flex items-center space-x-2 hover:underline"
+                                        >
+                                            <IconPhone />
+                                            <span>
+                                                {property?.phone || PHONE}
+                                            </span>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a
+                                            href="mailto:arch18designs@gmail.com"
+                                            className="flex items-center space-x-2 hover:underline"
+                                        >
+                                            <IconEnvelope />
+                                            <span>
+                                                {property?.email || EMAIL}
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="w-full p-7 md:w-1/2 lg:w-1/3">
+                                <h3 className="font-semibold mb-3 uppercase">
+                                    Fanpage Facebook
+                                </h3>
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html:
+                                            property?.facebook_page_iframe ||
+                                            FACEBOOK_PAGE_IFRAME,
                                     }}
-                                    allowFullScreen
-                                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                                 />
-                            </ContentItem>
-                        </Content>
-                    </Container>
-                </Inner>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </Seasion>
             <FooterBottom>
                 <Container>
-                    <p>Copyright 2023 © 18Design - 083.8586.444</p>
+                    <p>{property?.copyright || COPYRIGHT}</p>
                 </Container>
             </FooterBottom>
         </Wrapper>

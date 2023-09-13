@@ -1,13 +1,20 @@
 import styled from "styled-components";
 import "lazysizes";
 import { forwardRef } from "react";
+import clsx from "clsx";
 
-export const Img = styled.img.attrs(() => ({
-    className: "lazyload",
-    src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=",
-}))`
-    display: inline-block;
-`;
+export const Img = ({ src, className, ...props }) => {
+    return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+            alt="18 Design"
+            {...props}
+            data-src={src || ""}
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
+            className={clsx("lazyload", className || "")}
+        />
+    );
+};
 
 export const Form = forwardRef(({ onSubmit, ...props }, ref) => {
     const handleSubmit = (e) => {

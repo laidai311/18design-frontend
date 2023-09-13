@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { Container } from "../Styled/Common";
 import {
     NavTabList,
-    HomeTitle,
-    Wrapper,
     TabWrap,
     TabContent,
     NavTabItem,
@@ -11,79 +8,59 @@ import {
     ContentBottom,
 } from "../Styled/Home/TypicalProjects";
 import { IconChevronRight } from "../Icons";
-import { CardItem } from "../Common";
-import { CardList } from "../Styled/Card";
+import { Card } from "../Card";
 
-const data1 = {
-    image_link:
-        "https://noithatdreamhome.vn/wp-content/uploads/2023/05/z4389761188843_6f7f985f1f3ef8c0c72da06dee551b7e.jpg",
-    title: "Hoàn Thiện Nội Thất Chung Cư Season Avenue-115m2",
-    total_view: 20474,
-    location: "/thiet-ke-noi-that/hoan-thien-noi-that-chung-cu",
-};
-const data2 = {
-    image_link:
-        "https://noithatdreamhome.vn/wp-content/uploads/2023/08/z4643700286040_9467a37736687d9e7c40f3f29de894aa_compressed.jpg",
-    title: "Thiết Kế Kiến Trúc Biệt thự Sơn Tây-210m2",
-    total_view: 30746,
-    location: "/thiet-ke-noi-that/hoan-thien-noi-that-chung-cu",
-};
-export const TypicalProject = () => {
-    const [activedTab, setActivedTab] = useState(1);
+export const TypicalProject = ({ post_group, post_tab }) => {
+    const [activedTab, setActivedTab] = useState(post_tab?.[0]?.key);
 
     return (
-        <Wrapper>
-            <Container>
-                <HomeTitle>Công trình tiêu biểu</HomeTitle>
+        <div className="bg-white pt-10 relative">
+            <div className="container max-w-7xl mx-auto">
+                <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                    Công trình tiêu biểu
+                </h2>
                 <TabWrap>
                     <NavTabList>
-                        <NavTabItem
-                            $actived={activedTab === 1}
-                            onClick={() => setActivedTab(1)}
-                        >
-                            <span>Thiết kế nội thất</span>
-                        </NavTabItem>
-                        <NavTabItem
-                            $actived={activedTab === 2}
-                            onClick={() => setActivedTab(2)}
-                        >
-                            <span>Thiết kế kiến trúc</span>
-                        </NavTabItem>
+                        {Array.isArray(post_tab)
+                            ? post_tab.map((item, index) => (
+                                  <NavTabItem
+                                      key={index}
+                                      $actived={activedTab === item?.key}
+                                      onClick={() => setActivedTab(item?.key)}
+                                  >
+                                      <span>{item?.title || ""}</span>
+                                  </NavTabItem>
+                              ))
+                            : null}
                     </NavTabList>
-                    <TabContent $actived={activedTab === 1}>
-                        <CardList>
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                            <CardItem {...data1} />
-                        </CardList>
-                        <ContentBottom>
-                            <ViewMoreLink href={"/thiet-ke-noi-that"}>
-                                <span>Xem thêm</span>
-                                <IconChevronRight />
-                            </ViewMoreLink>
-                        </ContentBottom>
-                    </TabContent>
-                    <TabContent $actived={activedTab === 2}>
-                        <CardList>
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                            <CardItem {...data2} />
-                        </CardList>
-                        <ContentBottom>
-                            <ViewMoreLink href={"/thiet-ke-noi-that"}>
-                                <span>Xem thêm</span>
-                                <IconChevronRight />
-                            </ViewMoreLink>
-                        </ContentBottom>
-                    </TabContent>
+                    {Array.isArray(post_group)
+                        ? post_group.map((post) => (
+                              <TabContent
+                                  key={post?.key}
+                                  $actived={activedTab === post?.key}
+                              >
+                                  <div className="-m-4 flex flex-wrap">
+                                      {Array.isArray(post?.items)
+                                          ? post?.items.map((item) => (
+                                                <Card
+                                                    key={item?.id}
+                                                    {...item}
+                                                    className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                                />
+                                            ))
+                                          : null}
+                                  </div>
+                                  <ContentBottom>
+                                      <ViewMoreLink href={post?.url}>
+                                          <span>Xem thêm</span>
+                                          <IconChevronRight />
+                                      </ViewMoreLink>
+                                  </ContentBottom>
+                              </TabContent>
+                          ))
+                        : null}
                 </TabWrap>
-            </Container>
-        </Wrapper>
+            </div>
+        </div>
     );
 };

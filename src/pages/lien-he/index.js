@@ -2,11 +2,11 @@ import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
 import { Banner, Contact, FollowUs, Social } from "@/components/Contact/Banner";
 
-export default function Home() {
+export default function ContactPage() {
     return (
         <>
             <Head>
-                <title>CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN</title>
+                <title>18 Design</title>
                 <meta
                     name="description"
                     content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"
@@ -15,14 +15,13 @@ export default function Home() {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Banner/>
-            <Contact/>
-            <FollowUs/>
-            <Social/>
+            <Banner />
+            <Contact />
+            <FollowUs />
+            <Social />
         </>
     );
 }
 
-Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
+ContactPage.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
