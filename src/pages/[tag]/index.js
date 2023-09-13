@@ -1,129 +1,89 @@
-import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
-import { styled } from "styled-components";
-import { Container } from "@/components/Styled";
 import { Card } from "@/components/Card";
-import { CardList } from "@/components/Styled/Card";
 import unfetch from "isomorphic-unfetch";
+import { NextSeo } from "next-seo";
+import ReadOnlyEditor from "@/components/ReadOnlyEditor";
+import { getArrayStrapi } from "@/utils";
+import { usePagination } from "@/hooks";
+import clsx from "clsx";
+import { useRouter } from "next/router";
+import { LIMIT_LIST } from "@/constant/default";
 
-const Wrapper = styled.div`
-    position: relative;
-    padding: 30px 0;
-`;
+export default function Page({
+    posts,
+    seo_body,
+    title,
+    content,
+    site_name,
+    pagination,
+    currentPage,
+    tag,
+}) {
+    const router = useRouter();
 
-const PageTitle = styled.h1`
-    text-transform: uppercase;
-    margin: 0 0 20px;
-    border-bottom: 2px solid #bd8b1b;
-    line-height: 35px;
-    position: relative;
-    font-size: 20px;
-    text-align: center;
-`;
+    const paginationParam = usePagination({
+        total: Math.ceil(pagination?.total / pagination?.limit),
+        initialPage: 1,
+        page: (currentPage || 0) + 1,
+        siblings: 1,
+        boundaries: 1,
+        onChange: (value) => {
+            router.push({
+                pathname: window.location.pathname,
+                query: { page: value },
+            });
+        },
+    });
 
-const PageDescription = styled.div`
-    text-align: center;
-    padding: 0 12px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #333;
-
-    > * {
-        margin-bottom: 20px;
-    }
-`;
-
-const DescriptionList = styled.ul`
-    text-align: center;
-    padding: 0 12px;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #333;
-
-    > * {
-        margin-bottom: 20px;
-        list-style-type: disc;
-    }
-`;
-
-export default function Page({ posts, pagination, error }) {
     return (
         <>
-            <Head>
-                <title>Thiết kế nội thất | 18 Design</title>
-                <meta
-                    name="description"
-                    content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"
-                />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                />
-            </Head>
-            <section className="min-h-screen pt-8">
+            <NextSeo
+                title={(seo_body?.meta_title || title) + " - " + site_name}
+                description={seo_body?.meta_description || ""}
+            />
+            <section key={tag + currentPage} className="min-h-[80vh] pt-10">
                 <div className="container max-w-7xl mx-auto">
-                    <PageTitle>CATEGORY ARCHIVES: THIẾT KẾ NỘI THẤT</PageTitle>
-                    <PageDescription>
-                        <p>
-                            Thiết kế nội thất là một khâu vô cùng quan trọng và
-                            không thể tách rời trong ngành kiến trúc. Nội thất
-                            bao hàm không gian bên trong của ngôi nhà để phục vụ
-                            cho nhu cầu làm việc, sinh hoạt và giải trí của gia
-                            chủ. Điều này quyết định đến yếu tố thẩm mỹ cho ngôi
-                            nhà của chúng ta.
-                        </p>
-                        <p>
-                            Bộ sưu tập những mẫu thiết kế nội thất chung cư,
-                            biệt thự, nhà phố, khách sạn, showroom, nhà hàng,
-                            quán cafe,… theo nhiều phong cách như: phong cách
-                            hiện đại, phong cách Cổ Điển, Tân Cổ Điển, Bán Cổ
-                            Điển, phong cách Á Đông, phong cách Châu Âu, phong
-                            cách Scandinavian, phong cách Indochine…tại nhiều dự
-                            án và khắp các tỉnh thành trên cả nước do DreamHome
-                            thiết kế.
-                        </p>
-                        <p>
-                            Khi thiết kế nội thất tại Dreamhome, chúng tôi cam
-                            kết:
-                        </p>
-                        <DescriptionList>
-                            <li>
-                                Đảm bảo tiến độ 100% giao bản thiết kế đến tay
-                                khách hàng đúng hạn
-                            </li>
-                            <li>
-                                Đội ngũ kiến trúc sư giàu kinh nghiệm, chuyên
-                                sâu
-                            </li>
-                            <li>
-                                Từng thiết kế hàng nghìn công trình lớn nhỏ từ
-                                biệt thự, nhà phố đến chung cư
-                            </li>
-                            <li>
-                                Đáp ứng nhu cầu của khách hàng về các phòng cách
-                                như Hiện đại, Tân cổ điển, Indochine, Luxury,…
-                            </li>
-                            <li>
-                                Miễn phí 100% tiền thiết kế khi khách hàng
-                                chuyển sang giai đoạn thi công công trình
-                            </li>
-                            <li>
-                                Giá thành cạnh tranh nhất trên thị trường nội
-                                thất hiện nay
-                            </li>
-                        </DescriptionList>
-                    </PageDescription>
-                    {posts?.length ? (
-                        <div className="-m-4 flex flex-wrap">
-                            {posts.map((itm) => (
-                                <Card
-                                    {...itm.attributes}
-                                    key={itm.id}
-                                    className="w-full p-4 md:w-1/2 lg:w-1/3"
-                                />
-                            ))}
-                        </div>
-                    ) : null}
+                    <h1 className="border-b-2 border-primary uppercase mb-8 text-center text-2xl leading-9">
+                        {title || ""}
+                    </h1>
+                    <ReadOnlyEditor content={content || ""} />
+
+                    <div className="-m-4 flex flex-wrap">
+                        {Array.isArray(posts)
+                            ? posts.map((itm) => (
+                                  <Card
+                                      {...itm}
+                                      key={itm.id}
+                                      className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                  />
+                              ))
+                            : null}
+                    </div>
+                    <div className="flex items-center justify-center space-x-2 mt-10">
+                        {paginationParam?.range?.map((item, index) => {
+                            if (item === "dots") {
+                                return <div key={item + index}>...</div>;
+                            }
+                            return (
+                                <button
+                                    key={item}
+                                    onClick={() => {
+                                        paginationParam.setPage(item);
+                                    }}
+                                    className={clsx(
+                                        "border h-8 w-8 flex items-center justify-center rounded-full transition-all hover:bg-primary/70 hover:text-white",
+                                        {
+                                            "bg-primary/70 text-white":
+                                                paginationParam?.active ===
+                                                item,
+                                        }
+                                    )}
+                                >
+                                    {item}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             </section>
         </>
@@ -133,23 +93,41 @@ export default function Page({ posts, pagination, error }) {
 export async function getServerSideProps(context) {
     const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
     const { tag } = context.params;
+    const { page: currentPage = 1 } = context.query;
 
     try {
-        const [property] = await Promise.all(
-            ["/api/property?populate=*"].map(async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url);
-                return res.json();
-            })
+        const [property, tagPage] = await Promise.all(
+            ["/api/property?populate=*", `/api/pages/${tag}`].map(
+                async (url) => {
+                    const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+                    return res.json();
+                }
+            )
         );
 
         const propertyAttr = property?.data?.attributes || {};
+        const tagPageAttr = tagPage?.data?.attributes || {};
+
+        const res = await unfetch(
+            NEXT_PUBLIC_API_URL +
+                `/api/posts?populate=*&filters[tag][$eq]=${tag}&pagination[start]=${
+                    currentPage - 1 ? (+currentPage - 1) * LIMIT_LIST : 0
+                }&pagination[limit]=${LIMIT_LIST}`
+        );
+        const post = await res.json();
+
+        const postArr = getArrayStrapi(post?.data, []);
 
         return {
             props: {
-                // ...aboutAttr,
+                ...tagPageAttr,
                 property: propertyAttr,
-                // meta: aboutAttr?.meta || {},
-                // message: aboutAttr?.error?.message || "",
+                posts: postArr,
+                currentPage: currentPage - 1,
+                tag: tag,
+                pagination: post.meta?.pagination || {},
+                meta: tagPageAttr?.meta || {},
+                message: tagPageAttr?.error?.message || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
             },

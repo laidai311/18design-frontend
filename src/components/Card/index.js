@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Img } from "../UI";
 import { IconAnglesRight, IconEye } from "../Icons";
-import { useRouter } from "next/router";
 import { styled } from "styled-components";
+import { useStore } from "@/stores";
 
 export const Card = ({
     title,
@@ -11,31 +11,38 @@ export const Card = ({
     slug = "#",
     cover,
     className,
+    tag,
 }) => {
-    const router = useRouter();
-    const { NEXT_PUBLIC_API_URL } = process.env;
+    const { api_url } = useStore();
 
-    const image_link = cover
-        ? NEXT_PUBLIC_API_URL + cover.data.attributes.formats.medium.url
+    const image_link = cover?.data
+        ? api_url + cover?.data?.attributes?.formats?.medium?.url || ""
         : null;
 
-    const image_name = cover ? cover.data.attributes.formats.medium.name : null;
+    const image_name = cover?.data
+        ? cover?.data?.attributes?.formats?.medium?.name || ""
+        : "18 design";
 
-    const url =
-        router.pathname === "/"
-            ? router.pathname + slug
-            : router.pathname + "/" + slug;
+    const url = tag && slug ? `/${tag}/${slug}` : "";
 
     return (
         <CardStyled className={className || ""}>
             <div className="relative border rounded-md overflow-hidden transition-shadow duration-300 ease-out group hover:shadow-xl">
                 <Link href={url}>
                     <div className="relative cover-card overflow-hidden h-64 after:group-hover:animate-[circle_0.75s] select-none">
-                        <Img
-                            src={image_link}
-                            alt={image_name}
-                            className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
-                        />
+                        {image_link ? (
+                            <Img
+                                src={image_link}
+                                alt={image_name}
+                                className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
+                            />
+                        ) : (
+                            <Img
+                                src={"./images/Gold-18-design.jpg"}
+                                alt={"logo 18 design"}
+                                className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
+                            />
+                        )}
                     </div>
                 </Link>
                 <div className="p-3">

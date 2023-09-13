@@ -31,8 +31,17 @@ export default function App({ Component, pageProps, router }) {
     });
 
     return (
-        <StoreProvider>
-            <DefaultSeo {...SEO} />
+        <StoreProvider {...pageProps}>
+            <DefaultSeo
+                {...SEO}
+                additionalMetaTags={[
+                    {
+                        name: "viewport",
+                        content:
+                            "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no",
+                    },
+                ]}
+            />
             <ThemeProvider theme={defaultTheme}>
                 {getLayout(<Component {...pageProps} />, pageProps)}
             </ThemeProvider>

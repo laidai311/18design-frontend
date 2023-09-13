@@ -20,13 +20,6 @@ export default function Page({ site_name, message, seo_body, ...props }) {
             <NextSeo
                 title={seo_body?.meta_title || site_name}
                 description={seo_body?.meta_description || ""}
-                additionalMetaTags={[
-                    {
-                        name: "viewport",
-                        content:
-                            "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no",
-                    },
-                ]}
             />
             <Slider {...props} />
             <Quote />
