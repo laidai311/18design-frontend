@@ -41,7 +41,10 @@ export default function DefaultLayout({ children, ...props }) {
                 onContactClick={() => setOpenContactForm(true)}
                 {...props}
             />
-            <FloatButton onContactClick={() => setOpenContactForm(true)} />
+            <FloatButton
+                {...props}
+                onContactClick={() => setOpenContactForm(true)}
+            />
             <Modal
                 open={openContactForm}
                 onClose={() => setOpenContactForm(false)}

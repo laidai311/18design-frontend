@@ -14,7 +14,7 @@ export function About({
         <section
             className="relative py-12"
             style={{
-                backgroundImage: `url("${about_background_link}")`,
+                backgroundImage: `url("${about_background_link || ""}")`,
                 backgroundPosition: "50% 50%",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
@@ -35,39 +35,46 @@ export function About({
                         />
                     </div>
                     <div className="-mx-4 flex flex-wrap">
-                        {about_list.map((item, index) => (
-                            <div
-                                key={index}
-                                className={clsx("w-full p-4 md:w-1/3 group", {
-                                    "mt-12": index % 2 === 0,
-                                })}
-                            >
-                                <div
-                                    className={
-                                        "transition-shadow group-hover:shadow-2xl overflow-hidden rounded-md"
-                                    }
-                                >
-                                    <div className="bg-white text-black p-4 text-center min-h-[250px]">
-                                        <div className="flex justify-center mb-3">
-                                            <Img
-                                                alt="icon"
-                                                src={item?.icon_link || "#"}
-                                                className="transition-transform group-hover:rotate-[360deg] duration-1000"
-                                            />
-                                        </div>
-                                        <h3 className="font-semibold mb-2">
-                                            {item?.title || ""}
-                                        </h3>
-                                        <p className="text-sm">
-                                            {item?.description || ""}
-                                        </p>
-                                    </div>
-                                    <div className="bg-primary uppercase p-3 text-center">
-                                        {item?.action_text || ""}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        {Array.isArray(about_list)
+                            ? about_list.map((item, index) => (
+                                  <div
+                                      key={index}
+                                      className={clsx(
+                                          "w-full p-4 md:w-1/3 group",
+                                          {
+                                              "mt-12": index % 2 === 0,
+                                          }
+                                      )}
+                                  >
+                                      <div
+                                          className={
+                                              "transition-shadow group-hover:shadow-2xl overflow-hidden rounded-md"
+                                          }
+                                      >
+                                          <div className="bg-white text-black p-4 text-center min-h-[250px]">
+                                              <div className="flex justify-center mb-3">
+                                                  <Img
+                                                      alt="icon"
+                                                      src={
+                                                          item?.icon_link || "#"
+                                                      }
+                                                      className="transition-transform group-hover:rotate-[360deg] duration-1000"
+                                                  />
+                                              </div>
+                                              <h3 className="font-semibold mb-2">
+                                                  {item?.title || ""}
+                                              </h3>
+                                              <p className="text-sm">
+                                                  {item?.description || ""}
+                                              </p>
+                                          </div>
+                                          <div className="bg-primary uppercase p-3 text-center">
+                                              {item?.action_text || ""}
+                                          </div>
+                                      </div>
+                                  </div>
+                              ))
+                            : null}
                     </div>
                 </div>
             </div>

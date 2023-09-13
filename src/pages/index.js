@@ -31,7 +31,7 @@ export default function Page({ site_name, message, seo_body, ...props }) {
             <Slider {...props} />
             <Quote />
             <About {...props} />
-            <TypicalProject />
+            <TypicalProject {...props} />
             <Contact {...props} />
             <Whychoose {...props} />
             <OutPartner {...props} />
@@ -49,7 +49,8 @@ export async function getServerSideProps() {
         const attributes = data?.data?.attributes || {};
 
         const why_choose_icons = getArrayStrapi(
-            attributes?.why_choose_icons?.data
+            attributes?.why_choose_icons?.data,
+            []
         );
 
         attributes.why_choose_list =
@@ -80,7 +81,7 @@ export async function getServerSideProps() {
             ABOUT_BACKGROUND_LINK
         );
 
-        const about_icons = getArrayStrapi(attributes?.about_icons?.data);
+        const about_icons = getArrayStrapi(attributes?.about_icons?.data, []);
 
         attributes.about_list =
             "why_choose_list" in attributes &&
@@ -92,6 +93,24 @@ export async function getServerSideProps() {
                           get(about_icons, { name: item?.icon_name })?.url,
                   }))
                 : ABOUT_LIST;
+
+        if (Array.isArray(attributes?.post_tab)) {
+            attributes.post_group = await Promise.all(
+                attributes.post_tab.map(async (tab) => {
+                    const resp = await unfetch(
+                        NEXT_PUBLIC_API_URL +
+                            `/api/posts?populate=*&filters[tag][$eq]=${tab?.tag}`
+                    );
+                    return resp.json();
+                })
+            );
+        }
+
+        attributes.post_group = attributes.post_tab.map((item, index) => ({
+            ...item,
+            items:
+                getArrayStrapi(attributes.post_group?.[index]?.data, []) || [],
+        }));
 
         return {
             props: {
