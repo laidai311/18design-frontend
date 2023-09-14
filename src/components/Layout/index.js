@@ -60,10 +60,10 @@ export default function DefaultLayout({ children, ...props }) {
                     </div>
                     <div className="w-full md:min-w-[450px] space-y-4 flex flex-col">
                         <h3 className="font-semibold uppercase text-center text-lg">
-                            MIỄN PHÍ 100% <br /> PHÍ THIẾT KẾ NỘI THẤT
+                            Miễn phí 100% <br /> phí thiết kế nội thất
                         </h3>
                         <h4 className="uppercase text-center font-semibold">
-                            TRONG DUY NHẤT HÔM NAY
+                            Trong duy nhất hôm nay
                         </h4>
                         <ContactForm
                             onClose={() => setOpenContactForm(false)}

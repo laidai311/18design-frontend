@@ -1,21 +1,23 @@
-import clsx from "clsx";
 import {
     IconBox,
     IconChevronDown,
     IconEmail,
     IconHandMoney,
     IconHomeDesign,
+    IconLoading,
     IconPhone,
     IconUser,
-    IconXmark,
 } from "../Icons";
 import { useForm } from "react-hook-form";
+import { useStore } from "@/stores";
+import { useState } from "react";
+import clsx from "clsx";
 
-export default function ContactForm({
-    onClose,
-    closeButton = true,
-    className,
-}) {
+export default function ContactForm({ onClose, className }) {
+    const { api_url } = useStore();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
+
     const {
         register,
         handleSubmit,
@@ -23,13 +25,34 @@ export default function ContactForm({
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => console.log(data);
+    const onSubmit = async (value) => {
+        setIsLoading(true);
+        try {
+            // Default options are marked with *
+            const res = await fetch(api_url + "/api/registered-users", {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({ data: value, checked: false }), // body data type must match "Content-Type" header
+            });
+            const data = await res.json(); // parses JSON response into native JavaScript objects
+            onClose?.();
+        } catch (error) {
+            setError(error?.message || "Lỗi không gửi được dữ liệu");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <form
             style={{ width: "100%", height: "100%" }}
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col space-y-4"
+            className={clsx("flex flex-col space-y-4", className || "")}
         >
             <div className="flex">
                 <div className="flex items-center justify-center border border-gray-400 hover:border-gray-500 rounded-l-lg border-r-0 w-12">
@@ -121,12 +144,27 @@ export default function ContactForm({
                     className="grow pl-4 pr-2 py-2 border border-gray-400 rounded-r-lg focus:outline-none hover:border-gray-500 focus:shadow-outline h-11"
                 />
             </div>
-
+            {error ? (
+                <div className="text-white bg-red-500 rounded-lg p-2">
+                    {error}
+                </div>
+            ) : null}
             <button
                 type="submit"
-                className="bg-cta-button p-3 uppercase rounded-lg font-semibold text-white text-lg"
+                disabled={isLoading}
+                className="bg-cta-button h-14 uppercase rounded-lg font-semibold text-white text-lg flex justify-center items-center disabled:opacity-70 disabled:pointer-events-none relative"
             >
-                Dự tính chi phí
+                <div>Gửi thông tin liên hệ</div>
+                <div
+                    className={clsx(
+                        "opacity-0 transition-opacity absolute top-1/2 -translate-y-1/2 right-2",
+                        {
+                            "opacity-100": isLoading,
+                        }
+                    )}
+                >
+                    <IconLoading width={50} height={50} />
+                </div>
             </button>
         </form>
     );

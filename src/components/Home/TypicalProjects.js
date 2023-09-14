@@ -10,7 +10,7 @@ import {
 import { IconChevronRight } from "../Icons";
 import { Card } from "../Card";
 
-export const TypicalProject = ({ post_group, post_tab }) => {
+export const TypicalProject = ({ post_group, post_tab, property }) => {
     const [activedTab, setActivedTab] = useState(post_tab?.[0]?.key);
 
     return (
@@ -45,6 +45,7 @@ export const TypicalProject = ({ post_group, post_tab }) => {
                                                 <Card
                                                     key={item?.id}
                                                     {...item}
+                                                    property={property}
                                                     className="w-full p-4 md:w-1/2 lg:w-1/3"
                                                 />
                                             ))

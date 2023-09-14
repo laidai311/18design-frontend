@@ -20,3 +20,4 @@ export const ABOUT_TITLE =
 export const ABOUT_DESCRIPTION =
     'Với slogan "KIẾN TRÚC KHÁC BIỆT - KHÔNG GIAN ĐẶC BIỆT", chúng tôi đề cao sáng tạo, đổi mới và cung cấp ý tưởng thiết kế ra những không gian sống ý nghĩa, mang dấu ấn cá nhân, xứng tầm với phong cách, tầm nhìn của mọi gia chủ bằng tâm huyết, bằng kinh nghiệm, sự nhiệt tình và sáng tạo của đổi ngũ 18 design';
 export const ABOUT_BACKGROUND_LINK = "./images/seasion-bg-2.jpg";
+export const LIMIT_LIST = 12;

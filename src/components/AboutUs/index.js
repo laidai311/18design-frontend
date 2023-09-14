@@ -1,66 +1,15 @@
-import { styled } from "styled-components";
-import { Container } from "../Styled";
-import { Img } from "../UI";
-
-const About = styled.div`
-    padding-top: 50px;
-    line-height: 1.6;
-    font-size: 1rem;
-
-    /* h2 {
-        font-size: 28px;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-    }
-
-    h3 {
-        text-align: center;
-        font-size: 24px;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-    }
-    h4 {
-        font-size: 24px;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-    }
-    p {
-        margin-bottom: 20px;
-        font-weight: 300;
-    }
-
-    ul {
-        list-style: inside;
-        padding-left: 10px;
-
-        li {
-            font-weight: 300;
-            margin-bottom: 10px;
-        }
-    }
-
-    img {
-        margin-bottom: 20px;
-    }
-
-    a {
-        color: blue;
-        &:hover {
-            text-decoration: underline;
-        }
-    } */
-`;
-
 export function AboutUs({ title, content }) {
     return (
-        <About>
-            <Container>
-                <h2>{title}</h2>
+        <div className="py-12 leading-8 text-base">
+            <div className="container mx-auto max-w-7xl">
+                <h1 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                    {title || "Về chúng tôi"}
+                </h1>
                 <div
                     className="ck-content"
-                    dangerouslySetInnerHTML={{ __html: content }}
+                    dangerouslySetInnerHTML={{ __html: content || "" }}
                 />
-            </Container>
-        </About>
+            </div>
+        </div>
     );
 }

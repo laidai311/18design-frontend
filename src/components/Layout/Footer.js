@@ -26,14 +26,14 @@ import {
 export default function Footer({
     onContactClick,
     property,
-    color_logo,
     api_url,
     footer_background,
 }) {
-    const colorLogoUrl = color_logo?.data?.attributes?.url
-        ? api_url + color_logo?.data?.attributes?.url
+    const colorLogoUrl = property?.color_logo?.data?.attributes?.url
+        ? api_url + property?.color_logo?.data?.attributes?.url
         : COLOR_LOGO_URL;
-    const colorLogoName = color_logo?.data?.attributes?.name || LOGO_NAME;
+    const colorLogoName =
+        property?.color_logo?.data?.attributes?.name || LOGO_NAME;
     const footerBG = footer_background?.data?.attributes?.url
         ? api_url + footer_background?.data?.attributes?.url
         : FOOTER_BG;
