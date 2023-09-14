@@ -93,18 +93,17 @@ export async function getServerSideProps() {
                   }))
                 : ABOUT_LIST;
 
-        if (Array.isArray(homeAttr?.post_tab)) {
-            homeAttr.post_group = await Promise.all(
+        homeAttr.post_group = await Promise.all(
+            Array.isArray(homeAttr?.post_tab) &&
                 homeAttr.post_tab.map(async (tab) => {
                     const resp = await unfetch(
                         NEXT_PUBLIC_API_URL +
-                            `/api/posts?populate=*&filters[tag][$eq]=${tab?.tag}&pagination[start]=0&pagination[limit]=6`
+                            `/api/posts?populate=*&filters[tag][$eq]=${tab?.tag}&pagination[limit]=6`
                     );
                     return resp.json();
                 })
-            );
-        }
-
+        );
+        console.log(homeAttr.post_group);
         homeAttr.post_group = homeAttr.post_tab.map((item, index) => ({
             ...item,
             items: getArrayStrapi(homeAttr.post_group?.[index]?.data, []) || [],

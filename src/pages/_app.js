@@ -34,6 +34,7 @@ export default function App({ Component, pageProps, router }) {
         <StoreProvider {...pageProps}>
             <DefaultSeo
                 {...SEO}
+                dangerouslySetAllPagesToNoIndex
                 additionalMetaTags={[
                     {
                         name: "viewport",

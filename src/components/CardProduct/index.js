@@ -1,69 +1,108 @@
-import { formatCurrency } from "@/utils";
+import { formatCurrency, getArrayStrapi } from "@/utils";
 import Link from "next/link";
 import { styled } from "styled-components";
+import { Img } from "../UI";
+import { useStore } from "@/stores";
 
 const CardProduct = styled.div`
-  border-radius: 12px;
-  border: 0.5px solid #b9b9b9;
-  background: #fff;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    border: 0.5px solid #b9b9b9;
+    background: #fff;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
-  & img {
-    border-radius: 12px 12px 0px 0px;
-  }
+    & img {
+        border-radius: 12px 12px 0px 0px;
+    }
 `;
 const CardDescription = styled.div`
-  padding: 20px;
+    padding: 20px;
 
-  & h3 {
-    font-size: 17px;
-    font-weight: 700;
-    line-height: normal;
-    color: #616a7d;
-  }
+    & h3 {
+        font-size: 17px;
+        font-weight: 700;
+        line-height: normal;
+        color: #616a7d;
+    }
 
-  & .group__price {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 15px 0;
-    & .price {
-      font-size: 18px;
-      line-height: 28px;
-      font-weight: bold;
+    & .group__price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 15px 0;
+        & .price {
+            font-size: 18px;
+            line-height: 28px;
+            font-weight: bold;
+        }
+        & .strike-price {
+            letter-spacing: 0.4px;
+            text-decoration-line: line-through;
+            color: #d93535;
+            font-size: 14px;
+        }
     }
-    & .strike-price {
-      letter-spacing: 0.4px;
-      text-decoration-line: line-through;
-      color: #d93535;
-      font-size: 14px;
+    & .detail__product-info {
+        color: #0067c6;
+        text-transform: uppercase;
+        font-size: 14px;
     }
-  }
-  & .detail__product-info {
-    color: #0067c6;
-    text-transform: uppercase;
-    font-size: 14px;
-  }
 `;
-export function CardProductItem() {
-  const price = 1000000;
-  return (
-    <CardProduct>
-      <div>
-        <Link href="#">
-          <img src="https://img.freepik.com/free-photo/chairs-prepared-group-therapy_23-2148856209.jpg?w=1480&t=st=1694603886~exp=1694604486~hmac=078a50c7f583e9afca21c5de04456d6849e39620946c9c27e2be8b7cce149934" />
-        </Link>
-      </div>
-      <CardDescription>
-        <Link href="#">
-          <h3>Bàn học</h3>
-          <div className="group__price">
-            <p className="price">{formatCurrency(price)}</p>
-            <p className="strike-price">{formatCurrency(price)}</p>
-          </div>
-        </Link>
-        <a className="detail__product-info">Chi tiết</a>
-      </CardDescription>
-    </CardProduct>
-  );
+export function CardProductItem({
+    title,
+    slug,
+    new_price,
+    old_price,
+    images,
+    ...props
+}) {
+    const { api_url } = useStore();
+
+    const imagesArr = getArrayStrapi(images?.data, []);
+
+    const image_link = imagesArr?.[0]
+        ? api_url + imagesArr?.[0]?.url || ""
+        : null;
+
+    const image_name = imagesArr?.[0]
+        ? imagesArr?.[0]?.name || ""
+        : "18 design";
+
+    return (
+        <div className="p-4 w-full md:w-1/2 lg:w-1/4">
+            <div className="bg-white transition-all overflow-hidden rounded-lg shadow-md hover:shadow-xl group">
+                <div className="relative pt-[60%] overflow-hidden">
+                    <Link href={`/san-pham/${slug || ""}`}>
+                        <div className="absolute inset-0">
+                            <Img
+                                alt={image_name || ""}
+                                src={image_link || ""}
+                                className={
+                                    "w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
+                                }
+                            />
+                        </div>
+                    </Link>
+                </div>
+                <CardDescription>
+                    <Link href={`/san-pham/${slug || ""}`}>
+                        <h3>{title || ""}</h3>
+                        <div className="group__price">
+                            <p className="price">
+                                {formatCurrency(new_price || "")}
+                            </p>
+                            <p className="strike-price">
+                                {formatCurrency(old_price || "")}
+                            </p>
+                        </div>
+                    </Link>
+                    <Link
+                        href={`/san-pham/${slug || ""}`}
+                        className="hover:underline text-blue-500"
+                    >
+                        Chi tiết
+                    </Link>
+                </CardDescription>
+            </div>
+        </div>
+    );
 }

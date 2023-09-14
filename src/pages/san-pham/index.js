@@ -7,6 +7,9 @@ import { CardProductItem } from "@/components/CardProduct";
 import { styled } from "styled-components";
 import { Container } from "@/components/Styled";
 import unfetch from "isomorphic-unfetch";
+import { getArrayStrapi } from "@/utils";
+import { Img } from "@/components/UI";
+import { NextSeo } from "next-seo";
 
 const Card = styled.div`
     padding: 80px 0;
@@ -23,39 +26,62 @@ const CardList = styled.div`
     }
 `;
 
-export default function Page() {
+export default function Page({
+    seo_body,
+    title,
+    site_name,
+    cover_image,
+    api_url,
+    propducts,
+    category_images,
+    category_list,
+}) {
+    const image_link = cover_image?.data
+        ? api_url + cover_image?.data?.attributes?.url || ""
+        : null;
+
+    const image_name = cover_image?.data
+        ? cover_image?.data?.attributes?.name || ""
+        : "18 design";
+
     return (
         <>
-            <Head>
-                <title>18 Design</title>
-                <meta
-                    name="description"
-                    content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"
-                />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                />
-            </Head>
-            <img src="https://img.freepik.com/-photo/stylish-scandinavian-living-room-with-design-mint-sofa-furnitures-mock-up-poster-map-plants-eleg_1258-152155.jpg?w=1800&t=st=1694598264~exp=1694598864~hmac=a8ba1aef84538545f49d24057796937b6f87262f81c9b687e36c925d56b28b22" />
+            <NextSeo
+                title={(seo_body?.meta_title || title) + " - " + site_name}
+                description={seo_body?.meta_description || ""}
+            />
+            <div className="w-full relative pt-[56%]">
+                <div className="absolute inset-0">
+                    <Img
+                        alt={image_name || ""}
+                        src={image_link || ""}
+                        className={"w-full h-full object-cover"}
+                    />
+                </div>
+            </div>
             <Breadcrumb />
-            <CategorySection />
+            <CategorySection
+                category_images={category_images}
+                category_list={category_list}
+            />
             <Quote />
             <Card>
                 <Container>
                     <CategoryTitle>
-                        <h3>Sản phẩm nổi bật</h3>
+                        <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                            Sản phẩm nổi bật
+                        </h2>
                     </CategoryTitle>
-                    <CardList>
-                        <CardProductItem />
-                        <CardProductItem />
-                        <CardProductItem />
-                        <CardProductItem />
-                        <CardProductItem />
-                        <CardProductItem />
-                        <CardProductItem />
-                        <CardProductItem />
-                    </CardList>
+                    <div className="-mx-4 flex flex-wrap">
+                        {Array.isArray(propducts)
+                            ? propducts.map((item, index) => (
+                                  <CardProductItem
+                                      key={item?.id || index}
+                                      {...item}
+                                  />
+                              ))
+                            : null}
+                    </div>
                 </Container>
             </Card>
         </>
@@ -67,27 +93,31 @@ export async function getServerSideProps(context) {
     // const { tag, page: currentPage = 1 } = context.query;
 
     try {
-        const [property] = await Promise.all(
-            ["/api/property?populate=*", ,].map(async (url) => {
+        const [property, productPage, products] = await Promise.all(
+            [
+                "/api/property?populate=*",
+                "/api/product-page?populate=*",
+                "/api/products?populate=*",
+            ].map(async (url) => {
                 const res = await unfetch(NEXT_PUBLIC_API_URL + url);
                 return res.json();
             })
         );
 
         const propertyAttr = property?.data?.attributes || {};
-        // const tagPageAttr = tagPage?.data?.attributes || {};
-        // const postArr = getArrayStrapi(posts?.data, []);
+        const productPageAttr = productPage?.data?.attributes || {};
+        const productsArr = getArrayStrapi(products?.data, []);
 
         return {
             props: {
-                // ...tagPageAttr,
+                ...productPageAttr,
                 property: propertyAttr,
-                // posts: postArr,
+                propducts: productsArr,
                 // currentPage: currentPage - 1,
                 // tag: tag,
                 // pagination: posts.meta?.pagination || {},
-                // meta: tagPageAttr?.meta || {},
-                // message: tagPageAttr?.error?.message || "",
+                meta: productPageAttr?.meta || {},
+                message: productPageAttr?.error?.message || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
             },
