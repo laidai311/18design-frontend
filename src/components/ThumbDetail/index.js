@@ -11,6 +11,9 @@ const SlideWrapper = styled.div`
     margin-left: auto;
     margin-right: auto;
 
+    & .swiper-button-prev:after, & .swiper-button-next:after {
+      font-size:18px;
+    }
     & .swiper-slide {
       background-size: cover;
       background-position: center;
