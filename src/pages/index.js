@@ -98,7 +98,7 @@ export async function getServerSideProps() {
                 homeAttr.post_tab.map(async (tab) => {
                     const resp = await unfetch(
                         NEXT_PUBLIC_API_URL +
-                            `/api/posts?populate=*&filters[tag][$eq]=${tab?.tag}`
+                            `/api/posts?populate=*&filters[tag][$eq]=${tab?.tag}&pagination[start]=0&pagination[limit]=6`
                     );
                     return resp.json();
                 })

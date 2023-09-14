@@ -18,6 +18,7 @@ export default function Page({
     pagination,
     currentPage,
     tag,
+    property,
 }) {
     const router = useRouter();
 
@@ -53,6 +54,7 @@ export default function Page({
                             ? posts.map((itm) => (
                                   <Card
                                       {...itm}
+                                      property={property}
                                       key={itm.id}
                                       className="w-full p-4 md:w-1/2 lg:w-1/3"
                                   />
@@ -92,31 +94,25 @@ export default function Page({
 
 export async function getServerSideProps(context) {
     const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
-    const { tag } = context.params;
-    const { page: currentPage = 1 } = context.query;
+    const { tag, page: currentPage = 1 } = context.query;
 
     try {
-        const [property, tagPage] = await Promise.all(
-            ["/api/property?populate=*", `/api/pages/${tag}`].map(
-                async (url) => {
-                    const res = await unfetch(NEXT_PUBLIC_API_URL + url);
-                    return res.json();
-                }
-            )
+        const [property, tagPage, posts] = await Promise.all(
+            [
+                "/api/property?populate=*",
+                `/api/pages/${tag}`,
+                `/api/posts?populate=*&filters[tag][$eq]=${tag}&pagination[start]=${
+                    currentPage - 1 ? (+currentPage - 1) * LIMIT_LIST : 0
+                }&pagination[limit]=${LIMIT_LIST}`,
+            ].map(async (url) => {
+                const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+                return res.json();
+            })
         );
 
         const propertyAttr = property?.data?.attributes || {};
         const tagPageAttr = tagPage?.data?.attributes || {};
-
-        const res = await unfetch(
-            NEXT_PUBLIC_API_URL +
-                `/api/posts?populate=*&filters[tag][$eq]=${tag}&pagination[start]=${
-                    currentPage - 1 ? (+currentPage - 1) * LIMIT_LIST : 0
-                }&pagination[limit]=${LIMIT_LIST}`
-        );
-        const post = await res.json();
-
-        const postArr = getArrayStrapi(post?.data, []);
+        const postArr = getArrayStrapi(posts?.data, []);
 
         return {
             props: {
@@ -125,7 +121,7 @@ export async function getServerSideProps(context) {
                 posts: postArr,
                 currentPage: currentPage - 1,
                 tag: tag,
-                pagination: post.meta?.pagination || {},
+                pagination: posts.meta?.pagination || {},
                 meta: tagPageAttr?.meta || {},
                 message: tagPageAttr?.error?.message || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",

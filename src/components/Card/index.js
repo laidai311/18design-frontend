@@ -12,6 +12,7 @@ export const Card = ({
     cover,
     className,
     tag,
+    property,
 }) => {
     const { api_url } = useStore();
 
@@ -22,6 +23,12 @@ export const Card = ({
     const image_name = cover?.data
         ? cover?.data?.attributes?.formats?.medium?.name || ""
         : "18 design";
+
+    const default_image = property?.default_image?.data
+        ? api_url +
+              property?.default_image?.data?.attributes?.formats?.small?.url ||
+          "./images/Gold-18-design.jpg"
+        : "./images/Gold-18-design.jpg";
 
     const url = tag && slug ? `/${tag}/${slug}` : "";
 
@@ -38,7 +45,7 @@ export const Card = ({
                             />
                         ) : (
                             <Img
-                                src={"./images/Gold-18-design.jpg"}
+                                src={default_image}
                                 alt={"logo 18 design"}
                                 className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
                             />
