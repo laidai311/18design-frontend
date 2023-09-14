@@ -9,6 +9,9 @@ import {
     IconVKontake,
 } from "../Icons";
 import { Container } from "../Styled";
+import ReadOnlyEditor from "@/components/ReadOnlyEditor";
+import Link from "next/link";
+import { Img } from "../UI";
 
 const BannerContact = styled.div`
     padding: 120px 80px;
@@ -59,7 +62,9 @@ const ContactBlock = styled.div`
 const ContactTitle = styled.div`
     margin: 30px auto;
     color: #333333;
-
+    & strong {
+        font-weight: bold;
+    }
     & h1 {
         line-height: 1.3;
         font-weight: 500;
@@ -227,35 +232,22 @@ const SocialList = styled.div`
         }
     }
 `;
-export function Banner() {
+export function Banner({ banner_img, api_url }) {
     return (
         <BannerContact>
-            <BannerImage src="https://noithatdreamhome.vn/wp-content/uploads/2022/07/banner-bg1.jpg" />
+            <BannerImage src={api_url + banner_img?.data?.attributes?.url} />
         </BannerContact>
     );
 }
 
-export function Contact() {
+export function Contact({ address, email, phone, description_contact }) {
     return (
         <ContactInfo>
             <Container>
                 <ContactBlock>
                     <ContactTitle>
                         <h1>liên hệ với chúng tôi</h1>
-                        <p>
-                            Công Ty Cổ Phần Kiến Trúc Và Đầu Tư Xây Dựng 18
-                            Design là một trong những công ty hàng đầu về thiết
-                            kế và thi công kiến trúc - nội ngoại thất, từng bước
-                            trở thành Nhà thiết kế và thi công kiến trúc – nội
-                            ngoại thất, được các công ty RIKI Việt Nam, Truyền
-                            Thông Đậu Family, Imago Work hay tập đoàn Tài Tâm
-                            lựa chọn làm đối tác chiến lược.{" "}
-                            <strong>18 Design</strong> ghi dấu ấn thiết kế nội
-                            thất sang trọng, thi công nội thất cao cấp trên các
-                            dự án: Vinhomes Timecity Park Hill, Vinhomes Royal
-                            City, Vinhomes Smartcity, One 18 Ngọc Lâm, Vinhomes
-                            D’capitale, Shophouse 124 Vĩnh Tuy, Lake View,...
-                        </p>
+                        <ReadOnlyEditor content={description_contact || ""} />
                     </ContactTitle>
                     <div className="-mx-4 flex flex-wrap">
                         <div className="w-full p-4 md:w-1/3">
@@ -264,7 +256,7 @@ export function Contact() {
                             </div>
                             <div className="space-y-1">
                                 <h4 className="font-semibold text-lg">Email</h4>
-                                <p>arch18designs@gmail.com</p>
+                                <p>{email || "arch18designs@gmail.com"}</p>
                             </div>
                         </div>
                         <div className="w-full p-4 md:w-1/3">
@@ -276,8 +268,8 @@ export function Contact() {
                                     Địa chỉ
                                 </h4>
                                 <p>
-                                    Số 1, Nguyễn Cảnh Dị, Đại Kim, Hoàng Mai,
-                                    TP. Hà Nội
+                                    {address ||
+                                        "Số 1, Nguyễn Cảnh Dị, Đại Kim, Hoàng Mai, TP. Hà Nội"}
                                 </p>
                             </div>
                         </div>
@@ -289,7 +281,7 @@ export function Contact() {
                                 <h4 className="font-semibold text-lg">
                                     Điện thoại
                                 </h4>
-                                <p>083.8586.444</p>
+                                <p>{phone || "083.8586.444"}</p>
                             </div>
                         </div>
                     </div>
@@ -299,7 +291,7 @@ export function Contact() {
     );
 }
 
-export function FollowUs() {
+export function FollowUs({ connect_img, api_url }) {
     return (
         <Follow>
             <Container>
@@ -307,16 +299,29 @@ export function FollowUs() {
                     <h2>Follow Us</h2>
                 </FollowTitle>
                 <FollowImage>
-                    <img src="https://noithatdreamhome.vn/wp-content/uploads/2022/07/banner-bg2.jpg" />
-                    <img src="https://noithatdreamhome.vn/wp-content/uploads/2022/07/banner-bg3.jpg" />
-                    <img src="https://noithatdreamhome.vn/wp-content/uploads/2022/07/banner-bg1.jpg" />
+                    {connect_img?.data
+                        ? connect_img.data.map((itm, idx) => (
+                              <div key={idx} className="follow__image">
+                                  <Img
+                                      alt={itm?.attributes?.name || ""}
+                                      src={api_url + itm?.attributes?.url}
+                                      className={"select-none w-full h-full"}
+                                  />
+                              </div>
+                          ))
+                        : null}
                 </FollowImage>
             </Container>
         </Follow>
     );
 }
 
-export function Social() {
+export function Social({
+    fb_contact_link,
+    twitter_contact_link,
+    linked_contact_link,
+    wk_contact_link,
+}) {
     return (
         <section className="pt-16 bg-[#d4e1e7] pb-16">
             <div className="container max-w-7xl mx-auto">
@@ -324,26 +329,26 @@ export function Social() {
                     kết nối với chúng tôi
                 </h2>
                 <div className="flex justify-center space-x-2">
-                    <a href="#">
+                    <Link href={fb_contact_link || "#"}>
                         <div className="w-10 h-10 rounded-full bg-[#3a589d] text-white flex justify-center items-center">
                             <IconFacebook />
                         </div>
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link href={twitter_contact_link || "#"}>
                         <div className="w-10 h-10 rounded-full bg-[#2478ba] text-white flex justify-center items-center">
                             <IconTwitter />
                         </div>
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link href={linked_contact_link || "#"}>
                         <div className="w-10 h-10 rounded-full bg-[#0072b7] text-white flex justify-center items-center">
                             <IconLinkedin />
                         </div>
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link href={wk_contact_link || "#"}>
                         <div className="w-10 h-10 rounded-full bg-[#527498] text-white flex justify-center items-center">
                             <IconVKontake />
                         </div>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

@@ -39,7 +39,7 @@ export const TypicalProject = ({ post_group, post_tab, property }) => {
                                   key={post?.key}
                                   $actived={activedTab === post?.key}
                               >
-                                  <div className="-m-4 flex flex-wrap">
+                                  <div className="-mx-4 flex flex-wrap">
                                       {Array.isArray(post?.items)
                                           ? post?.items.map((item) => (
                                                 <Card
@@ -52,7 +52,10 @@ export const TypicalProject = ({ post_group, post_tab, property }) => {
                                           : null}
                                   </div>
                                   <ContentBottom>
-                                      <ViewMoreLink href={post?.url}>
+                                      <ViewMoreLink
+                                          href={post?.url}
+                                          className="mt-5"
+                                      >
                                           <span>Xem thêm</span>
                                           <IconChevronRight />
                                       </ViewMoreLink>

@@ -22,6 +22,8 @@ export default function Page({
     posts,
     slug,
     property,
+    tag_name,
+    tag,
 }) {
     useEffect(() => {
         const fn = async () => {
@@ -57,6 +59,13 @@ export default function Page({
                     <div className="-mx-4 flex flex-wrap">
                         <div className="p-4 basis-full lg:basis-2/3">
                             <div className="p-8 shadow-lg rounded-lg">
+                                {tag_name ? (
+                                    <Link href={`/${tag}`}>
+                                        <div className="inline-block opacity-80 border rounded-full px-2 mb-2 text-sm hover:bg-black/5 transition-colors">
+                                            {tag_name || ""}
+                                        </div>
+                                    </Link>
+                                ) : null}
                                 <h1 className="font-semibold text-2xl pb-5">
                                     {title || ""}
                                 </h1>
@@ -123,7 +132,7 @@ const CardItem = ({ title, cover, tag, slug, property }) => {
 
     return (
         <Link href={url} className="block mb-4">
-            <div className="flex space-x-3">
+            <div className="flex space-x-3 hover:bg-black/5 rounded-xl transition-colors">
                 <div className="w-24 h-24 overflow-hidden rounded-lg shrink-0">
                     {image_link ? (
                         <Img
