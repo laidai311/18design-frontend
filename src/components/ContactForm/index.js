@@ -37,7 +37,7 @@ export default function ContactForm({ onClose, className }) {
                     "Content-Type": "application/json",
                     // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({ data: value, checked: false }), // body data type must match "Content-Type" header
+                body: JSON.stringify({ data: { ...value, checked: false } }), // body data type must match "Content-Type" header
             });
             const data = await res.json(); // parses JSON response into native JavaScript objects
             onClose?.();
