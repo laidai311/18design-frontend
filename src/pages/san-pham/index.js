@@ -50,7 +50,7 @@ export default function Page({
                 title={(seo_body?.meta_title || title) + " - " + site_name}
                 description={seo_body?.meta_description || ""}
             />
-            <div className="w-full relative pt-[56%]">
+            <div className="w-full relative pt-[52%] h-auto lg:pt-0 lg:h-[80vh]">
                 <div className="absolute inset-0">
                     <Img
                         alt={image_name || ""}
