@@ -5,6 +5,8 @@ import ProductOther from "@/components/ProductOther";
 import { SpecificationTab } from "@/components/SpecificationsTab";
 import { Container } from "@/components/Styled";
 import { ThumbDetail } from "@/components/ThumbDetail";
+import { Img } from "@/components/UI";
+import { useStore } from "@/stores";
 import { formatCurrency } from "@/utils";
 import unfetch from "isomorphic-unfetch";
 import { styled } from "styled-components";
@@ -52,7 +54,8 @@ const ProductDescription = styled.div`
     }
   }
   & .materials,
-  & .size {
+  & .size,
+  & .tag__category {
     display: flex;
     gap: 30px;
     align-items: center;
@@ -76,8 +79,8 @@ const ProductDescription = styled.div`
   }
   & .contact-btn {
     margin-top: 30px;
-    background-color: #bd8b1b;
     color: white;
+    background-color: black;
     font-weight: 700;
     width: 120px;
     line-height: 45px;
@@ -92,7 +95,7 @@ const ProductDescription = styled.div`
       content: "";
       position: absolute;
       z-index: -1;
-      background-color: black;
+      background-color: #bd8b1b;
     }
   }
   & .more-btn {
@@ -102,46 +105,52 @@ const ProductDescription = styled.div`
       width: 0;
       height: 100%;
       transition: width 0.25s linear;
-     
     }
     &:hover:before {
-        width: 100%;
-      }
+      width: 100%;
+    }
   }
 `;
-export default function Page() {
+export default function Page({ title, materials, size, new_price, old_price, tag, tag_name, slug, ...props }) {
   return (
     <>
       <ProductDetail>
-        <img src="https://img.freepik.com/-photo/stylish-scandinavian-living-room-with-design-mint-sofa-furnitures-mock-up-poster-map-plants-eleg_1258-152155.jpg?w=1800&t=st=1694598264~exp=1694598864~hmac=a8ba1aef84538545f49d24057796937b6f87262f81c9b687e36c925d56b28b22" />
+        <Img src="https://img.freepik.com/-photo/stylish-scandinavian-living-room-with-design-mint-sofa-furnitures-mock-up-poster-map-plants-eleg_1258-152155.jpg?w=1800&t=st=1694598264~exp=1694598864~hmac=a8ba1aef84538545f49d24057796937b6f87262f81c9b687e36c925d56b28b22" />
         <BreadcrumbDetail />
         <Container>
           <div className="detail">
-            <ThumbDetail />
+            <ThumbDetail {...props} />
             <ProductDescription>
-              <h3>Ghế sofa</h3>
+              <h3>{title}</h3>
               <div className="price__group">
-                <p className="price">{formatCurrency(8000000)}</p>
-                <p className="old__price">{formatCurrency(12000000)}</p>
+                <p className="price">{formatCurrency(new_price)}</p>
+                <p className="old__price">{formatCurrency(old_price)}</p>
               </div>
               <div className="materials">
                 <span>Vật liệu</span>
 
                 <div className="option__name">
-                  <p>Khung gỗ bọc vải - chân kim loại màu gold</p>
+                  <p>{materials}</p>
                 </div>
               </div>
               <div className="size">
                 <span>Kích thước</span>
 
                 <div className="option__name">
-                  <p>D1800 - R880 - C710 mm</p>
+                  <p>{size}</p>
                 </div>
               </div>
+              <div className="tag__category">
+                <span>Tags:</span>
+                <div className="option__name">
+                  <p>{tag_name}</p>
+                </div>
+              </div>
+
               <button className="contact-btn more-btn">Liên hệ</button>
             </ProductDescription>
           </div>
-          <SpecificationTab />
+          <SpecificationTab {...props} />
           <CategoryTitle>
             <h3>Sản phẩm khác</h3>
           </CategoryTitle>
@@ -154,30 +163,24 @@ export default function Page() {
 
 export async function getServerSideProps(context) {
   const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
-  // const { tag, page: currentPage = 1 } = context.query;
-
+  const { slug } = context.params;
   try {
-    const [property] = await Promise.all(
-      ["/api/property?populate=*", ,].map(async (url) => {
+    const [property, product] = await Promise.all(
+      ["/api/property?populate=*", `/api/products/${slug}?populate=images`].map(async (url) => {
         const res = await unfetch(NEXT_PUBLIC_API_URL + url);
         return res.json();
       })
     );
 
     const propertyAttr = property?.data?.attributes || {};
-    // const tagPageAttr = tagPage?.data?.attributes || {};
-    // const postArr = getArrayStrapi(posts?.data, []);
-
+    const productAttr = product?.data?.attributes || {};
     return {
       props: {
-        // ...tagPageAttr,
+        ...productAttr,
+        id: product?.data?.id,
         property: propertyAttr,
-        // posts: postArr,
-        // currentPage: currentPage - 1,
-        // tag: tag,
-        // pagination: posts.meta?.pagination || {},
-        // meta: tagPageAttr?.meta || {},
-        // message: tagPageAttr?.error?.message || "",
+        products: productAttr,
+        slug: slug,
         site_name: NEXT_PUBLIC_SITE_NAME || "",
         api_url: NEXT_PUBLIC_API_URL || "",
       },
