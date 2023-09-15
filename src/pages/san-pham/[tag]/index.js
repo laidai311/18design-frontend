@@ -60,16 +60,11 @@ export default function Page({
                 </div>
             </div>
             <Breadcrumb />
-            <CategorySection
-                category_images={category_images}
-                category_list={category_list}
-            />
-            <Quote />
             <Card>
-                <Container>
+                <div className="container mx-auto max-w-7xl">
                     <CategoryTitle>
                         <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
-                            Sản phẩm nổi bật
+                            Sản phẩm
                         </h2>
                     </CategoryTitle>
                     <div className="-mx-4 flex flex-wrap">
@@ -84,7 +79,7 @@ export default function Page({
                               ))
                             : null}
                     </div>
-                </Container>
+                </div>
             </Card>
         </>
     );

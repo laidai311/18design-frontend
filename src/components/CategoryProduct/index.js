@@ -136,6 +136,7 @@ const data = [
 ];
 
 export function CategorySection({ category_images, category_list = data }) {
+    console.log(category_list);
     return (
         <Category className="category__product">
             <Container>
@@ -149,10 +150,12 @@ export function CategorySection({ category_images, category_list = data }) {
                         ? category_list.map((item, index) => (
                               <CategoryItem key={index}>
                                   <div className="category__card">
-                                      <Link href={`/san-pham/item`}>
+                                      <Link
+                                          href={`/san-pham/${item?.slug || ""}`}
+                                      >
                                           <Img
-                                              alt={item?.image_name}
-                                              src={item?.image_link}
+                                              alt={item?.image_name || ""}
+                                              src={item?.image_link || ""}
                                           />
                                           <p>{item?.title || ""}</p>
                                       </Link>
