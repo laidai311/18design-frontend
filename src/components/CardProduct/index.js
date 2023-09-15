@@ -53,6 +53,7 @@ export function CardProductItem({
     new_price,
     old_price,
     images,
+    tag,
     ...props
 }) {
     const { api_url } = useStore();
@@ -68,41 +69,40 @@ export function CardProductItem({
         : "18 design";
 
     return (
-        <div className="p-4 w-full md:w-1/2 lg:w-1/4">
-            <div className="bg-white transition-all overflow-hidden rounded-lg shadow-md hover:shadow-xl group">
-                <div className="relative pt-[60%] overflow-hidden">
-                    <Link href={`/san-pham/${slug || ""}`}>
-                        <div className="absolute inset-0">
-                            <Img
-                                alt={image_name || ""}
-                                src={image_link || ""}
-                                className={
-                                    "w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
-                                }
-                            />
-                        </div>
-                    </Link>
-                </div>
-                <CardDescription>
-                    <Link href={`/san-pham/${slug || ""}`}>
-                        <h3>{title || ""}</h3>
-                        <div className="group__price">
-                            <p className="price">
-                                {formatCurrency(new_price || "")}
-                            </p>
-                            <p className="strike-price">
-                                {formatCurrency(old_price || "")}
-                            </p>
-                        </div>
-                    </Link>
-                    <Link
-                        href={`/san-pham/${slug || ""}`}
-                        className="hover:underline text-blue-500"
-                    >
-                        Chi tiết
-                    </Link>
-                </CardDescription>
+        <div className="bg-white transition-all overflow-hidden rounded-lg shadow-md hover:shadow-xl group">
+            <div className="relative pt-[60%] overflow-hidden">
+                <Link href={`/san-pham/${tag}/${slug || ""}`}>
+                    <div className="absolute inset-0">
+                        <Img
+                            alt={image_name || ""}
+                            src={image_link || ""}
+                            className={
+                                "w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
+                            }
+                        />
+                    </div>
+                </Link>
             </div>
+            <CardDescription>
+                <Link href={`/san-pham/${tag}/${slug || ""}`}>
+                    <h3>{title || ""}</h3>
+                    <div className="group__price">
+                        <p className="price">
+                            {formatCurrency(new_price || "")}
+                        </p>
+                        <p className="strike-price">
+                            {formatCurrency(old_price || "")}
+                        </p>
+                    </div>
+                </Link>
+                <Link
+                    href={`/san-pham/${tag}/${slug || ""}`}
+                    className="hover:underline text-blue-500"
+                >
+                    {" "}
+                    Chi tiết
+                </Link>
+            </CardDescription>
         </div>
     );
 }
