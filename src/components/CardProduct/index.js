@@ -53,6 +53,7 @@ export function CardProductItem({
     new_price,
     old_price,
     images,
+    tag,
     ...props
 }) {
     const { api_url } = useStore();
@@ -71,7 +72,7 @@ export function CardProductItem({
         <div className="p-4 w-full md:w-1/2 lg:w-1/4">
             <div className="bg-white transition-all overflow-hidden rounded-lg shadow-md hover:shadow-xl group">
                 <div className="relative pt-[60%] overflow-hidden">
-                    <Link href={`/san-pham/${slug || ""}`}>
+                    <Link href={`/san-pham/${tag}/${slug || ""}`}>
                         <div className="absolute inset-0">
                             <Img
                                 alt={image_name || ""}
@@ -84,7 +85,7 @@ export function CardProductItem({
                     </Link>
                 </div>
                 <CardDescription>
-                    <Link href={`/san-pham/${slug || ""}`}>
+                    <Link href={`/san-pham/${tag}/${slug || ""}`}>
                         <h3>{title || ""}</h3>
                         <div className="group__price">
                             <p className="price">
@@ -96,9 +97,10 @@ export function CardProductItem({
                         </div>
                     </Link>
                     <Link
-                        href={`/san-pham/${slug || ""}`}
+                        href={`/san-pham/${tag}/${slug || ""}`}
                         className="hover:underline text-blue-500"
                     >
+                        {" "}
                         Chi tiết
                     </Link>
                 </CardDescription>
