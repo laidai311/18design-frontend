@@ -75,10 +75,12 @@ export default function Page({
                     <div className="-mx-4 flex flex-wrap">
                         {Array.isArray(propducts)
                             ? propducts.map((item, index) => (
-                                  <CardProductItem
+                                  <div
                                       key={item?.id || index}
-                                      {...item}
-                                  />
+                                      className="p-4 w-full md:w-1/2 lg:w-1/4"
+                                  >
+                                      <CardProductItem {...item} />
+                                  </div>
                               ))
                             : null}
                     </div>
