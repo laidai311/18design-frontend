@@ -7,7 +7,7 @@ import { Container } from "@/components/Styled";
 import { ThumbDetail } from "@/components/ThumbDetail";
 import { Img } from "@/components/UI";
 import { useStore } from "@/stores";
-import { formatCurrency } from "@/utils";
+import { formatCurrency, getArrayStrapi } from "@/utils";
 import unfetch from "isomorphic-unfetch";
 import { styled } from "styled-components";
 
@@ -154,7 +154,7 @@ export default function Page({ title, materials, size, new_price, old_price, tag
           <CategoryTitle>
             <h3>Sản phẩm khác</h3>
           </CategoryTitle>
-          <ProductOther />
+          <ProductOther {...props}/>
         </Container>
       </ProductDetail>
     </>
@@ -165,8 +165,8 @@ export async function getServerSideProps(context) {
   const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
   const { slug } = context.params;
   try {
-    const [property, product] = await Promise.all(
-      ["/api/property?populate=*", `/api/products/${slug}?populate=images`].map(async (url) => {
+    const [property, product,products] = await Promise.all(
+      ["/api/property?populate=*", `/api/products/${slug}?populate=images`,"/api/products?populate=*"].map(async (url) => {
         const res = await unfetch(NEXT_PUBLIC_API_URL + url);
         return res.json();
       })
@@ -174,9 +174,11 @@ export async function getServerSideProps(context) {
 
     const propertyAttr = property?.data?.attributes || {};
     const productAttr = product?.data?.attributes || {};
+    const productsArr = getArrayStrapi(products?.data, []);
     return {
       props: {
         ...productAttr,
+        productsArr,
         id: product?.data?.id,
         property: propertyAttr,
         products: productAttr,
@@ -195,5 +197,8 @@ export async function getServerSideProps(context) {
     };
   }
 }
+
+
+
 
 Page.getLayout = (page, pageProps) => <DefaultLayout {...pageProps}>{page}</DefaultLayout>;
