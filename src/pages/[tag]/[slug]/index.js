@@ -156,7 +156,7 @@ const CardItem = ({ title, cover, tag, slug, property }) => {
 
 export async function getServerSideProps(context) {
     const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
-    const { slug } = context.params;
+    const { slug = null } = context.params;
 
     try {
         const [property, post] = await Promise.all(
@@ -172,11 +172,11 @@ export async function getServerSideProps(context) {
         const propertyAttr = property?.data?.attributes || {};
         const postAttr = post?.data?.attributes || {};
 
-        postAttr.content = updateImgSrc(postAttr?.content);
+        // postAttr.content = updateImgSrc(postAttr?.content);
 
         const res = await unfetch(
             NEXT_PUBLIC_API_URL +
-                `/api/posts?populate=*&filters[tag][$eq]=${postAttr?.tag}&pagination[limit]=10`
+                `/api/posts?populate=*&filters[tag][$eqi]=${postAttr?.tag}&pagination[limit]=10`
         );
         const posts = await res.json();
 

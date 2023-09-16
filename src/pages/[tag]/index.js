@@ -8,6 +8,7 @@ import { usePagination } from "@/hooks";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import { LIMIT_LIST } from "@/constant/default";
+import Component404 from "@/components/404";
 
 export default function Page({
     posts,
@@ -19,6 +20,8 @@ export default function Page({
     currentPage,
     tag,
     property,
+    status,
+    error,
 }) {
     const router = useRouter();
 
@@ -39,64 +42,72 @@ export default function Page({
     return (
         <>
             <NextSeo
-                title={(seo_body?.meta_title || title) + " - " + site_name}
+                title={
+                    (seo_body?.meta_title || title || "") + " - " + site_name
+                }
                 description={seo_body?.meta_description || ""}
             />
-            <section key={tag + currentPage} className="min-h-[80vh] pt-10">
-                <div className="container max-w-7xl mx-auto">
-                    <h1 className="border-b-2 border-primary uppercase mb-8 text-center text-2xl leading-9">
-                        {title || ""}
-                    </h1>
-                    <ReadOnlyEditor content={content || ""} />
+            {status ? (
+                <section key={tag + currentPage} className="min-h-[80vh] pt-10">
+                    <div className="container max-w-7xl mx-auto">
+                        <h1 className="border-b-2 border-primary uppercase mb-8 text-center text-2xl leading-9">
+                            {title || ""}
+                        </h1>
+                        <ReadOnlyEditor content={content || ""} />
 
-                    <div className="-m-4 flex flex-wrap">
-                        {Array.isArray(posts)
-                            ? posts.map((itm) => (
-                                  <Card
-                                      {...itm}
-                                      property={property}
-                                      key={itm.id}
-                                      className="w-full p-4 md:w-1/2 lg:w-1/3"
-                                  />
-                              ))
-                            : null}
-                    </div>
-                    {posts?.length ? (
-                        <div className="flex items-center justify-center space-x-2 mt-10">
-                            {paginationParam?.range?.map((item, index) => {
-                                if (item === "dots") {
-                                    return <div key={item + index}>...</div>;
-                                }
-                                return (
-                                    <button
-                                        key={item}
-                                        onClick={() => {
-                                            paginationParam.setPage(item);
-                                        }}
-                                        className={clsx(
-                                            "border h-8 w-8 flex items-center justify-center rounded-full transition-all hover:bg-primary/70 hover:text-white",
-                                            {
-                                                "bg-primary/70 text-white":
-                                                    paginationParam?.active ===
-                                                    item,
-                                            }
-                                        )}
-                                    >
-                                        {item}
-                                    </button>
-                                );
-                            })}
+                        <div className="-m-4 flex flex-wrap">
+                            {Array.isArray(posts)
+                                ? posts.map((itm) => (
+                                      <Card
+                                          {...itm}
+                                          property={property}
+                                          key={itm.id}
+                                          className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                      />
+                                  ))
+                                : null}
                         </div>
-                    ) : null}
-                </div>
-            </section>
+                        {posts?.length ? (
+                            <div className="flex items-center justify-center space-x-2 mt-10">
+                                {paginationParam?.range?.map((item, index) => {
+                                    if (item === "dots") {
+                                        return (
+                                            <div key={item + index}>...</div>
+                                        );
+                                    }
+                                    return (
+                                        <button
+                                            key={item}
+                                            onClick={() => {
+                                                paginationParam.setPage(item);
+                                            }}
+                                            className={clsx(
+                                                "border h-8 w-8 flex items-center justify-center rounded-full transition-all hover:bg-primary/70 hover:text-white",
+                                                {
+                                                    "bg-primary/70 text-white":
+                                                        paginationParam?.active ===
+                                                        item,
+                                                }
+                                            )}
+                                        >
+                                            {item}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        ) : null}
+                    </div>
+                </section>
+            ) : (
+                <Component404 message={error} />
+            )}
         </>
     );
 }
 
 export async function getServerSideProps(context) {
     const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
-    const { tag, page: currentPage = 1 } = context.query;
+    const { tag = null, page: currentPage = 1 } = context.query;
 
     try {
         const [property, tagPage, posts] = await Promise.all(
@@ -116,6 +127,11 @@ export async function getServerSideProps(context) {
         const tagPageAttr = tagPage?.data?.attributes || {};
         const postArr = getArrayStrapi(posts?.data, []);
 
+        if (tagPage?.error?.message) {
+            tagPageAttr.status = false;
+            tagPageAttr.error = tagPage?.error?.message;
+        } else tagPageAttr.status = true;
+
         return {
             props: {
                 ...tagPageAttr,
@@ -133,7 +149,8 @@ export async function getServerSideProps(context) {
     } catch (error) {
         return {
             props: {
-                message: error.message,
+                status: false,
+                error: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
             },

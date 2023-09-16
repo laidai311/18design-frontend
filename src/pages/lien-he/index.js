@@ -2,12 +2,15 @@ import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
 import { Banner, Contact, FollowUs, Social } from "@/components/Contact/Banner";
 import unfetch from "isomorphic-unfetch";
+import { Img } from "@/components/UI";
+import { useStore } from "@/stores";
 
-export default function ContactPage({ ...props }) {
+export default function ContactPage({ banner_img, ...props }) {
+    const { api_url } = useStore();
     return (
         <>
             <Head>
-                <title>18 Design</title>
+                <title>Liên hệ - 18 Design</title>
                 <meta
                     name="description"
                     content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"
@@ -17,7 +20,16 @@ export default function ContactPage({ ...props }) {
                     content="width=device-width, initial-scale=1"
                 />
             </Head>
-            <Banner {...props} />
+            {/* <Banner {...props} /> */}
+            <div className="w-full relative pt-[52%] h-auto lg:pt-0 lg:h-[80vh] bg-[#d4e1e7]">
+                <div className="absolute inset-0 py-32 px-20">
+                    <Img
+                        // alt={image_name || ""}
+                        src={api_url + banner_img?.data?.attributes?.url}
+                        className={"w-full h-full object-cover"}
+                    />
+                </div>
+            </div>
             <Contact {...props} />
             <FollowUs {...props} />
             <Social {...props} />
