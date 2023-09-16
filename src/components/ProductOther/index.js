@@ -1,6 +1,8 @@
 import { styled } from "styled-components";
+import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CardProductItem } from "../CardProduct";
+import { fakeProductOther } from "./fetchData";
 
 const SwiperWrapper = styled.div`
   & .swiper-wrapper {
@@ -8,16 +10,21 @@ const SwiperWrapper = styled.div`
   }
 `;
 
-export default function ProductOther() {
+export default function ProductOther({ productsArr = fakeProductOther}) {
   return (
     <SwiperWrapper>
       <Swiper
         slidesPerView={4}
         loop={true}
         spaceBetween={30}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
         pagination={{
           clickable: true,
         }}
+        modules = {[Autoplay]}
         className="mySwiper"
         breakpoints={{
           280: {
@@ -37,21 +44,11 @@ export default function ProductOther() {
           },
         }}
       >
-        <SwiperSlide>
-          <CardProductItem />
-        </SwiperSlide>
-        <SwiperSlide>
-          <CardProductItem />
-        </SwiperSlide>
-        <SwiperSlide>
-          <CardProductItem />
-        </SwiperSlide>
-        <SwiperSlide>
-          <CardProductItem />
-        </SwiperSlide>
-        <SwiperSlide>
-          <CardProductItem />
-        </SwiperSlide>
+        {productsArr.map((item) => (
+          <SwiperSlide key={item.id}>
+            <CardProductItem {...item} />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </SwiperWrapper>
   );

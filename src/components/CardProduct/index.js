@@ -75,7 +75,7 @@ export function CardProductItem({
                     <div className="absolute inset-0">
                         <Img
                             alt={image_name || ""}
-                            src={image_link || ""}
+                            src={"/images/slider-1.jpg" || image_link || ""}
                             className={
                                 "w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
                             }
