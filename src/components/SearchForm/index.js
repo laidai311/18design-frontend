@@ -1,7 +1,15 @@
+import { useState } from "react";
 import { IconSearch } from "../Icons";
 import { useForm } from "react-hook-form";
+import clsx from "clsx";
+import { useClickOutside } from "@/hooks";
 
 function SearchForm({ ...props }) {
+    const [selected, setSelected] = useState("post");
+    const [isFocused, setIsFocused] = useState(false);
+    const ref = useClickOutside(() => {
+        setIsFocused(false);
+    });
     const {
         register,
         handleSubmit,
@@ -12,13 +20,16 @@ function SearchForm({ ...props }) {
     const onSubmit = (data) => console.log(data);
 
     return (
-        <div {...props}>
+        <div ref={ref} {...props}>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex items-center"
             >
                 <input
                     {...register("search")}
+                    onFocus={() => {
+                        setIsFocused(true);
+                    }}
                     placeholder="Bạn đang tìm kiếm gì ...?"
                     inputMode="search"
                     autoCapitalize="off"
@@ -31,6 +42,29 @@ function SearchForm({ ...props }) {
                     <IconSearch width={18} height={18} />
                 </button>
             </form>
+            <div
+                className={clsx(
+                    "flex space-x-2 lg:pt-2 transition-all opacity-0 lg:opacity-100 h-0 lg:h-auto pointer-events-none lg:pointer-events-auto",
+                    { "opacity-100 h-auto pt-2 pointer-events-auto": isFocused }
+                )}
+            >
+                <button
+                    onClick={() => setSelected("post")}
+                    className={clsx("border rounded-full px-3 text-sm", {
+                        "bg-primary/80 text-white": selected === "post",
+                    })}
+                >
+                    Bài đăng
+                </button>
+                <button
+                    onClick={() => setSelected("product")}
+                    className={clsx("border rounded-full px-3 text-sm", {
+                        "bg-primary/80 text-white": selected === "product",
+                    })}
+                >
+                    Sản phẩm
+                </button>
+            </div>
         </div>
     );
 }

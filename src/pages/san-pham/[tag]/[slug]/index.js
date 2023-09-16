@@ -135,7 +135,7 @@ export default function Page({
                 }
                 description={seo_body?.meta_description || ""}
             />
-            <ProductDetail>
+            <ProductDetail key={slug}>
                 <div className="container mx-auto max-w-7xl my-10">
                     <BreadcrumbDetail />
                     <div className="detail">
@@ -146,9 +146,11 @@ export default function Page({
                                 <p className="price">
                                     {formatCurrency(new_price)}
                                 </p>
-                                <p className="old__price">
-                                    {formatCurrency(old_price)}
-                                </p>
+                                {old_price ? (
+                                    <p className="old__price">
+                                        {formatCurrency(old_price)}
+                                    </p>
+                                ) : null}
                             </div>
                             <div className="materials">
                                 <span>Vật liệu</span>

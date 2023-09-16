@@ -42,7 +42,7 @@ export default function Page({
                     }), // body data type must match "Content-Type" header
                 });
             } catch (error) {
-                console.log(error.message);
+                console.error(error.message);
             }
         };
         fn();

@@ -103,7 +103,7 @@ export async function getServerSideProps() {
                     return resp.json();
                 })
         );
-        console.log(homeAttr.post_group);
+
         homeAttr.post_group = homeAttr.post_tab.map((item, index) => ({
             ...item,
             items: getArrayStrapi(homeAttr.post_group?.[index]?.data, []) || [],
