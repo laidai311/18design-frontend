@@ -307,15 +307,23 @@ export function FollowUs({ connect_img, api_url }) {
                 </FollowTitle>
                 <div className="-mx-4 flex flex-wrap">
                     {Array.isArray(connect_img?.data)
-                        ? connect_img.data.map((itm, idx) => (
-                              <div key={idx} className="p-4 w-full lg:w-1/3">
-                                  <Img
-                                      alt={itm?.attributes?.name || ""}
-                                      src={api_url + itm?.attributes?.url}
-                                      className={"select-none w-full h-full"}
-                                  />
-                              </div>
-                          ))
+                        ? connect_img.data.map((itm, idx) => {
+                              if (idx >= 3) return null;
+                              return (
+                                  <div
+                                      key={idx}
+                                      className="p-4 w-full lg:w-1/3"
+                                  >
+                                      <Img
+                                          alt={itm?.attributes?.name || ""}
+                                          src={api_url + itm?.attributes?.url}
+                                          className={
+                                              "select-none w-full h-full"
+                                          }
+                                      />
+                                  </div>
+                              );
+                          })
                         : null}
                 </div>
             </div>

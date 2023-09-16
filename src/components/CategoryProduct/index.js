@@ -136,7 +136,7 @@ const data = [
 ];
 
 export function CategorySection({ category_images, category_list = data }) {
-    console.log(category_list);
+
     return (
         <Category className="category__product">
             <Container>

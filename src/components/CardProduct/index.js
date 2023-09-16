@@ -91,9 +91,11 @@ export function CardProductItem({
                         <p className="price">
                             {formatCurrency(new_price || "")}
                         </p>
-                        <p className="strike-price">
-                            {formatCurrency(old_price || "")}
-                        </p>
+                        {old_price ? (
+                            <p className="strike-price">
+                                {formatCurrency(old_price || "")}
+                            </p>
+                        ) : null}
                     </div>
                 </Link>
                 <Link
