@@ -51,7 +51,6 @@ export function OutPartner({ our_partner_list, api_url }) {
                     }}
                     pagination={false}
                     navigation={false}
-                    centeredSlides
                     modules={[Autoplay, Pagination, Navigation]}
                     breakpoints={{
                         200: {
