@@ -5,11 +5,19 @@ import unfetch from "isomorphic-unfetch";
 import { NextSeo } from "next-seo";
 import { updateImgSrc } from "@/utils";
 
-export default function Page({ site_name, message, seo_body, ...props }) {
+export default function Page({
+    site_name,
+    message,
+    seo_body,
+    title,
+    ...props
+}) {
     return (
         <>
             <NextSeo
-                title={seo_body?.meta_title + " - " + site_name}
+                title={
+                    (seo_body?.meta_title || title || "") + " - " + site_name
+                }
                 description={seo_body?.meta_description || ""}
             />
             {message ? (
@@ -37,7 +45,7 @@ export async function getServerSideProps() {
         const propertyAttr = property?.data?.attributes || {};
         const aboutAttr = about?.data?.attributes || {};
 
-        aboutAttr.content = updateImgSrc(aboutAttr?.content);
+        // aboutAttr.content = updateImgSrc(aboutAttr?.content);
 
         return {
             props: {

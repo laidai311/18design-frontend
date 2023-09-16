@@ -235,7 +235,11 @@ const SocialList = styled.div`
 export function Banner({ banner_img, api_url }) {
     return (
         <BannerContact>
-            <BannerImage src={api_url + banner_img?.data?.attributes?.url} />
+            <Img
+                alt="banner"
+                src={api_url + banner_img?.data?.attributes?.url}
+                className={"w-full h-full"}
+            />
         </BannerContact>
     );
 }
@@ -247,7 +251,10 @@ export function Contact({ address, email, phone, description_contact }) {
                 <ContactBlock>
                     <ContactTitle>
                         <h1>liên hệ với chúng tôi</h1>
-                        <ReadOnlyEditor content={description_contact || ""} />
+                        <ReadOnlyEditor
+                            className="text-justify"
+                            content={description_contact || ""}
+                        />
                     </ContactTitle>
                     <div className="-mx-4 flex flex-wrap">
                         <div className="w-full p-4 md:w-1/3">
@@ -294,14 +301,14 @@ export function Contact({ address, email, phone, description_contact }) {
 export function FollowUs({ connect_img, api_url }) {
     return (
         <Follow>
-            <Container>
+            <div className="container mx-auto max-w-7xl">
                 <FollowTitle>
                     <h2>Follow Us</h2>
                 </FollowTitle>
-                <FollowImage>
-                    {connect_img?.data
+                <div className="-mx-4 flex flex-wrap">
+                    {Array.isArray(connect_img?.data)
                         ? connect_img.data.map((itm, idx) => (
-                              <div key={idx} className="follow__image">
+                              <div key={idx} className="p-4 w-full lg:w-1/3">
                                   <Img
                                       alt={itm?.attributes?.name || ""}
                                       src={api_url + itm?.attributes?.url}
@@ -310,8 +317,8 @@ export function FollowUs({ connect_img, api_url }) {
                               </div>
                           ))
                         : null}
-                </FollowImage>
-            </Container>
+                </div>
+            </div>
         </Follow>
     );
 }
