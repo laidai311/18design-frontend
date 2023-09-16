@@ -61,31 +61,33 @@ export default function Page({
                               ))
                             : null}
                     </div>
-                    <div className="flex items-center justify-center space-x-2 mt-10">
-                        {paginationParam?.range?.map((item, index) => {
-                            if (item === "dots") {
-                                return <div key={item + index}>...</div>;
-                            }
-                            return (
-                                <button
-                                    key={item}
-                                    onClick={() => {
-                                        paginationParam.setPage(item);
-                                    }}
-                                    className={clsx(
-                                        "border h-8 w-8 flex items-center justify-center rounded-full transition-all hover:bg-primary/70 hover:text-white",
-                                        {
-                                            "bg-primary/70 text-white":
-                                                paginationParam?.active ===
-                                                item,
-                                        }
-                                    )}
-                                >
-                                    {item}
-                                </button>
-                            );
-                        })}
-                    </div>
+                    {posts?.length ? (
+                        <div className="flex items-center justify-center space-x-2 mt-10">
+                            {paginationParam?.range?.map((item, index) => {
+                                if (item === "dots") {
+                                    return <div key={item + index}>...</div>;
+                                }
+                                return (
+                                    <button
+                                        key={item}
+                                        onClick={() => {
+                                            paginationParam.setPage(item);
+                                        }}
+                                        className={clsx(
+                                            "border h-8 w-8 flex items-center justify-center rounded-full transition-all hover:bg-primary/70 hover:text-white",
+                                            {
+                                                "bg-primary/70 text-white":
+                                                    paginationParam?.active ===
+                                                    item,
+                                            }
+                                        )}
+                                    >
+                                        {item}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ) : null}
                 </div>
             </section>
         </>
