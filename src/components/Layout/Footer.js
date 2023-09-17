@@ -39,7 +39,9 @@ export default function Footer({ onContactClick, property, api_url }) {
                 <div
                     className="absolute inset-0"
                     style={{
-                        backgroundImage: `url(${footerBG})`,
+                        backgroundImage: `url(${
+                            "/images/default-image.jpg" || footerBG
+                        })`,
                         backgroundPosition: "50% 50%",
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
@@ -55,7 +57,10 @@ export default function Footer({ onContactClick, property, api_url }) {
                                     <Link href={"/"}>
                                         <Img
                                             alt={colorLogoName}
-                                            src={colorLogoUrl}
+                                            src={
+                                                "/images/18-design-cut.png" ||
+                                                colorLogoUrl
+                                            }
                                         />
                                     </Link>
                                 </FooterLogo>

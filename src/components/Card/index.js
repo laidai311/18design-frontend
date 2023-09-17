@@ -39,7 +39,7 @@ export const Card = ({
                     <div className="relative cover-card overflow-hidden h-64 after:group-hover:animate-[circle_0.75s] select-none">
                         {image_link ? (
                             <Img
-                                src={image_link}
+                                src={"/images/default-image.jpg" || image_link}
                                 alt={image_name}
                                 className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
                             />

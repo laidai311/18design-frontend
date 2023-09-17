@@ -25,7 +25,10 @@ export default function ContactPage({ banner_img, ...props }) {
                 <div className="absolute inset-0 py-32 px-20">
                     <Img
                         // alt={image_name || ""}
-                        src={api_url + banner_img?.data?.attributes?.url}
+                        src={
+                            "/images/default-image.jpg" ||
+                            api_url + banner_img?.data?.attributes?.url
+                        }
                         className={"w-full h-full object-cover"}
                     />
                 </div>

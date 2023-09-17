@@ -9,6 +9,7 @@ import { getArrayStrapi, updateImgSrc } from "@/utils";
 import { useStore } from "@/stores";
 import { Img } from "@/components/UI";
 import Link from "next/link";
+import { fakePost, fakePosts, fakeProperty } from "@/stores/fakeData";
 
 export default function Page({
     seo_body,
@@ -159,33 +160,33 @@ export async function getServerSideProps(context) {
     const { slug = null } = context.params;
 
     try {
-        const [property, post] = await Promise.all(
-            [
-                "/api/property?populate=*",
-                `/api/posts/${slug}?populate=cover`,
-            ].map(async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url);
-                return res.json();
-            })
-        );
+        // const [property, post] = await Promise.all(
+        //     [
+        //         "/api/property?populate=*",
+        //         `/api/posts/${slug}?populate=cover`,
+        //     ].map(async (url) => {
+        //         const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+        //         return res.json();
+        //     })
+        // );
 
-        const propertyAttr = property?.data?.attributes || {};
-        const postAttr = post?.data?.attributes || {};
+        const propertyAttr = fakeProperty?.data?.attributes || {};
+        const postAttr = fakePost?.data?.attributes || {};
 
         // postAttr.content = updateImgSrc(postAttr?.content);
 
-        const res = await unfetch(
-            NEXT_PUBLIC_API_URL +
-                `/api/posts?populate=*&filters[tag][$eqi]=${postAttr?.tag}&pagination[limit]=10`
-        );
-        const posts = await res.json();
+        // const res = await unfetch(
+        //     NEXT_PUBLIC_API_URL +
+        //         `/api/posts?populate=*&filters[tag][$eqi]=${postAttr?.tag}&pagination[limit]=10`
+        // );
+        // const posts = await res.json();
 
-        const postArr = getArrayStrapi(posts?.data, []);
+        const postArr = getArrayStrapi(fakePosts?.data, []);
 
         return {
             props: {
                 ...postAttr,
-                id: post?.data?.id,
+                // id: post?.data?.id,
                 property: propertyAttr,
                 posts: postArr,
                 slug: slug,
