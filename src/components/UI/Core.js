@@ -9,7 +9,7 @@ export const Img = ({ src, className, ...props }) => {
         <img
             alt="18 Design"
             {...props}
-            data-src={src || ""}
+            data-src={src || "/images/default-image.jpg"}
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
             className={clsx("lazyload", className || "")}
         />

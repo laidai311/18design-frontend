@@ -75,7 +75,10 @@ export function OutPartner({ our_partner_list, api_url }) {
                               <SwiperSlide key={idx}>
                                   <Img
                                       alt={itm?.attributes?.name || ""}
-                                      src={api_url + itm?.attributes?.url}
+                                      src={
+                                          "/images/default-image.jpg" ||
+                                          api_url + itm?.attributes?.url
+                                      }
                                       className={"select-none w-full h-full"}
                                   />
                               </SwiperSlide>

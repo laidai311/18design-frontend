@@ -16,7 +16,10 @@ export function Contact({ contact_background_link }) {
                     <div className="w-full p-4 lg:w-1/2">
                         <Img
                             alt="sesion-bg-2"
-                            src={contact_background_link}
+                            src={
+                                "/images/default-image.jpg" ||
+                                contact_background_link
+                            }
                             className={"w-full h-full object-cover"}
                         />
                     </div>
