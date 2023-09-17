@@ -36,7 +36,7 @@ const SwiperWrapper = styled.div`
     }
 `;
 
-export function OutPartner({ our_partner_list, api_url }) {
+export function OutPartner({ our_partner_images, api_url }) {
     return (
         <div className="bg-white pt-10 relative">
             <div className="container max-w-7xl mx-auto">
@@ -70,14 +70,14 @@ export function OutPartner({ our_partner_list, api_url }) {
                     }}
                     className="mySwiper"
                 >
-                    {our_partner_list?.data
-                        ? our_partner_list.data.map((itm, idx) => (
+                    {Array.isArray(our_partner_images)
+                        ? our_partner_images.map((itm, idx) => (
                               <SwiperSlide key={idx}>
                                   <Img
-                                      alt={itm?.attributes?.name || ""}
+                                      alt={itm?.name || ""}
                                       src={
-                                          "/images/default-image.jpg" ||
-                                          api_url + itm?.attributes?.url
+                                          itm?.full_url ||
+                                          "/images/default-image.jpg"
                                       }
                                       className={"select-none w-full h-full"}
                                   />

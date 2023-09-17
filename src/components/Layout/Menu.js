@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 const SubMenuItem = ({
     children,
     className,
-    subMenu,
+    sub_menu,
     title,
     url,
     target,
@@ -57,9 +57,9 @@ const SubMenuItem = ({
                     </div>
                 </button>
             </div>
-            {subMenu?.length ? (
+            {Array.isArray(sub_menu) && sub_menu?.length ? (
                 <MenuItems
-                    items={subMenu}
+                    items={sub_menu}
                     className={clsx(
                         "bg-black/5 lg:bg-white lg:text-initial font-normal text-sm pointer-events-none transition-all lg:transition-transform ease-out opacity-0 lg:translate-y-2 h-0",
                         {
@@ -114,7 +114,7 @@ const MenuItems = ({ items, hasHome, hasSearch, ...props }) => {
             ) : null}
             {items.map((itm, idx) =>
                 cloneElement(
-                    itm?.subMenu?.length ? (
+                    Array.isArray(itm?.sub_menu) && itm?.sub_menu?.length ? (
                         <SubMenuItem {...itm} />
                     ) : (
                         <li

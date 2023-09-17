@@ -10,7 +10,7 @@ import { useSwipesHoriziontal } from "@/hooks";
 import { MENU } from "@/constant/menu";
 import { COLOR_LOGO_URL, LOGO_NAME, WHITE_LOGO_URL } from "@/constant/default";
 
-export default function Header({ isHomePage, property, api_url }) {
+export default function Header({ isHomePage, menu, white_logo, color_logo }) {
     const {
         openSidebar,
         setOpenSidebar,
@@ -26,16 +26,10 @@ export default function Header({ isHomePage, property, api_url }) {
         },
     });
 
-    const colorLogoUrl = property?.color_logo?.data?.attributes?.url
-        ? api_url + property?.color_logo?.data?.attributes?.url
-        : COLOR_LOGO_URL;
-    const whiteLogoUrl = property?.white_logo?.data?.attributes?.url
-        ? api_url + property?.white_logo?.data?.attributes?.url
-        : WHITE_LOGO_URL;
-    const colorLogoName =
-        property?.color_logo?.data?.attributes?.name || LOGO_NAME;
-    const whiteLogoName =
-        property?.white_logo?.data?.attributes?.name || LOGO_NAME;
+    const colorLogoUrl = color_logo?.full_url || COLOR_LOGO_URL;
+    const whiteLogoUrl = white_logo?.full_url || WHITE_LOGO_URL;
+    const colorLogoName = color_logo?.name || LOGO_NAME;
+    const whiteLogoName = white_logo?.name || LOGO_NAME;
 
     return (
         <header id="header">
@@ -62,19 +56,14 @@ export default function Header({ isHomePage, property, api_url }) {
                         <Link href={"/"} className="w-40">
                             <img
                                 alt={colorLogoName}
-                                src={
-                                    "/images/18-design-cut.png" || colorLogoUrl
-                                }
+                                src={colorLogoUrl}
                                 className={clsx({ "lg:hidden": isHomePage })}
                             />
                             <img
                                 alt={
                                     stickyHeader ? colorLogoName : whiteLogoName
                                 }
-                                src={
-                                    "/images/18-design-cut.png" ||
-                                    (stickyHeader ? colorLogoUrl : whiteLogoUrl)
-                                }
+                                src={stickyHeader ? colorLogoUrl : whiteLogoUrl}
                                 className={
                                     isHomePage ? "hidden lg:block" : "hidden"
                                 }
@@ -116,7 +105,7 @@ export default function Header({ isHomePage, property, api_url }) {
                                 onClick={() => setOpenSidebar(false)}
                             />
                         </div>
-                        <Menu menu={property?.menu || MENU} />
+                        <Menu menu={menu || MENU} />
                     </div>
                 </div>
                 <div

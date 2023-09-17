@@ -3,8 +3,9 @@ import clsx from "clsx";
 function ReadOnlyEditor({ content, className }) {
     return (
         <div
-            className={clsx("ck-content", className || "")}
-            dangerouslySetInnerHTML={{ __html: content }}
+            id="tinymce"
+            className={clsx("mce-content-body", className || "")}
+            dangerouslySetInnerHTML={{ __html: content || "" }}
         />
     );
 }

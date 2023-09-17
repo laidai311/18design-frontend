@@ -52,31 +52,22 @@ export function CardProductItem({
     slug,
     new_price,
     old_price,
-    images,
+    meta_box,
     tag,
-    ...props
 }) {
-    const { api_url } = useStore();
+    const image_link =
+        meta_box?.images?.[0]?.full_url || "/images/slider-1.jpg";
 
-    const imagesArr = getArrayStrapi(images?.data, []);
-
-    const image_link = imagesArr?.[0]
-        ? api_url + imagesArr?.[0]?.url || ""
-        : null;
-
-    const image_name = imagesArr?.[0]
-        ? imagesArr?.[0]?.name || ""
-        : "18 design";
+    const image_name = meta_box?.images?.[0]?.name || "pic";
 
     return (
         <div className="bg-white transition-all overflow-hidden rounded-lg shadow-md hover:shadow-xl group">
             <div className="relative pt-[60%] overflow-hidden">
-                <Link href={`/san-pham/${tag}/${slug || ""}`}>
+                <Link href={`/san-pham/chi-tiet/${slug || ""}`}>
                     <div className="absolute inset-0">
                         <Img
-                            alt={image_name || ""}
-                            // src={"/images/slider-1.jpg" || image_link || ""}
-                            src={image_link || "/images/slider-1.jpg"}
+                            alt={image_name}
+                            src={image_link}
                             className={
                                 "w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
                             }
@@ -85,21 +76,23 @@ export function CardProductItem({
                 </Link>
             </div>
             <CardDescription>
-                <Link href={`/san-pham/${tag}/${slug || ""}`}>
-                    <h3>{title || ""}</h3>
+                <Link href={`/san-pham/chi-tiet/${slug || ""}`}>
+                    <h3 className="line-clamp-2 h-10">
+                        {title?.rendered || ""}
+                    </h3>
                     <div className="group__price">
                         <p className="price">
-                            {formatCurrency(new_price || "")}
+                            {formatCurrency(meta_box?.new_price || "")}
                         </p>
-                        {old_price ? (
+                        {meta_box?.old_price ? (
                             <p className="strike-price">
-                                {formatCurrency(old_price || "")}
+                                {formatCurrency(meta_box?.old_price || "")}
                             </p>
                         ) : null}
                     </div>
                 </Link>
                 <Link
-                    href={`/san-pham/${tag}/${slug || ""}`}
+                    href={`/san-pham/chi-tiet/${slug || ""}`}
                     className="hover:underline text-blue-500"
                 >
                     {" "}

@@ -1,3 +1,5 @@
+import ReadOnlyEditor from "../ReadOnlyEditor";
+
 export function AboutUs({ title, content }) {
     return (
         <div className="py-12 leading-8 text-base">
@@ -5,10 +7,7 @@ export function AboutUs({ title, content }) {
                 <h1 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     {title || "Về chúng tôi"}
                 </h1>
-                <div
-                    className="ck-content"
-                    dangerouslySetInnerHTML={{ __html: content || "" }}
-                />
+                <ReadOnlyEditor content={content} />
             </div>
         </div>
     );

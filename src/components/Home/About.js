@@ -7,14 +7,14 @@ import clsx from "clsx";
 export function About({
     about_title,
     about_description,
-    about_background_link,
+    about_background,
     about_list,
 }) {
     return (
         <section
             className="relative py-12"
             style={{
-                backgroundImage: `url("${about_background_link || ""}")`,
+                backgroundImage: `url("${about_background?.full_url || ""}")`,
                 backgroundPosition: "50% 50%",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
@@ -36,44 +36,48 @@ export function About({
                     </div>
                     <div className="-mx-4 flex flex-wrap">
                         {Array.isArray(about_list)
-                            ? about_list.map((item, index) => (
-                                  <div
-                                      key={index}
-                                      className={clsx(
-                                          "w-full p-4 md:w-1/3 group",
-                                          {
-                                              "mt-12": index % 2 === 0,
-                                          }
-                                      )}
-                                  >
+                            ? about_list.map((item, index) => {
+                                  if (index >= 3) return null;
+                                  return (
                                       <div
-                                          className={
-                                              "transition-shadow group-hover:shadow-2xl overflow-hidden rounded-md"
-                                          }
+                                          key={index}
+                                          className={clsx(
+                                              "w-full p-4 md:w-1/3 group",
+                                              {
+                                                  "mt-12": index % 2 === 0,
+                                              }
+                                          )}
                                       >
-                                          <div className="bg-white text-black p-4 text-center min-h-[250px]">
-                                              <div className="flex justify-center mb-3">
-                                                  <Img
-                                                      alt="icon"
-                                                      src={
-                                                          item?.icon_link || "#"
-                                                      }
-                                                      className="transition-transform group-hover:rotate-[360deg] duration-1000"
-                                                  />
+                                          <div
+                                              className={
+                                                  "transition-shadow group-hover:shadow-2xl overflow-hidden rounded-md"
+                                              }
+                                          >
+                                              <div className="bg-white text-black p-4 text-center min-h-[250px]">
+                                                  <div className="flex justify-center mb-3">
+                                                      <Img
+                                                          alt="icon"
+                                                          src={
+                                                              item?.full_url ||
+                                                              "#"
+                                                          }
+                                                          className="transition-transform group-hover:rotate-[360deg] duration-1000 h-16"
+                                                      />
+                                                  </div>
+                                                  <h3 className="font-semibold mb-2">
+                                                      {item?.title || ""}
+                                                  </h3>
+                                                  <p className="text-sm">
+                                                      {item?.description || ""}
+                                                  </p>
                                               </div>
-                                              <h3 className="font-semibold mb-2">
-                                                  {item?.title || ""}
-                                              </h3>
-                                              <p className="text-sm">
-                                                  {item?.description || ""}
-                                              </p>
-                                          </div>
-                                          <div className="bg-primary uppercase p-3 text-center">
-                                              {item?.action_text || ""}
+                                              <div className="bg-primary uppercase p-3 text-center">
+                                                  {item?.caption || ""}
+                                              </div>
                                           </div>
                                       </div>
-                                  </div>
-                              ))
+                                  );
+                              })
                             : null}
                     </div>
                 </div>

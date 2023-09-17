@@ -8,7 +8,7 @@ export const MENU = [
         title: "Dự án",
         url: "/du-an",
         target: null,
-        subMenu: [
+        sub_menu: [
             {
                 title: "Sửa nhà trọn gói",
                 url: "/sua-nha-tron-goi",
@@ -30,7 +30,7 @@ export const MENU = [
         title: "Thiết kế nội thất",
         url: "/thiet-ke-noi-that",
         target: null,
-        subMenu: [
+        sub_menu: [
             {
                 title: "Thiết kế nội thất biệt thự",
                 url: "/thiet-ke-noi-that-biet-thu",
@@ -77,7 +77,7 @@ export const MENU = [
         title: "Thiết kế kiến trúc",
         url: "/thiet-ke-kien-truc",
         target: null,
-        subMenu: [
+        sub_menu: [
             {
                 title: "Thiết kế kiến trúc biệt thự",
                 url: "/thiet-ke-kien-truc-biet-thu",
@@ -94,7 +94,7 @@ export const MENU = [
         title: "Tin tức",
         url: "/tin-tuc",
         target: null,
-        subMenu: [
+        sub_menu: [
             {
                 title: "Chia sẻ kiến thức",
                 url: "/chia-se-kien-thuc",

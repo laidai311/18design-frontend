@@ -7,11 +7,11 @@ import {
     PulseRing,
 } from "../Styled/Layout/FloatButton";
 
-export default function FloatButton({ onContactClick, property }) {
+export default function FloatButton({ onContactClick, phone, email }) {
     return (
         <>
             <FloatLeft $bottom={170}>
-                <a href={`tel:${property?.phone || PHONE}`} className="tooltip">
+                <a href={`tel:${phone || PHONE}`} className="tooltip">
                     <FloatIcon>
                         <PulseRing />
                         <IconPhone
@@ -21,35 +21,28 @@ export default function FloatButton({ onContactClick, property }) {
                         />
                     </FloatIcon>
                     <span className="tooltiptext">
-                        Gọi ngay: {property?.phone || PHONE}
+                        Gọi ngay: {phone || PHONE}
                     </span>
                 </a>
             </FloatLeft>
             <FloatLeft $bottom={110}>
-                <a
-                    href={`mailto:${property?.email || EMAIL}`}
-                    className="tooltip"
-                >
+                <a href={`mailto:${email || EMAIL}`} className="tooltip">
                     <FloatIcon>
                         <IconEnvelope width={24} height={24} />
                     </FloatIcon>
-                    <span className="tooltiptext">
-                        {property?.email || EMAIL}
-                    </span>
+                    <span className="tooltiptext">{email || EMAIL}</span>
                 </a>
             </FloatLeft>
             <FloatLeft $bottom={50}>
                 <a
                     target="_blank"
-                    href={`https://zalo.me/${property?.phone || PHONE}`}
+                    href={`https://zalo.me/${phone || PHONE}`}
                     className="tooltip"
                 >
                     <FloatIcon>
                         <IconZalo width={24} height={24} />
                     </FloatIcon>
-                    <span className="tooltiptext">
-                        Zalo:{property?.phone || PHONE}
-                    </span>
+                    <span className="tooltiptext">Zalo:{phone || PHONE}</span>
                 </a>
             </FloatLeft>
             <FloatRight>

@@ -135,8 +135,7 @@ const data = [
     },
 ];
 
-export function CategorySection({ category_images, category_list = data }) {
-
+export function CategorySection({ product_tag_list }) {
     return (
         <Category className="category__product">
             <Container>
@@ -146,18 +145,24 @@ export function CategorySection({ category_images, category_list = data }) {
                     </h2>
                 </CategoryTitle>
                 <CategoryList>
-                    {Array.isArray(category_list)
-                        ? category_list.map((item, index) => (
+                    {Array.isArray(product_tag_list)
+                        ? product_tag_list.map((item, index) => (
                               <CategoryItem key={index}>
                                   <div className="category__card">
                                       <Link
                                           href={`/san-pham/${item?.slug || ""}`}
                                       >
                                           <Img
-                                              alt={item?.image_name || ""}
-                                              src={item?.image_link || ""}
+                                              alt={
+                                                  item?.meta_box?.image?.name ||
+                                                  ""
+                                              }
+                                              src={
+                                                  item?.meta_box?.image
+                                                      ?.full_url || ""
+                                              }
                                           />
-                                          <p>{item?.title || ""}</p>
+                                          <p>{item?.name || ""}</p>
                                       </Link>
                                   </div>
                               </CategoryItem>

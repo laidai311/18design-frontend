@@ -5,7 +5,7 @@ import { NextSeo } from "next-seo";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 import { IconEye } from "@/components/Icons";
 import { useEffect } from "react";
-import { getArrayStrapi, updateImgSrc } from "@/utils";
+import { getArrayStrapi, getMenu, updateImgSrc } from "@/utils";
 import { useStore } from "@/stores";
 import { Img } from "@/components/UI";
 import Link from "next/link";
@@ -22,9 +22,10 @@ export default function Page({
     api_url,
     posts,
     slug,
-    property,
+    default_image,
     tag_name,
     tag,
+    category,
 }) {
     useEffect(() => {
         const fn = async () => {
@@ -91,13 +92,14 @@ export default function Page({
                                 <h3 className="uppercase bg-[#e5b936] px-6 py-4 font-semibold text-white">
                                     Bài viết mới nhất
                                 </h3>
-                                <div className="p-4 bg-[#e5b9364a]">
+                                <div className="py-4 bg-[#e5b9364a]">
                                     {Array.isArray(posts)
                                         ? posts.map((item, index) => (
                                               <CardItem
                                                   key={item?.id || index}
                                                   slug={slug}
-                                                  property={property}
+                                                  category={category}
+                                                  default_image={default_image}
                                                   {...item}
                                               />
                                           ))
@@ -112,96 +114,105 @@ export default function Page({
     );
 }
 
-const CardItem = ({ title, cover, tag, slug, property }) => {
-    const { api_url } = useStore();
+const CardItem = ({ title, meta_box, slug, category, default_image }) => {
+    const image_link = meta_box?.image?.full_url || default_image?.full_url;
 
-    const image_link = cover?.data
-        ? api_url + cover?.data?.attributes?.formats?.small?.url || ""
-        : null;
+    const image_name = meta_box?.image?.name || "18 design";
 
-    const image_name = cover?.data
-        ? cover?.data?.attributes?.formats?.small?.name || ""
-        : "18 design";
-
-    const default_image = property?.default_image?.data
-        ? api_url +
-              property?.default_image?.data?.attributes?.formats?.small?.url ||
-          "./images/Gold-18-design.jpg"
-        : "./images/Gold-18-design.jpg";
-
-    const url = tag && slug ? `/${tag}/${slug}` : "#";
+    const url = category && slug ? `/${category}/${slug}` : "";
 
     return (
-        <Link href={url} className="block mb-4">
-            <div className="flex space-x-3 hover:bg-black/5 rounded-xl transition-colors">
+        <Link href={url} className="block">
+            <div className="flex space-x-3 hover:bg-black/5 rounded-xl transition-colors px-3 py-3">
                 <div className="w-24 h-24 overflow-hidden rounded-lg shrink-0">
-                    {image_link ? (
-                        <Img
-                            src={image_link}
-                            alt={image_name}
-                            className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
-                        />
-                    ) : (
-                        <Img
-                            src={default_image}
-                            alt={"logo 18 design"}
-                            className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
-                        />
-                    )}
+                    <Img
+                        src={image_link}
+                        alt={image_name}
+                        className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
+                    />
                 </div>
-                <h3 className="">{title || ""}</h3>
+                <h3 className="">{title?.rendered || ""}</h3>
             </div>
         </Link>
     );
 };
 
 export async function getServerSideProps(context) {
-    const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
-    const { slug = null } = context.params;
+    const {
+        NEXT_PUBLIC_SITE_NAME,
+        NEXT_PUBLIC_API_URL,
+        NEXT_PUBLIC_USER_NAME,
+        NEXT_PUBLIC_PASSWORD,
+    } = process.env;
+    const { slug, category } = context.params;
 
     try {
-        // const [property, post] = await Promise.all(
-        //     [
-        //         "/api/property?populate=*",
-        //         `/api/posts/${slug}?populate=cover`,
-        //     ].map(async (url) => {
-        //         const res = await unfetch(NEXT_PUBLIC_API_URL + url);
-        //         return res.json();
-        //     })
-        // );
+        const [menuData, defaulPageData, postPageData] = await Promise.all(
+            ["/menu-items", "/pages?slug=mac-dinh", `/posts?slug=${slug}`].map(
+                async (url) => {
+                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                        method: "GET",
+                        headers: {
+                            Authorization:
+                                "Basic " +
+                                btoa(
+                                    NEXT_PUBLIC_USER_NAME +
+                                        ":" +
+                                        NEXT_PUBLIC_PASSWORD
+                                ),
+                        },
+                    });
+                    return res.json();
+                }
+            )
+        );
 
-        const propertyAttr = fakeProperty?.data?.attributes || {};
-        const postAttr = fakePost?.data?.attributes || {};
+        const menu = getMenu(menuData);
+        const meta_box = defaulPageData[0]?.meta_box || {};
+        const post_meta_box = postPageData[0]?.meta_box || {};
 
-        // postAttr.content = updateImgSrc(postAttr?.content);
-
-        // const res = await unfetch(
-        //     NEXT_PUBLIC_API_URL +
-        //         `/api/posts?populate=*&filters[tag][$eqi]=${postAttr?.tag}&pagination[limit]=10`
-        // );
-        // const posts = await res.json();
-
-        const postArr = getArrayStrapi(fakePosts?.data, []);
+        const [postsData] = await Promise.all(
+            [`/posts?categories=${postPageData[0]?.categories[0]}`].map(
+                async (url) => {
+                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                        method: "GET",
+                        headers: {
+                            Authorization:
+                                "Basic " +
+                                btoa(
+                                    NEXT_PUBLIC_USER_NAME +
+                                        ":" +
+                                        NEXT_PUBLIC_PASSWORD
+                                ),
+                        },
+                    });
+                    return res.json();
+                }
+            )
+        );
 
         return {
             props: {
-                ...postAttr,
-                // id: post?.data?.id,
-                property: propertyAttr,
-                posts: postArr,
-                slug: slug,
-                meta: postAttr?.meta || {},
-                message: postAttr?.error?.message || "",
+                ...meta_box,
+                menu,
+                post: post_meta_box || {},
+                posts: postsData,
+                category: category || "",
+                title: postPageData[0]?.title?.rendered || "",
+                content: postPageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                status: true,
             },
         };
     } catch (error) {
+        console.log(error);
         return {
             props: {
                 message: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                status: false,
             },
         };
     }
