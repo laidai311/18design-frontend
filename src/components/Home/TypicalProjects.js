@@ -9,9 +9,10 @@ import {
 } from "../Styled/Home/TypicalProjects";
 import { IconChevronRight } from "../Icons";
 import { Card } from "../Card";
+import { POST_TAB } from "@/constant/post_tab";
 
-export const TypicalProject = ({ post_group, post_tab, property }) => {
-    const [activedTab, setActivedTab] = useState(post_tab?.[0]?.key);
+export const TypicalProject = ({ post_group, property }) => {
+    const [activedTab, setActivedTab] = useState(POST_TAB?.[0]?.key);
 
     return (
         <div className="bg-white pt-10 relative">
@@ -21,17 +22,15 @@ export const TypicalProject = ({ post_group, post_tab, property }) => {
                 </h2>
                 <TabWrap>
                     <NavTabList>
-                        {Array.isArray(post_tab)
-                            ? post_tab.map((item, index) => (
-                                  <NavTabItem
-                                      key={index}
-                                      $actived={activedTab === item?.key}
-                                      onClick={() => setActivedTab(item?.key)}
-                                  >
-                                      <span>{item?.title || ""}</span>
-                                  </NavTabItem>
-                              ))
-                            : null}
+                        {POST_TAB.map((item, index) => (
+                            <NavTabItem
+                                key={index}
+                                $actived={activedTab === item?.key}
+                                onClick={() => setActivedTab(item?.key)}
+                            >
+                                <span>{item?.title || ""}</span>
+                            </NavTabItem>
+                        ))}
                     </NavTabList>
                     {Array.isArray(post_group)
                         ? post_group.map((post) => (

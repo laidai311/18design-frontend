@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import { Img } from "../UI";
 import { SLIDER_LIST } from "@/constant/slider-list";
 
-export function Slider({ slider_list, api_url }) {
+export function Slider({ slider_images, site_name }) {
     return (
         <StyledSwiper>
             <Swiper
@@ -20,14 +20,14 @@ export function Slider({ slider_list, api_url }) {
                 modules={[Pagination, Navigation, Autoplay]}
                 className="mySwiper"
             >
-                {slider_list?.data
-                    ? slider_list.data.map((itm, idx) => (
+                {Array.isArray(slider_images)
+                    ? slider_images.map((itm, idx) => (
                           <SwiperSlide key={idx}>
                               <Img
-                                  alt={itm?.attributes?.name || ""}
+                                  alt={itm?.name || site_name || ""}
                                   src={
-                                      "/images/default-image.jpg" ||
-                                      api_url + itm?.attributes?.url
+                                      itm?.full_url ||
+                                      "/images/default-image.jpg"
                                   }
                                   className={"select-none w-full h-full"}
                               />

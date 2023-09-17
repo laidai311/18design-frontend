@@ -3,25 +3,26 @@ import { Card } from "@/components/Card";
 import unfetch from "isomorphic-unfetch";
 import { NextSeo } from "next-seo";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
-import { getArrayStrapi } from "@/utils";
+import { getMenu } from "@/utils";
 import { usePagination } from "@/hooks";
 import clsx from "clsx";
 import { useRouter } from "next/router";
-import { LIMIT_LIST } from "@/constant/default";
 import Component404 from "@/components/404";
 
 export default function Page({
     posts,
-    seo_body,
+    seo_title,
+    seo_description,
     title,
     content,
     site_name,
     pagination,
     currentPage,
     tag,
-    property,
     status,
     error,
+    category,
+    default_image,
 }) {
     const router = useRouter();
 
@@ -42,10 +43,8 @@ export default function Page({
     return (
         <>
             <NextSeo
-                title={
-                    (seo_body?.meta_title || title || "") + " - " + site_name
-                }
-                description={seo_body?.meta_description || ""}
+                title={(seo_title || title || "") + " - " + site_name}
+                description={seo_description || ""}
             />
             {status ? (
                 <section key={tag + currentPage} className="min-h-[80vh] pt-10">
@@ -53,14 +52,15 @@ export default function Page({
                         <h1 className="border-b-2 border-primary uppercase mb-8 text-center text-2xl leading-9">
                             {title || ""}
                         </h1>
-                        <ReadOnlyEditor content={content || ""} />
+                        <ReadOnlyEditor content={content || ""} className={'mb-10'} />
 
                         <div className="-m-4 flex flex-wrap">
                             {Array.isArray(posts)
                                 ? posts.map((itm) => (
                                       <Card
                                           {...itm}
-                                          property={property}
+                                          category={category}
+                                          default_image={default_image}
                                           key={itm.id}
                                           className="w-full p-4 md:w-1/2 lg:w-1/3"
                                       />
@@ -106,53 +106,81 @@ export default function Page({
 }
 
 export async function getServerSideProps(context) {
-    const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
-    const { tag = null, page: currentPage = 1 } = context.query;
+    const {
+        NEXT_PUBLIC_SITE_NAME,
+        NEXT_PUBLIC_API_URL,
+        NEXT_PUBLIC_USER_NAME,
+        NEXT_PUBLIC_PASSWORD,
+    } = process.env;
+    const { category, page: currentPage = 1 } = context.query;
 
     try {
-        const [property, tagPage, posts] = await Promise.all(
+        const [menuData, defaulPageData, categoryPageData] = await Promise.all(
             [
-                "/api/property?populate=*",
-                `/api/pages/${tag}`,
-                `/api/posts?populate=*&filters[tag][$eq]=${tag}&pagination[start]=${
-                    currentPage - 1 ? (+currentPage - 1) * LIMIT_LIST : 0
-                }&pagination[limit]=${LIMIT_LIST}`,
+                "/menu-items",
+                "/pages?slug=mac-dinh",
+                `/categories?slug=${category}`,
             ].map(async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                    method: "GET",
+                    headers: {
+                        Authorization:
+                            "Basic " +
+                            btoa(
+                                NEXT_PUBLIC_USER_NAME +
+                                    ":" +
+                                    NEXT_PUBLIC_PASSWORD
+                            ),
+                    },
+                });
                 return res.json();
             })
         );
 
-        const propertyAttr = property?.data?.attributes || {};
-        const tagPageAttr = tagPage?.data?.attributes || {};
-        const postArr = getArrayStrapi(posts?.data, []);
+        const menu = getMenu(menuData);
+        const meta_box = defaulPageData[0]?.meta_box || {};
+        const category_meta_box = categoryPageData[0]?.meta_box || {};
 
-        if (tagPage?.error?.message) {
-            tagPageAttr.status = false;
-            tagPageAttr.error = tagPage?.error?.message;
-        } else tagPageAttr.status = true;
+        const [postsData] = await Promise.all(
+            [`/posts?categories=${categoryPageData[0]?.id}`].map(
+                async (url) => {
+                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                        method: "GET",
+                        headers: {
+                            Authorization:
+                                "Basic " +
+                                btoa(
+                                    NEXT_PUBLIC_USER_NAME +
+                                        ":" +
+                                        NEXT_PUBLIC_PASSWORD
+                                ),
+                        },
+                    });
+                    return res.json();
+                }
+            )
+        );
 
         return {
             props: {
-                ...tagPageAttr,
-                property: propertyAttr,
-                posts: postArr,
-                currentPage: currentPage - 1,
-                tag: tag,
-                pagination: posts.meta?.pagination || {},
-                meta: tagPageAttr?.meta || {},
-                message: tagPageAttr?.error?.message || "",
+                ...meta_box,
+                menu,
+                posts: postsData,
+                category: category,
+                title: category_meta_box?.title || "",
+                content: category_meta_box?.content || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                status: true,
             },
         };
     } catch (error) {
         return {
             props: {
-                status: false,
-                error: error.message,
+                message: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                status: false,
             },
         };
     }

@@ -1,27 +1,29 @@
 import DefaultLayout from "@/components/Layout";
-import { Quote, About, TypicalProject } from "@/components/Home";
-import { Slider } from "@/components/Home/Slider";
-import { Contact } from "@/components/Home/Contact";
-import { OutPartner } from "@/components/Home/OutPartner";
-import Whychoose from "@/components/Home/Whychoose";
-import { NextSeo } from "next-seo";
+import { AboutUs } from "@/components/AboutUs";
+import Component404 from "@/components/404";
 import unfetch from "isomorphic-unfetch";
-import { getMenu } from "@/utils";
+import { NextSeo } from "next-seo";
+import { getMenu, updateImgSrc } from "@/utils";
 
-export default function Page({ seo_title, seo_description, ...props }) {
+export default function Page({
+    message,
+    seo_title,
+    seo_description,
+    ...props
+}) {
     return (
         <>
             <NextSeo
-                title={seo_title || props?.site_name || ""}
+                title={
+                    (seo_title || props?.title || "") + " - " + props?.site_name
+                }
                 description={seo_description || ""}
             />
-            <Slider {...props} />
-            <Quote />
-            <About {...props} />
-            <TypicalProject {...props} />
-            <Contact {...props} />
-            <Whychoose {...props} />
-            <OutPartner {...props} />
+            {message ? (
+                <Component404 message={message} />
+            ) : (
+                <AboutUs {...props} />
+            )}
         </>
     );
 }
@@ -35,8 +37,8 @@ export async function getServerSideProps() {
     } = process.env;
 
     try {
-        const [menuData, homePageData] = await Promise.all(
-            ["/menu-items", "/pages?slug=trang-chu"].map(async (url) => {
+        const [menuData, aboutPageData] = await Promise.all(
+            ["/menu-items", "/pages?slug=ve-chung-toi"].map(async (url) => {
                 const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
                     method: "GET",
                     headers: {
@@ -55,16 +57,16 @@ export async function getServerSideProps() {
 
         const menu = getMenu(menuData);
 
-        const meta_box = homePageData[0]?.meta_box
-            ? homePageData[0]?.meta_box
+        const meta_box = aboutPageData[0]?.meta_box
+            ? aboutPageData[0]?.meta_box
             : {};
 
         return {
             props: {
                 ...meta_box,
                 menu,
-                title: homePageData[0]?.title?.rendered || "",
-                content: homePageData[0]?.content?.rendered || "",
+                title: aboutPageData[0]?.title?.rendered || "",
+                content: aboutPageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
             },
