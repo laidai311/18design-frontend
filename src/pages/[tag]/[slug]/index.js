@@ -58,7 +58,7 @@ export default function Page({
             <section className="py-10 min-h-[80vh]">
                 <div className="container mx-auto max-w-7xl">
                     <div className="-mx-4 flex flex-wrap">
-                        <div className="p-4 basis-full lg:basis-2/3">
+                        <div className="p-4 w-full lg:w-2/3">
                             <div className="p-8 shadow-lg rounded-lg">
                                 {tag_name ? (
                                     <Link href={`/${tag}`}>
@@ -77,7 +77,7 @@ export default function Page({
                                 <ReadOnlyEditor content={content || ""} />
                             </div>
                         </div>
-                        <div className="p-4 basis-full lg:basis-1/3 space-y-8">
+                        <div className="p-4 w-full lg:w-1/3 space-y-8">
                             <div className="shadow-lg p-4 bg-white rounded-lg">
                                 <h3 className="font-semibold uppercase text-center text-lg mb-1">
                                     Miễn phí 100% <br /> phí thiết kế nội thất
