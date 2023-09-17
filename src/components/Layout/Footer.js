@@ -23,15 +23,22 @@ import {
     PHONE,
 } from "@/constant/default";
 
-export default function Footer({ onContactClick, property, api_url }) {
-    const colorLogoUrl = property?.color_logo?.data?.attributes?.url
-        ? api_url + property?.color_logo?.data?.attributes?.url
-        : COLOR_LOGO_URL;
-    const colorLogoName =
-        property?.color_logo?.data?.attributes?.name || LOGO_NAME;
-    const footerBG = property?.footer_background?.data?.attributes?.url
-        ? api_url + property?.footer_background?.data?.attributes?.url
-        : FOOTER_BG;
+export default function Footer({
+    onContactClick,
+    color_logo,
+    footer_background,
+    footer_description,
+    default_image,
+    company_name,
+    address,
+    phone,
+    email,
+    copyright,
+    facebook_page_name,
+}) {
+    const colorLogoUrl = color_logo?.full_url || COLOR_LOGO_URL;
+    const colorLogoName = color_logo?.name || LOGO_NAME;
+    const footerBG = footer_background?.full_url || FOOTER_BG;
 
     return (
         <Wrapper id="footer">
@@ -40,7 +47,7 @@ export default function Footer({ onContactClick, property, api_url }) {
                     className="absolute inset-0"
                     style={{
                         backgroundImage: `url(${
-                            "/images/default-image.jpg" || footerBG
+                            footerBG || default_image?.full_url
                         })`,
                         backgroundPosition: "50% 50%",
                         backgroundRepeat: "no-repeat",
@@ -65,8 +72,7 @@ export default function Footer({ onContactClick, property, api_url }) {
                                     </Link>
                                 </FooterLogo>
                                 <FooterDescription>
-                                    {property?.footer_description ||
-                                        FOOTER_DESCRIPTION}
+                                    {footer_description || FOOTER_DESCRIPTION}
                                 </FooterDescription>
                                 <button
                                     onClick={onContactClick || null}
@@ -82,14 +88,12 @@ export default function Footer({ onContactClick, property, api_url }) {
                                 </h3>
 
                                 <h4 className="mb-4">
-                                    {property?.company_name || COMPANY_NAME}
+                                    {company_name || COMPANY_NAME}
                                 </h4>
                                 <div className="flex flex-col space-y-2">
                                     <div className="flex items-center space-x-2">
                                         <IconLocationDot />
-                                        <span>
-                                            {property?.address || ADDRESS}
-                                        </span>
+                                        <span>{address || ADDRESS}</span>
                                     </div>
                                     <div>
                                         <a
@@ -97,9 +101,7 @@ export default function Footer({ onContactClick, property, api_url }) {
                                             className="flex items-center space-x-2 hover:underline"
                                         >
                                             <IconPhone />
-                                            <span>
-                                                {property?.phone || PHONE}
-                                            </span>
+                                            <span>{phone || PHONE}</span>
                                         </a>
                                     </div>
                                     <div>
@@ -108,9 +110,7 @@ export default function Footer({ onContactClick, property, api_url }) {
                                             className="flex items-center space-x-2 hover:underline"
                                         >
                                             <IconEnvelope />
-                                            <span>
-                                                {property?.email || EMAIL}
-                                            </span>
+                                            <span>{email || EMAIL}</span>
                                         </a>
                                     </div>
                                 </div>
@@ -119,13 +119,19 @@ export default function Footer({ onContactClick, property, api_url }) {
                                 <h3 className="font-semibold mb-3 uppercase">
                                     Fanpage Facebook
                                 </h3>
-                                <div
-                                    dangerouslySetInnerHTML={{
-                                        __html:
-                                            property?.facebook_page_iframe ||
-                                            FACEBOOK_PAGE_IFRAME,
-                                    }}
-                                />
+                                {facebook_page_name ? (
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: `<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2${facebook_page_name}%2F&tabs=timeline&width=340&height=350&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="350" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`,
+                                        }}
+                                    />
+                                ) : (
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: FACEBOOK_PAGE_IFRAME,
+                                        }}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>
@@ -133,7 +139,7 @@ export default function Footer({ onContactClick, property, api_url }) {
             </Seasion>
             <FooterBottom>
                 <Container>
-                    <p>{property?.copyright || COPYRIGHT}</p>
+                    <p>{copyright || COPYRIGHT}</p>
                 </Container>
             </FooterBottom>
         </Wrapper>

@@ -2,7 +2,7 @@
 import ContactForm from "../ContactForm";
 import { Img } from "../UI";
 
-export function Contact({ contact_background_link }) {
+export function Contact({ contact_background }) {
     return (
         <section className="bg-white pt-10 relative">
             <div className="container max-w-7xl mx-auto">
@@ -14,14 +14,18 @@ export function Contact({ contact_background_link }) {
                         <ContactForm />
                     </div>
                     <div className="w-full p-4 lg:w-1/2">
-                        <Img
-                            alt="sesion-bg-2"
-                            src={
-                                "/images/default-image.jpg" ||
-                                contact_background_link
-                            }
-                            className={"w-full h-full object-cover"}
-                        />
+                        <div className="relative w-full h-full">
+                            <div className="absolute inset-0">
+                                <Img
+                                    alt="sesion-bg-2"
+                                    src={
+                                        contact_background?.full_url ||
+                                        "/images/default-image.jpg"
+                                    }
+                                    className={"w-full h-full object-cover"}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

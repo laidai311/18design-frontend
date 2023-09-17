@@ -46,8 +46,9 @@ const SlideWrapper = styled.div`
         }
     }
 `;
-export function ThumbDetail({ images, api_url }) {
+export function ThumbDetail({ images }) {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
     return (
         <SlideWrapper>
             <Swiper
@@ -67,12 +68,12 @@ export function ThumbDetail({ images, api_url }) {
                 modules={[FreeMode, Navigation, Thumbs]}
                 className="mySwiper2"
             >
-                {images?.data
-                    ? images.data.map((itm, idx) => (
+                {Array.isArray(images)
+                    ? images.map((itm, idx) => (
                           <SwiperSlide key={idx}>
                               <Img
-                                  alt={itm?.attributes?.name || ""}
-                                  src={api_url + itm?.attributes?.url}
+                                  alt={itm?.name || ""}
+                                  src={itm?.full_url}
                                   className={"select-none"}
                               />
                           </SwiperSlide>
@@ -88,12 +89,12 @@ export function ThumbDetail({ images, api_url }) {
                 modules={[FreeMode, Navigation, Thumbs]}
                 className="mySwiper"
             >
-                {images?.data
-                    ? images.data.map((itm, idx) => (
+                {Array.isArray(images)
+                    ? images.map((itm, idx) => (
                           <SwiperSlide key={idx} className="cursor-pointer">
                               <Img
-                                  alt={itm?.attributes?.name || ""}
-                                  src={api_url + itm?.attributes?.url}
+                                  alt={itm?.name || ""}
+                                  src={itm?.full_url}
                                   className={"select-none"}
                               />
                           </SwiperSlide>
