@@ -9,6 +9,7 @@ import { getArrayStrapi, updateImgSrc } from "@/utils";
 import { useStore } from "@/stores";
 import { Img } from "@/components/UI";
 import Link from "next/link";
+import { fakePost, fakePosts, fakeProperty } from "@/stores/fakeData";
 
 export default function Page({
     seo_body,
@@ -57,7 +58,7 @@ export default function Page({
             <section className="py-10 min-h-[80vh]">
                 <div className="container mx-auto max-w-7xl">
                     <div className="-mx-4 flex flex-wrap">
-                        <div className="p-4 basis-full lg:basis-2/3">
+                        <div className="p-4 w-full lg:w-2/3">
                             <div className="p-8 shadow-lg rounded-lg">
                                 {tag_name ? (
                                     <Link href={`/${tag}`}>
@@ -76,7 +77,7 @@ export default function Page({
                                 <ReadOnlyEditor content={content || ""} />
                             </div>
                         </div>
-                        <div className="p-4 basis-full lg:basis-1/3 space-y-8">
+                        <div className="p-4 w-full lg:w-1/3 space-y-8">
                             <div className="shadow-lg p-4 bg-white rounded-lg">
                                 <h3 className="font-semibold uppercase text-center text-lg mb-1">
                                     Miễn phí 100% <br /> phí thiết kế nội thất
@@ -159,33 +160,33 @@ export async function getServerSideProps(context) {
     const { slug = null } = context.params;
 
     try {
-        const [property, post] = await Promise.all(
-            [
-                "/api/property?populate=*",
-                `/api/posts/${slug}?populate=cover`,
-            ].map(async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url);
-                return res.json();
-            })
-        );
+        // const [property, post] = await Promise.all(
+        //     [
+        //         "/api/property?populate=*",
+        //         `/api/posts/${slug}?populate=cover`,
+        //     ].map(async (url) => {
+        //         const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+        //         return res.json();
+        //     })
+        // );
 
-        const propertyAttr = property?.data?.attributes || {};
-        const postAttr = post?.data?.attributes || {};
+        const propertyAttr = fakeProperty?.data?.attributes || {};
+        const postAttr = fakePost?.data?.attributes || {};
 
         // postAttr.content = updateImgSrc(postAttr?.content);
 
-        const res = await unfetch(
-            NEXT_PUBLIC_API_URL +
-                `/api/posts?populate=*&filters[tag][$eqi]=${postAttr?.tag}&pagination[limit]=10`
-        );
-        const posts = await res.json();
+        // const res = await unfetch(
+        //     NEXT_PUBLIC_API_URL +
+        //         `/api/posts?populate=*&filters[tag][$eqi]=${postAttr?.tag}&pagination[limit]=10`
+        // );
+        // const posts = await res.json();
 
-        const postArr = getArrayStrapi(posts?.data, []);
+        const postArr = getArrayStrapi(fakePosts?.data, []);
 
         return {
             props: {
                 ...postAttr,
-                id: post?.data?.id,
+                // id: post?.data?.id,
                 property: propertyAttr,
                 posts: postArr,
                 slug: slug,

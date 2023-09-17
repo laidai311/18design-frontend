@@ -62,14 +62,19 @@ export default function Header({ isHomePage, property, api_url }) {
                         <Link href={"/"} className="w-40">
                             <img
                                 alt={colorLogoName}
-                                src={colorLogoUrl}
+                                src={
+                                    "/images/18-design-cut.png" || colorLogoUrl
+                                }
                                 className={clsx({ "lg:hidden": isHomePage })}
                             />
                             <img
                                 alt={
                                     stickyHeader ? colorLogoName : whiteLogoName
                                 }
-                                src={stickyHeader ? colorLogoUrl : whiteLogoUrl}
+                                src={
+                                    "/images/18-design-cut.png" ||
+                                    (stickyHeader ? colorLogoUrl : whiteLogoUrl)
+                                }
                                 className={
                                     isHomePage ? "hidden lg:block" : "hidden"
                                 }

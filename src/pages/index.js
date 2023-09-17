@@ -13,6 +13,7 @@ import {
     CONTACT_BACKGROUND_NAME,
 } from "@/constant/default";
 import { ABOUT_LIST } from "@/constant/about-list";
+import { fakeHome, fakePostGroup, fakeProperty } from "@/stores/fakeData";
 
 export default function Page({ site_name, message, seo_body, ...props }) {
     return (
@@ -36,17 +37,17 @@ export async function getServerSideProps() {
     const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
 
     try {
-        const [property, home] = await Promise.all(
-            ["/api/property?populate=*", "/api/home?populate=*"].map(
-                async (url) => {
-                    const res = await unfetch(NEXT_PUBLIC_API_URL + url);
-                    return res.json();
-                }
-            )
-        );
+        // const [property, home] = await Promise.all(
+        //     ["/api/property?populate=*", "/api/home?populate=*"].map(
+        //         async (url) => {
+        //             const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+        //             return res.json();
+        //         }
+        //     )
+        // );
 
-        const propertyAttr = property?.data?.attributes || {};
-        const homeAttr = home?.data?.attributes || {};
+        const propertyAttr = fakeProperty?.data?.attributes || {};
+        const homeAttr = fakeHome?.data?.attributes || {};
 
         const why_choose_icons = getArrayStrapi(
             homeAttr?.why_choose_icons?.data,
@@ -93,28 +94,28 @@ export async function getServerSideProps() {
                   }))
                 : ABOUT_LIST;
 
-        homeAttr.post_group = await Promise.all(
-            Array.isArray(homeAttr?.post_tab) &&
-                homeAttr.post_tab.map(async (tab) => {
-                    const resp = await unfetch(
-                        NEXT_PUBLIC_API_URL +
-                            `/api/posts?populate=*&filters[tag][$eq]=${tab?.tag}&pagination[limit]=6`
-                    );
-                    return resp.json();
-                })
-        );
+        // const postGroup = await Promise.all(
+        //     Array.isArray(homeAttr?.post_tab) &&
+        //         homeAttr.post_tab.map(async (tab) => {
+        //             const resp = await unfetch(
+        //                 NEXT_PUBLIC_API_URL +
+        //                     `/api/posts?populate=*&filters[tag][$eq]=${tab?.tag}&pagination[limit]=6`
+        //             );
+        //             return resp.json();
+        //         })
+        // );
 
         homeAttr.post_group = homeAttr.post_tab.map((item, index) => ({
             ...item,
-            items: getArrayStrapi(homeAttr.post_group?.[index]?.data, []) || [],
+            items: getArrayStrapi(fakePostGroup?.[index]?.data, []) || [],
         }));
 
         return {
             props: {
                 ...homeAttr,
                 property: propertyAttr,
-                meta: home?.meta || {},
-                message: home?.error?.message || "",
+                // meta: home?.meta || {},
+                // message: home?.error?.message || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
             },
