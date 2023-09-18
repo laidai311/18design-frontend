@@ -35,8 +35,12 @@ export async function getServerSideProps() {
     } = process.env;
 
     try {
-        const [menuData, homePageData] = await Promise.all(
-            ["/menu-items", "/pages?slug=trang-chu"].map(async (url) => {
+        const [menuData, homePageData, posts] = await Promise.all(
+            [
+                "/menu-items",
+                "/pages?slug=trang-chu",
+                `/posts?category=thiet-ke-noi-that`,
+            ].map(async (url) => {
                 const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
                     method: "GET",
                     headers: {
@@ -63,6 +67,7 @@ export async function getServerSideProps() {
             props: {
                 ...meta_box,
                 menu,
+                posts,
                 title: homePageData[0]?.title?.rendered || "",
                 content: homePageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",

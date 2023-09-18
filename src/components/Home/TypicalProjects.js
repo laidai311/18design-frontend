@@ -11,9 +11,14 @@ import { IconChevronRight } from "../Icons";
 import { Card } from "../Card";
 import { POST_TAB } from "@/constant/post_tab";
 
-export const TypicalProject = ({ post_group, property }) => {
+export const TypicalProject = ({
+    post_group,
+    default_image,
+    category,
+    posts,
+}) => {
     const [activedTab, setActivedTab] = useState(POST_TAB?.[0]?.key);
-
+    console.log(posts);
     return (
         <div className="bg-white pt-10 relative">
             <div className="container max-w-7xl mx-auto">
@@ -32,22 +37,28 @@ export const TypicalProject = ({ post_group, property }) => {
                             </NavTabItem>
                         ))}
                     </NavTabList>
-                    {Array.isArray(post_group)
-                        ? post_group.map((post) => (
+                    {Array.isArray(POST_TAB)
+                        ? POST_TAB.map((post) => (
                               <TabContent
                                   key={post?.key}
                                   $actived={activedTab === post?.key}
                               >
                                   <div className="-mx-4 flex flex-wrap">
-                                      {Array.isArray(post?.items)
-                                          ? post?.items.map((item) => (
-                                                <Card
-                                                    key={item?.id}
-                                                    {...item}
-                                                    property={property}
-                                                    className="w-full p-4 md:w-1/2 lg:w-1/3"
-                                                />
-                                            ))
+                                      {Array.isArray(posts)
+                                          ? posts.map((item, index) => {
+                                                if (index >= 6) return;
+                                                return (
+                                                    <Card
+                                                        key={item?.id}
+                                                        {...item}
+                                                        category={category}
+                                                        default_image={
+                                                            default_image
+                                                        }
+                                                        className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                                    />
+                                                );
+                                            })
                                           : null}
                                   </div>
                                   <ContentBottom>
