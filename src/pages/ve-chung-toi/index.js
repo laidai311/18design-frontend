@@ -76,6 +76,7 @@ export async function getStaticProps() {
                 content: aboutPageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                revalidate: 3600, // In seconds 1h
             },
         };
     } catch (error) {

@@ -221,10 +221,10 @@ export async function getStaticProps(context) {
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
                 status: true,
+                revalidate: 3600, // In seconds 1h
             },
         };
     } catch (error) {
-        console.log(error);
         return {
             props: {
                 message: error.message,

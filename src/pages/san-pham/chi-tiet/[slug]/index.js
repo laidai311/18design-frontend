@@ -22,7 +22,7 @@ export default function Page({
     products_list,
 }) {
     const { setOpenContactForm } = useStore();
-    console.log(products_list);
+
     return (
         <>
             <NextSeo
@@ -128,8 +128,6 @@ export async function getStaticProps(context) {
         );
 
         const menu = getMenu(menuData);
-
-        console.log(productData);
 
         const default_meta_box = defaulPageData[0]?.meta_box || {};
 
