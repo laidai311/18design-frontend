@@ -10,7 +10,7 @@ const SwiperWrapper = styled.div`
     }
 `;
 
-export default function ProductOther({ product_list = fakeProductOther }) {
+export default function ProductOther({ products_list }) {
     return (
         <SwiperWrapper>
             <Swiper
@@ -44,11 +44,13 @@ export default function ProductOther({ product_list = fakeProductOther }) {
                     },
                 }}
             >
-                {product_list.map((item) => (
-                    <SwiperSlide key={item.id}>
-                        <CardProductItem {...item} />
-                    </SwiperSlide>
-                ))}
+                {Array.isArray(products_list)
+                    ? products_list.map((item) => (
+                          <SwiperSlide key={item.id}>
+                              <CardProductItem {...item} />
+                          </SwiperSlide>
+                      ))
+                    : null}
             </Swiper>
         </SwiperWrapper>
     );

@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { Container } from "../Styled";
 import Link from "next/link";
 import { Img } from "../UI";
+import { useStore } from "@/stores";
 
 const Category = styled.div`
     padding: 30px 0 80px;
@@ -61,7 +62,7 @@ const CategoryItem = styled.div`
         transform: scale(1.1);
     }
 
-    & p {
+    & span {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -136,6 +137,7 @@ const data = [
 ];
 
 export function CategorySection({ product_tag_list }) {
+    const { default_image } = useStore();
     return (
         <Category className="category__product">
             <Container>
@@ -162,12 +164,23 @@ export function CategorySection({ product_tag_list }) {
                                                       ?.full_url || ""
                                               }
                                           />
-                                          <p>{item?.name || ""}</p>
+                                          <span>{item?.name || ""}</span>
                                       </Link>
                                   </div>
                               </CategoryItem>
                           ))
                         : null}
+                    <CategoryItem>
+                        <div className="category__card">
+                            <Link href={`/san-pham/loai`}>
+                                <Img
+                                    alt={"18 design"}
+                                    src={default_image?.full_url || ""}
+                                />
+                                <span>Xem tất cả</span>
+                            </Link>
+                        </div>
+                    </CategoryItem>
                 </CategoryList>
             </Container>
         </Category>

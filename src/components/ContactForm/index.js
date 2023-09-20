@@ -14,7 +14,7 @@ import { useState } from "react";
 import clsx from "clsx";
 
 export default function ContactForm({ onClose, className }) {
-    const { api_url } = useStore();
+    const { form_url, form_data } = useStore();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const [errorMessages, setErrorMessages] = useState({});
@@ -65,28 +65,33 @@ export default function ContactForm({ onClose, className }) {
         }
 
         setIsLoading(true);
-        // try {
-        //     // Default options are marked with *
-        //     const res = await fetch(api_url + "/api/registered-users", {
-        //         method: "POST", // *GET, POST, PUT, DELETE, etc.
-        //         mode: "cors", // no-cors, *cors, same-origin
-        //         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             // 'Content-Type': 'application/x-www-form-urlencoded',
-        //         },
-        //         body: JSON.stringify({ data: { ...value, checked: false } }), // body data type must match "Content-Type" header
-        //     });
-        //     const data = await res.json(); // parses JSON response into native JavaScript objects
+        try {
+            let formData = new FormData();
+            formData.append("input_1", value?.design_style);
+            formData.append("input_3", value?.investment_level);
+            formData.append("input_4", value?.total_area);
+            formData.append("input_5", value?.full_name);
+            formData.append("input_6", value?.phone);
+            formData.append("input_8", value?.email);
+            // Default options are marked with *
+            const res = await fetch(form_url + "/forms/1/submissions", {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                body: formData, // body data type must match "Content-Type" header
+            });
+            const data = await res.json(); // parses JSON response into native JavaScript objects
 
-        //     onClose?.();
-        //     reset();
-        // } catch (error) {
-        //     setError(error?.message || "Lỗi không gửi được dữ liệu");
-        // } finally {
-        //     setIsLoading(false);
-        // }
+            onClose?.();
+            reset();
+        } catch (error) {
+            setError(error?.message || "Lỗi không gửi được dữ liệu");
+        } finally {
+            setIsLoading(false);
+        }
     };
+
+    const form_fields = form_data ? form_data?.fields : [];
 
     return (
         <form
@@ -104,10 +109,16 @@ export default function ContactForm({ onClose, className }) {
                         placeholder="Phong cách thiết kế"
                         className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded-r-lg leading-tight focus:outline-none focus:shadow-outline h-11"
                     >
-                        <option value={""}>Phong cách thiết kế</option>
-                        <option value={"Hiện đại"}>Hiện đại</option>
-                        <option value={"Luxury"}>Luxury</option>
-                        <option value={"Tân cổ điển"}>Tân cổ điển</option>
+                        <option value={""}>
+                            {form_fields?.[0]?.label || "Phong cách thiết kế"}
+                        </option>
+                        {Array.isArray(form_fields[0]?.choices)
+                            ? form_fields?.[0]?.choices.map((item, index) => (
+                                  <option key={index} value={item?.value || ""}>
+                                      {item?.text || ""}
+                                  </option>
+                              ))
+                            : null}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <IconChevronDown />
@@ -129,10 +140,16 @@ export default function ContactForm({ onClose, className }) {
                         placeholder="Mức độ đầu từ"
                         className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded-r-lg leading-tight focus:outline-none focus:shadow-outline h-11"
                     >
-                        <option value={""}>Mức độ đầu tư</option>
-                        <option value={"Thấp"}>Thấp</option>
-                        <option value={"Trung cấp"}>Trung cấp</option>
-                        <option value={"Cao cấp"}>Cao cấp</option>
+                        <option value={""}>
+                            {form_fields?.[1]?.label || "Phong cách thiết kế"}
+                        </option>
+                        {Array.isArray(form_fields[1]?.choices)
+                            ? form_fields?.[1]?.choices.map((item, index) => (
+                                  <option key={index} value={item?.value || ""}>
+                                      {item?.text || ""}
+                                  </option>
+                              ))
+                            : null}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <IconChevronDown />
@@ -151,7 +168,9 @@ export default function ContactForm({ onClose, className }) {
                 <input
                     {...register("total_area")}
                     type="number"
-                    placeholder="Tổng diện tích (m²)"
+                    placeholder={
+                        form_fields?.[2]?.label || "Tổng diện tích (m²)"
+                    }
                     inputMode="decimal"
                     className="grow pl-4 pr-2 py-2 border border-gray-400 rounded-r-lg focus:outline-none hover:border-gray-500 focus:shadow-outline h-11"
                 />
@@ -168,7 +187,7 @@ export default function ContactForm({ onClose, className }) {
                 <input
                     {...register("full_name")}
                     type="text"
-                    placeholder="Họ tên"
+                    placeholder={form_fields?.[3]?.label || "Họ tên"}
                     inputMode="text"
                     className="grow pl-4 pr-2 py-2 border border-gray-400 rounded-r-lg focus:outline-none hover:border-gray-500 focus:shadow-outline h-11"
                 />
@@ -185,7 +204,7 @@ export default function ContactForm({ onClose, className }) {
                 <input
                     {...register("phone")}
                     type="text"
-                    placeholder="Số điện thoại"
+                    placeholder={form_fields?.[4]?.label || "Số điện thoại"}
                     inputMode="tel"
                     className="grow pl-4 pr-2 py-2 border border-gray-400 rounded-r-lg focus:outline-none hover:border-gray-500 focus:shadow-outline h-11"
                 />
@@ -202,7 +221,7 @@ export default function ContactForm({ onClose, className }) {
                 <input
                     {...register("email")}
                     type="email"
-                    placeholder="Email"
+                    placeholder={form_fields?.[5]?.label || "Email"}
                     inputMode="email"
                     className="grow pl-4 pr-2 py-2 border border-gray-400 rounded-r-lg focus:outline-none hover:border-gray-500 focus:shadow-outline h-11"
                 />
@@ -213,7 +232,11 @@ export default function ContactForm({ onClose, className }) {
                 </div>
             )}
 
-            {/* {error ? <div className="text-white bg-red-500 mt-0 rounded-lg p-2">{error}</div> : null} */}
+            {error ? (
+                <div className="text-white bg-red-500 mt-0 rounded-lg p-2">
+                    {error}
+                </div>
+            ) : null}
             <button
                 type="submit"
                 disabled={isLoading}

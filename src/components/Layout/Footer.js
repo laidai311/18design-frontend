@@ -23,22 +23,10 @@ import {
     PHONE,
 } from "@/constant/default";
 
-export default function Footer({
-    onContactClick,
-    color_logo,
-    footer_background,
-    footer_description,
-    default_image,
-    company_name,
-    address,
-    phone,
-    email,
-    copyright,
-    facebook_page_name,
-}) {
-    const colorLogoUrl = color_logo?.full_url || COLOR_LOGO_URL;
-    const colorLogoName = color_logo?.name || LOGO_NAME;
-    const footerBG = footer_background?.full_url || FOOTER_BG;
+export default function Footer({ onContactClick, default_page }) {
+    const colorLogoUrl = default_page?.color_logo?.full_url || COLOR_LOGO_URL;
+    const colorLogoName = default_page?.color_logo?.name || LOGO_NAME;
+    const footerBG = default_page?.footer_background?.full_url || FOOTER_BG;
 
     return (
         <Wrapper id="footer">
@@ -47,7 +35,7 @@ export default function Footer({
                     className="absolute inset-0"
                     style={{
                         backgroundImage: `url(${
-                            footerBG || default_image?.full_url
+                            footerBG || default_page?.default_image?.full_url
                         })`,
                         backgroundPosition: "50% 50%",
                         backgroundRepeat: "no-repeat",
@@ -72,7 +60,8 @@ export default function Footer({
                                     </Link>
                                 </FooterLogo>
                                 <FooterDescription>
-                                    {footer_description || FOOTER_DESCRIPTION}
+                                    {default_page?.footer_description ||
+                                        FOOTER_DESCRIPTION}
                                 </FooterDescription>
                                 <button
                                     onClick={onContactClick || null}
@@ -88,12 +77,14 @@ export default function Footer({
                                 </h3>
 
                                 <h4 className="mb-4">
-                                    {company_name || COMPANY_NAME}
+                                    {default_page?.company_name || COMPANY_NAME}
                                 </h4>
                                 <div className="flex flex-col space-y-2">
                                     <div className="flex items-center space-x-2">
                                         <IconLocationDot />
-                                        <span>{address || ADDRESS}</span>
+                                        <span>
+                                            {default_page?.address || ADDRESS}
+                                        </span>
                                     </div>
                                     <div>
                                         <a
@@ -101,7 +92,9 @@ export default function Footer({
                                             className="flex items-center space-x-2 hover:underline"
                                         >
                                             <IconPhone />
-                                            <span>{phone || PHONE}</span>
+                                            <span>
+                                                {default_page?.phone || PHONE}
+                                            </span>
                                         </a>
                                     </div>
                                     <div>
@@ -110,7 +103,9 @@ export default function Footer({
                                             className="flex items-center space-x-2 hover:underline"
                                         >
                                             <IconEnvelope />
-                                            <span>{email || EMAIL}</span>
+                                            <span>
+                                                {default_page?.email || EMAIL}
+                                            </span>
                                         </a>
                                     </div>
                                 </div>
@@ -119,10 +114,10 @@ export default function Footer({
                                 <h3 className="font-semibold mb-3 uppercase">
                                     Fanpage Facebook
                                 </h3>
-                                {facebook_page_name ? (
+                                {default_page?.facebook_page_name ? (
                                     <div
                                         dangerouslySetInnerHTML={{
-                                            __html: `<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2${facebook_page_name}%2F&tabs=timeline&width=340&height=350&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="350" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`,
+                                            __html: `<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2${default_page?.facebook_page_name}%2F&tabs=timeline&width=340&height=350&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="350" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`,
                                         }}
                                     />
                                 ) : (
@@ -139,7 +134,7 @@ export default function Footer({
             </Seasion>
             <FooterBottom>
                 <Container>
-                    <p>{copyright || COPYRIGHT}</p>
+                    <p>{default_page?.copyright || COPYRIGHT}</p>
                 </Container>
             </FooterBottom>
         </Wrapper>

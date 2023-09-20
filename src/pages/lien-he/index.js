@@ -1,34 +1,33 @@
 import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
-import { Banner, Contact, FollowUs, Social } from "@/components/Contact/Banner";
+import { Contact, FollowUs, Social } from "@/components/Contact/Banner";
 import unfetch from "isomorphic-unfetch";
 import { Img } from "@/components/UI";
 import { useStore } from "@/stores";
+import { getMenu } from "@/utils";
+import { NextSeo } from "next-seo";
 
-export default function ContactPage({ banner_img, ...props }) {
-    const { api_url } = useStore();
+export default function ContactPage({
+    background,
+    seo_title,
+    seo_description,
+    ...props
+}) {
+    const { default_image } = useStore();
+
     return (
         <>
-            <Head>
-                <title>Liên hệ - 18 Design</title>
-                <meta
-                    name="description"
-                    content="CÔNG TY CP KIẾN TRÚC & ĐT XÂY DỰNG 18 DESIGN"
-                />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                />
-            </Head>
-            {/* <Banner {...props} /> */}
+            <NextSeo
+                title={
+                    (seo_title || props?.title || "") + " - " + props?.site_name
+                }
+                description={seo_description || ""}
+            />
             <div className="w-full relative pt-[52%] h-auto lg:pt-0 lg:h-[80vh] bg-[#d4e1e7]">
                 <div className="absolute inset-0 py-32 px-20">
                     <Img
-                        // alt={image_name || ""}
-                        src={
-                            "/images/default-image.jpg" ||
-                            api_url + banner_img?.data?.attributes?.url
-                        }
+                        alt={background?.title || default_image?.title || ""}
+                        src={background?.full_url || default_image?.full_url}
                         className={"w-full h-full object-cover"}
                     />
                 </div>
@@ -40,26 +39,50 @@ export default function ContactPage({ banner_img, ...props }) {
     );
 }
 
-export async function getServerSideProps() {
-    const { NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_API_URL } = process.env;
+export async function getStaticProps() {
+    const {
+        NEXT_PUBLIC_SITE_NAME,
+        NEXT_PUBLIC_API_URL,
+        NEXT_PUBLIC_USER_NAME,
+        NEXT_PUBLIC_PASSWORD,
+    } = process.env;
 
     try {
-        const [property, contact] = await Promise.all(
-            ["/api/property?populate=*", "/api/contact?populate=*"].map(
+        const [menuData, defaulPageData, contactPageData] = await Promise.all(
+            ["/menu-items", "/pages?slug=mac-dinh", "/pages?slug=lien-he"].map(
                 async (url) => {
-                    const res = await unfetch(NEXT_PUBLIC_API_URL + url);
+                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                        method: "GET",
+                        headers: {
+                            Authorization:
+                                "Basic " +
+                                btoa(
+                                    NEXT_PUBLIC_USER_NAME +
+                                        ":" +
+                                        NEXT_PUBLIC_PASSWORD
+                                ),
+                        },
+                    });
                     return res.json();
                 }
             )
         );
-        const propertyAttr = property?.data?.attributes || {};
-        const contactAttr = contact?.data?.attributes || {};
+
+        const menu = getMenu(menuData);
+
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
+        const meta_box = contactPageData[0]?.meta_box
+            ? contactPageData[0]?.meta_box
+            : {};
+
         return {
             props: {
-                ...contactAttr,
-                property: propertyAttr,
-                meta: contact?.meta || {},
-                message: contact?.error?.message || "",
+                ...meta_box,
+                menu,
+                default_page: default_meta_box,
+                title: contactPageData[0]?.title?.rendered || "",
+                content: contactPageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
             },

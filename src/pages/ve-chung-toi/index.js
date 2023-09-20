@@ -3,7 +3,7 @@ import { AboutUs } from "@/components/AboutUs";
 import Component404 from "@/components/404";
 import unfetch from "isomorphic-unfetch";
 import { NextSeo } from "next-seo";
-import { getMenu, updateImgSrc } from "@/utils";
+import { getMenu } from "@/utils";
 
 export default function Page({
     message,
@@ -28,7 +28,7 @@ export default function Page({
     );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
     const {
         NEXT_PUBLIC_SITE_NAME,
         NEXT_PUBLIC_API_URL,
@@ -37,8 +37,12 @@ export async function getServerSideProps() {
     } = process.env;
 
     try {
-        const [menuData, aboutPageData] = await Promise.all(
-            ["/menu-items", "/pages?slug=ve-chung-toi"].map(async (url) => {
+        const [menuData, defaulPageData, aboutPageData] = await Promise.all(
+            [
+                "/menu-items",
+                "/pages?slug=mac-dinh",
+                "/pages?slug=ve-chung-toi",
+            ].map(async (url) => {
                 const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
                     method: "GET",
                     headers: {
@@ -57,6 +61,8 @@ export async function getServerSideProps() {
 
         const menu = getMenu(menuData);
 
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
         const meta_box = aboutPageData[0]?.meta_box
             ? aboutPageData[0]?.meta_box
             : {};
@@ -65,6 +71,7 @@ export async function getServerSideProps() {
             props: {
                 ...meta_box,
                 menu,
+                default_page: default_meta_box,
                 title: aboutPageData[0]?.title?.rendered || "",
                 content: aboutPageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",

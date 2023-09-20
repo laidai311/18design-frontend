@@ -10,7 +10,7 @@ import { useSwipesHoriziontal } from "@/hooks";
 import { MENU } from "@/constant/menu";
 import { COLOR_LOGO_URL, LOGO_NAME, WHITE_LOGO_URL } from "@/constant/default";
 
-export default function Header({ isHomePage, menu, white_logo, color_logo }) {
+export default function Header({ isHomePage, menu, default_page }) {
     const {
         openSidebar,
         setOpenSidebar,
@@ -26,34 +26,36 @@ export default function Header({ isHomePage, menu, white_logo, color_logo }) {
         },
     });
 
-    const colorLogoUrl = color_logo?.full_url || COLOR_LOGO_URL;
-    const whiteLogoUrl = white_logo?.full_url || WHITE_LOGO_URL;
-    const colorLogoName = color_logo?.name || LOGO_NAME;
-    const whiteLogoName = white_logo?.name || LOGO_NAME;
+    const colorLogoUrl = default_page?.color_logo?.full_url || COLOR_LOGO_URL;
+    const whiteLogoUrl = default_page?.white_logo?.full_url || WHITE_LOGO_URL;
+    const colorLogoName = default_page?.color_logo?.name || LOGO_NAME;
+    const whiteLogoName = default_page?.white_logo?.name || LOGO_NAME;
 
     return (
         <header id="header">
             <div
                 className={clsx(
                     "flex flex-col absolute top-0 left-0 right-0 z-10 shadow-lg transition-all",
-                    isHomePage ? "bg-transparent" : "bg-white",
+                    isHomePage
+                        ? "bg-header lg:bg-transparent"
+                        : "bg-header text-white",
                     {
-                        "!fixed !bg-white animate-[stuckMoveDown_0.6s]":
+                        "!fixed !bg-header text-white animate-[stuckMoveDown_0.6s]":
                             stickyHeader,
                     }
                 )}
             >
-                <div className="relative container max-w-7xl mx-auto flex justify-center lg:justify-between items-stretch h-header px-3">
-                    <div className="lg:hidden absolute top-0 left-0 h-header w-header flex items-center justify-center">
+                <div className="relative container max-w-7xl mx-auto flex justify-start lg:justify-between items-stretch h-header px-3">
+                    <div className="lg:hidden absolute top-0 right-0 h-header w-header flex items-center justify-center">
                         <button
                             onClick={() => setOpenSidebar(true)}
-                            className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10"
+                            className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10 text-white"
                         >
                             <IconMenu width={20} height={20} />
                         </button>
                     </div>
                     <div className="shrink-0 mr-3 flex items-center">
-                        <Link href={"/"} className="w-40">
+                        <Link href={"/"} className="w-40 ml-3 lg:ml-0">
                             <img
                                 alt={colorLogoName}
                                 src={colorLogoUrl}
@@ -84,7 +86,7 @@ export default function Header({ isHomePage, menu, white_logo, color_logo }) {
                         className={clsx(
                             "flex items-stretch flex-col lg:flex-row",
                             {
-                                "fixed top-0 left-0 z-30 w-72 h-full transition-all duration-300 transform -translate-x-full bg-sidebar text-white lg:text-black lg:bg-white shadow-lg lg:py-0 overflow-y-auto opacity-0 overscroll-contain":
+                                "fixed top-0 left-0 z-30 w-72 h-full transition-all duration-300 transform -translate-x-full bg-sidebar text-white lg:text-black lg:bg-header shadow-lg lg:py-0 overflow-y-auto opacity-0 overscroll-contain":
                                     !responsive.lg,
                             },
                             { "!translate-x-0 opacity-100": openSidebar },
@@ -97,7 +99,10 @@ export default function Header({ isHomePage, menu, white_logo, color_logo }) {
                         >
                             <img
                                 alt={"logo-white"}
-                                src={"./images/18-design-cut-white.png"}
+                                src={
+                                    whiteLogoUrl ||
+                                    "./images/18-design-cut-white.png"
+                                }
                             />
                         </Link>
                         <div className="absolute top-0 right-2 h-header flex items-center justify-center lg:hidden">
@@ -128,7 +133,7 @@ export default function Header({ isHomePage, menu, white_logo, color_logo }) {
                         }
                     )}
                 >
-                    <div className="lg:px-5 lg:py-3 bg-white rounded-lg divide-y w-full">
+                    <div className="lg:px-5 lg:py-3 bg-header rounded-lg divide-y w-full">
                         <SearchForm className="py-1" />
                     </div>
                 </div>

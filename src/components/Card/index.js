@@ -2,20 +2,16 @@ import Link from "next/link";
 import { Img } from "../UI";
 import { IconAnglesRight, IconEye } from "../Icons";
 import { styled } from "styled-components";
+import { useStore } from "@/stores";
 
-export const Card = ({
-    title,
-    slug = "#",
-    className,
-    meta_box,
-    category,
-    default_image,
-}) => {
+export const Card = ({ title, slug = "#", className, meta_box, category }) => {
+    const { default_image } = useStore();
+
     const image_link = meta_box?.image?.full_url || default_image?.full_url;
 
     const image_name = meta_box?.image?.name || "18 design";
 
-    const url = category && slug ? `/${category}/${slug}` : "";
+    const url = category?.slug && slug ? `/${category?.slug}/${slug}` : "/#";
 
     return (
         <CardStyled className={className || ""}>

@@ -31,6 +31,7 @@ module.exports = {
                 hover: "#E6BC67",
                 initial: "initial",
                 sidebar: "#bd8b1b",
+                header: "#262626",
             },
             backgroundImage: {
                 "cta-button":
