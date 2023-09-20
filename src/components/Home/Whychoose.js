@@ -2,12 +2,12 @@
 import { WHY_CHOOSE_BG } from "@/constant/default";
 import { WHY_CHOOSE_LIST } from "@/constant/why-choose_list";
 
-export default function Whychoose({ why_choose_list, why_choose_background }) {
+export default function Whychoose({ why_choose_background, why_choose_group }) {
     const whyChooseBG = why_choose_background?.full_url || WHY_CHOOSE_BG;
 
     const whyChooseList =
-        Array.isArray(why_choose_list) && why_choose_list?.length
-            ? why_choose_list
+        Array.isArray(why_choose_group) && why_choose_group?.length
+            ? why_choose_group
             : WHY_CHOOSE_LIST;
 
     return (
@@ -35,8 +35,8 @@ export default function Whychoose({ why_choose_list, why_choose_background }) {
                             >
                                 <div className="flex justify-center">
                                     <img
-                                        alt={itm?.name || ""}
-                                        src={itm?.full_url || ""}
+                                        alt={itm?.icon_name || ""}
+                                        src={itm?.icon_link || ""}
                                         className="w-16 h-16"
                                     />
                                 </div>

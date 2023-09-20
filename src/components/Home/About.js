@@ -8,7 +8,7 @@ export function About({
     about_title,
     about_description,
     about_background,
-    about_list,
+    about_group,
 }) {
     return (
         <section
@@ -35,8 +35,8 @@ export function About({
                         />
                     </div>
                     <div className="-mx-4 flex flex-wrap">
-                        {Array.isArray(about_list)
-                            ? about_list.map((item, index) => {
+                        {Array.isArray(about_group)
+                            ? about_group.map((item, index) => {
                                   if (index >= 3) return null;
                                   return (
                                       <div
@@ -56,10 +56,13 @@ export function About({
                                               <div className="bg-white text-black p-4 text-center min-h-[250px]">
                                                   <div className="flex justify-center mb-3">
                                                       <Img
-                                                          alt="icon"
+                                                          alt={
+                                                              item?.icon_name ||
+                                                              ""
+                                                          }
                                                           src={
-                                                              item?.full_url ||
-                                                              "#"
+                                                              item?.icon_link ||
+                                                              "/#"
                                                           }
                                                           className="transition-transform group-hover:rotate-[360deg] duration-1000 h-16"
                                                       />
@@ -72,7 +75,7 @@ export function About({
                                                   </p>
                                               </div>
                                               <div className="bg-primary uppercase p-3 text-center">
-                                                  {item?.caption || ""}
+                                                  {item?.action || ""}
                                               </div>
                                           </div>
                                       </div>

@@ -2,11 +2,11 @@ import { styled } from "styled-components";
 import {
     IconEmail,
     IconFacebook,
-    IconLinkedin,
     IconLocation,
+    IconMessenger,
     IconPhoneRight,
     IconTwitter,
-    IconVKontake,
+    IconZalo,
 } from "../Icons";
 import { Container } from "../Styled";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
@@ -244,16 +244,16 @@ export function Banner({ banner_img, api_url }) {
     );
 }
 
-export function Contact({ address, email, phone, description_contact }) {
+export function Contact({ address, email, phone, description }) {
     return (
         <ContactInfo>
             <Container>
                 <ContactBlock>
                     <ContactTitle>
-                        <h1>liên hệ với chúng tôi</h1>
+                        <h1 className="font-semibold">Liên hệ với chúng tôi</h1>
                         <ReadOnlyEditor
-                            className="text-justify"
-                            content={description_contact || ""}
+                            className="text-center"
+                            content={description || ""}
                         />
                     </ContactTitle>
                     <div className="-mx-4 flex flex-wrap">
@@ -263,7 +263,9 @@ export function Contact({ address, email, phone, description_contact }) {
                             </div>
                             <div className="space-y-1">
                                 <h4 className="font-semibold text-lg">Email</h4>
-                                <p>{email || "arch18designs@gmail.com"}</p>
+                                <a href={`mailto:${email}`}>
+                                    {email || "arch18designs@gmail.com"}
+                                </a>
                             </div>
                         </div>
                         <div className="w-full p-4 md:w-1/3">
@@ -288,7 +290,9 @@ export function Contact({ address, email, phone, description_contact }) {
                                 <h4 className="font-semibold text-lg">
                                     Điện thoại
                                 </h4>
-                                <p>{phone || "083.8586.444"}</p>
+                                <a href={`tel:${phone}`}>
+                                    {phone || "083.8586.444"}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -298,7 +302,7 @@ export function Contact({ address, email, phone, description_contact }) {
     );
 }
 
-export function FollowUs({ connect_img, api_url }) {
+export function FollowUs({ images }) {
     return (
         <Follow>
             <div className="container mx-auto max-w-7xl">
@@ -306,21 +310,25 @@ export function FollowUs({ connect_img, api_url }) {
                     <h2>Follow Us</h2>
                 </FollowTitle>
                 <div className="-mx-4 flex flex-wrap">
-                    {Array.isArray(connect_img?.data)
-                        ? connect_img.data.map((itm, idx) => {
+                    {Array.isArray(images)
+                        ? images.map((itm, idx) => {
                               if (idx >= 3) return null;
                               return (
                                   <div
                                       key={idx}
                                       className="p-4 w-full lg:w-1/3"
                                   >
-                                      <Img
-                                          alt={itm?.attributes?.name || ""}
-                                          src={api_url + itm?.attributes?.url}
-                                          className={
-                                              "select-none w-full h-full"
-                                          }
-                                      />
+                                      <div className="relative pt-[100%]">
+                                          <div className="absolute inset-0">
+                                              <Img
+                                                  alt={itm?.title || ""}
+                                                  src={itm?.full_url}
+                                                  className={
+                                                      "select-none w-full h-full object-cover"
+                                                  }
+                                              />
+                                          </div>
+                                      </div>
                                   </div>
                               );
                           })
@@ -331,39 +339,47 @@ export function FollowUs({ connect_img, api_url }) {
     );
 }
 
-export function Social({
-    fb_contact_link,
-    twitter_contact_link,
-    linked_contact_link,
-    wk_contact_link,
-}) {
+export function Social({ social_group }) {
     return (
         <section className="pt-16 bg-[#d4e1e7] pb-16">
             <div className="container max-w-7xl mx-auto">
                 <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     kết nối với chúng tôi
                 </h2>
-                <div className="flex justify-center space-x-2">
-                    <Link href={fb_contact_link || "#"}>
-                        <div className="w-10 h-10 rounded-full bg-[#3a589d] text-white flex justify-center items-center">
-                            <IconFacebook />
-                        </div>
-                    </Link>
-                    <Link href={twitter_contact_link || "#"}>
-                        <div className="w-10 h-10 rounded-full bg-[#2478ba] text-white flex justify-center items-center">
-                            <IconTwitter />
-                        </div>
-                    </Link>
-                    <Link href={linked_contact_link || "#"}>
-                        <div className="w-10 h-10 rounded-full bg-[#0072b7] text-white flex justify-center items-center">
-                            <IconLinkedin />
-                        </div>
-                    </Link>
-                    <Link href={wk_contact_link || "#"}>
-                        <div className="w-10 h-10 rounded-full bg-[#527498] text-white flex justify-center items-center">
-                            <IconVKontake />
-                        </div>
-                    </Link>
+                <div className="flex justify-center space-x-4">
+                    {Array.isArray(social_group)
+                        ? social_group.map((item, index) => (
+                              <Link key={index} href={item?.link || "/#"}>
+                                  {item?.social === "Facebook" ? (
+                                      <div className="w-10 h-10 rounded-full bg-[#3a589d] text-white flex justify-center items-center">
+                                          <IconFacebook />
+                                      </div>
+                                  ) : item?.social === "Twitter" ? (
+                                      <div className="w-10 h-10 rounded-full bg-[#2478ba] text-white flex justify-center items-center">
+                                          <IconTwitter />
+                                      </div>
+                                  ) : item?.social === "Zalo" ? (
+                                      <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex justify-center items-center">
+                                          <IconZalo className="w-10 h-10" />
+                                      </div>
+                                  ) : item?.social === "Instagram" ? (
+                                      <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex justify-center items-center">
+                                          <img
+                                              alt="icon"
+                                              src="/images/Instagram_logo.svg"
+                                          />
+                                      </div>
+                                  ) : item?.social === "Messenger" ? (
+                                      <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex justify-center items-center">
+                                          <img
+                                              alt="icon"
+                                              src="/images/Messenger_logo.svg"
+                                          />
+                                      </div>
+                                  ) : null}
+                              </Link>
+                          ))
+                        : null}
                 </div>
             </div>
         </section>
