@@ -1,3 +1,4 @@
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { BreadcrumbDetail } from "@/components/BreadcrumbDetail";
 import { CategoryTitle } from "@/components/CategoryProduct";
 import DefaultLayout from "@/components/Layout";
@@ -18,11 +19,10 @@ export default function Page({
     seo_description,
     site_name,
     product,
-    product_list,
-    content,
+    products_list,
 }) {
     const { setOpenContactForm } = useStore();
-
+    console.log(products_list);
     return (
         <>
             <NextSeo
@@ -31,18 +31,22 @@ export default function Page({
             />
             <ProductDetail key={product?.slug}>
                 <div className="container mx-auto max-w-7xl my-10">
-                    <BreadcrumbDetail />
+                    <Breadcrumb value1={product?.title?.rendered || ""} />
                     <div className="detail">
-                        <ThumbDetail images={product?.images} />
+                        <ThumbDetail images={product?.meta_box?.images} />
                         <ProductDescription>
                             <h3 className="font-semibold text-lg">{title}</h3>
                             <div className="price__group">
                                 <p className="price">
-                                    {formatCurrency(product?.new_price)}
+                                    {formatCurrency(
+                                        product?.meta_box?.new_price
+                                    )}
                                 </p>
-                                {product?.old_price ? (
+                                {product?.meta_box?.old_price ? (
                                     <p className="old__price">
-                                        {formatCurrency(product?.old_price)}
+                                        {formatCurrency(
+                                            product?.meta_box?.old_price
+                                        )}
                                     </p>
                                 ) : null}
                             </div>
@@ -50,14 +54,14 @@ export default function Page({
                                 <span>Vật liệu</span>
 
                                 <div className="option__name">
-                                    <p>{product?.material || ""}</p>
+                                    <p>{product?.meta_box?.material || ""}</p>
                                 </div>
                             </div>
                             <div className="size">
                                 <span>Kích thước</span>
 
                                 <div className="option__name">
-                                    <p>{product?.size || ""}</p>
+                                    <p>{product?.meta_box?.size || ""}</p>
                                 </div>
                             </div>
 
@@ -69,66 +73,111 @@ export default function Page({
                             </button>
                         </ProductDescription>
                     </div>
-                    <SpecificationTab {...product} content={content} />
+                    <SpecificationTab
+                        {...product?.meta_box}
+                        content={product?.content.rendered || ""}
+                    />
                     <CategoryTitle>
                         <h3>Sản phẩm khác</h3>
                     </CategoryTitle>
-                    <ProductOther product_list={product_list} />
+                    <ProductOther products_list={products_list} />
                 </div>
             </ProductDetail>
         </>
     );
 }
 
-export async function getServerSideProps(context) {
+export const getStaticPaths = async (context) => {
+    return {
+        paths: [],
+        fallback: "blocking",
+    };
+};
+
+export async function getStaticProps(context) {
     const {
         NEXT_PUBLIC_SITE_NAME,
         NEXT_PUBLIC_API_URL,
         NEXT_PUBLIC_USER_NAME,
         NEXT_PUBLIC_PASSWORD,
+        NEXT_PUBLIC_GRAVITY_FORMS_URL,
     } = process.env;
-    const { slug } = context.params;
+    const slug = context.params?.slug;
 
     try {
-        const [menuData, pageData, productData, productsData] =
-            await Promise.all(
-                [
-                    "/menu-items",
-                    "/pages?slug=mac-dinh",
-                    `/product?slug=${slug}`,
-                    "/product?per_page=8",
-                ].map(async (url) => {
-                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                        method: "GET",
-                        headers: {
-                            Authorization:
-                                "Basic " +
-                                btoa(
-                                    NEXT_PUBLIC_USER_NAME +
-                                        ":" +
-                                        NEXT_PUBLIC_PASSWORD
-                                ),
-                        },
-                    });
-                    return res.json();
-                })
-            );
+        const [menuData, defaulPageData, productData] = await Promise.all(
+            [
+                "/menu-items",
+                "/pages?slug=mac-dinh",
+                `/product?slug=${slug}`,
+            ].map(async (url) => {
+                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                    method: "GET",
+                    headers: {
+                        Authorization:
+                            "Basic " +
+                            btoa(
+                                NEXT_PUBLIC_USER_NAME +
+                                    ":" +
+                                    NEXT_PUBLIC_PASSWORD
+                            ),
+                    },
+                });
+                return res.json();
+            })
+        );
 
         const menu = getMenu(menuData);
 
-        const page_meta_box = pageData[0]?.meta_box || {};
-        const meta_box = productData[0]?.meta_box || {};
+        console.log(productData);
+
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
+        const productsRes = await unfetch(
+            NEXT_PUBLIC_API_URL +
+                `/product?product-tag=${productData[0]?.["product-tag"]?.[0]}&per_page=10`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
+
+        const productsData = await productsRes.json();
+
+        const formRes = await unfetch(
+            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
+
+        const form_data = await formRes.json();
 
         return {
             props: {
-                ...page_meta_box,
-                product: meta_box,
-                product_list: productsData || [],
                 menu,
-                title: productData[0]?.title?.rendered || "",
-                content: productData[0]?.content?.rendered || "",
+                default_page: default_meta_box,
+                form_data,
+                products_list: productsData,
+                product: productData?.[0] || {},
+                title: productData?.[0]?.title?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
+                revalidate: 3600, // In seconds 1h
             },
         };
     } catch (error) {
@@ -138,6 +187,7 @@ export async function getServerSideProps(context) {
                 message: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
             },
         };
     }
