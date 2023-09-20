@@ -39,6 +39,7 @@ export const getStaticProps = async (context) => {
         NEXT_PUBLIC_API_URL,
         NEXT_PUBLIC_USER_NAME,
         NEXT_PUBLIC_PASSWORD,
+        NEXT_PUBLIC_GRAVITY_FORMS_URL,
     } = process.env;
 
     try {
@@ -137,6 +138,22 @@ export const getStaticProps = async (context) => {
             })
         );
 
+        const formRes = await unfetch(
+            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
+
+        const form_data = await formRes.json();
+
         return {
             props: {
                 ...meta_box,
@@ -145,10 +162,12 @@ export const getStaticProps = async (context) => {
                 about_group,
                 why_choose_group,
                 posts_tab,
+                form_data,
                 title: homePageData[0]?.title?.rendered || "",
                 content: homePageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
                 revalidate: 3600, // In seconds 1h
             },
         };
@@ -158,6 +177,7 @@ export const getStaticProps = async (context) => {
                 message: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
             },
         };
     }

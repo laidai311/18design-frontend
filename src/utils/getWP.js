@@ -6,7 +6,8 @@ export const getMenu = (value, defaultValue = []) => {
         value.forEach((item) => {
             const formatItem = {
                 title: item.title.rendered,
-                url: getUrl(item.url),
+                url:
+                    (item?.object === "post" ? "/khac" : "") + getUrl(item.url),
                 target: item.target,
                 menu_order: item.menu_order,
                 sub_menu: [],
@@ -29,6 +30,7 @@ export const getMenu = (value, defaultValue = []) => {
 };
 
 const getUrl = (value) => {
-    const result = `${value}`.match(/(?<=\/)(.*?)(?=\/)/g);
-    return result.length === 0 ? "/#" : "/" + result[result.length - 1];
+    const result = value.split('/')
+    // const result = `${value}`.match(/(?<=\/)(.*?)(?=\/)/g);
+    return result.length === 0 ? "/#" : "/" + result[result.length - 2];
 };

@@ -33,7 +33,7 @@ function SearchForm({ ...props }) {
                     placeholder="Bạn đang tìm kiếm gì ...?"
                     inputMode="search"
                     autoCapitalize="off"
-                    className="grow focus:outline-none appearance-none"
+                    className="grow focus:outline-none appearance-none bg-inherit"
                 />
                 <button
                     type="submit"

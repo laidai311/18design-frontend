@@ -12,7 +12,7 @@ import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
 
 const Card = styled.div`
-    padding: 80px 0;
+    padding: 10px 0;
 `;
 const CardList = styled.div`
     display: grid;
@@ -26,41 +26,14 @@ const CardList = styled.div`
     }
 `;
 
-export default function Page({
-    seo_body,
-    title,
-    site_name,
-    cover_image,
-    api_url,
-    propducts,
-    category_images,
-    category_list,
-    product_list
-}) {
-    const image_link = cover_image?.data
-        ? api_url + cover_image?.data?.attributes?.url || ""
-        : null;
-
-    const image_name = cover_image?.data
-        ? cover_image?.data?.attributes?.name || ""
-        : "18 design";
-
+export default function Page({ seo_body, title, site_name, products_list }) {
     return (
         <>
             <NextSeo
                 title={(seo_body?.meta_title || title) + " - " + site_name}
                 description={seo_body?.meta_description || ""}
             />
-            <div className="w-full relative pt-[52%] h-auto lg:pt-0 lg:h-[80vh]">
-                <div className="absolute inset-0">
-                    <Img
-                        alt={image_name || ""}
-                        src={image_link || ""}
-                        className={"w-full h-full object-cover"}
-                    />
-                </div>
-            </div>
-            <Breadcrumb />
+            <Breadcrumb value1={title || ""} />
             <Card>
                 <div className="container mx-auto max-w-7xl">
                     <CategoryTitle>
@@ -69,16 +42,21 @@ export default function Page({
                         </h2>
                     </CategoryTitle>
                     <div className="-mx-4 flex flex-wrap">
-                        {Array.isArray(product_list)
-                            ? product_list.map((item, index) => (
-                                  <div
-                                      key={item?.id || index}
-                                      className="p-4 w-full md:w-1/2 lg:w-1/4"
-                                  >
-                                      <CardProductItem {...item} />
-                                  </div>
-                              ))
-                            : null}
+                        {Array.isArray(products_list) &&
+                        products_list.length ? (
+                            products_list.map((item, index) => (
+                                <div
+                                    key={item?.id || index}
+                                    className="p-4 w-full md:w-1/2 lg:w-1/4"
+                                >
+                                    <CardProductItem {...item} />
+                                </div>
+                            ))
+                        ) : (
+                            <div className="w-full my-10 text-center">
+                                Không có sản phẩm nào trên hệ thống
+                            </div>
+                        )}
                     </div>
                 </div>
             </Card>
@@ -86,55 +64,95 @@ export default function Page({
     );
 }
 
-export async function getServerSideProps(context) {
+export const getStaticPaths = async (context) => {
+    return {
+        paths: [],
+        fallback: "blocking",
+    };
+};
+
+export async function getStaticProps(context) {
     const {
         NEXT_PUBLIC_SITE_NAME,
         NEXT_PUBLIC_API_URL,
         NEXT_PUBLIC_USER_NAME,
         NEXT_PUBLIC_PASSWORD,
+        NEXT_PUBLIC_GRAVITY_FORMS_URL,
     } = process.env;
+    const tag = context.params?.tag;
 
     try {
-        const [menuData, productPageData, productTagData, productData] =
-            await Promise.all(
-                [
-                    "/menu-items",
-                    "/pages?slug=san-pham",
-                    "/product-tag?per_page=8",
-                    "/product?per_page=8",
-                ].map(async (url) => {
-                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                        method: "GET",
-                        headers: {
-                            Authorization:
-                                "Basic " +
-                                btoa(
-                                    NEXT_PUBLIC_USER_NAME +
-                                        ":" +
-                                        NEXT_PUBLIC_PASSWORD
-                                ),
-                        },
-                    });
-                    return res.json();
-                })
-            );
+        const [menuData, defaulPageData, productTagData] = await Promise.all(
+            [
+                "/menu-items",
+                "/pages?slug=mac-dinh",
+                `/product-tag?slug=${tag}`,
+            ].map(async (url) => {
+                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                    method: "GET",
+                    headers: {
+                        Authorization:
+                            "Basic " +
+                            btoa(
+                                NEXT_PUBLIC_USER_NAME +
+                                    ":" +
+                                    NEXT_PUBLIC_PASSWORD
+                            ),
+                    },
+                });
+                return res.json();
+            })
+        );
 
         const menu = getMenu(menuData);
 
-        const meta_box = productPageData[0]?.meta_box
-            ? productPageData[0]?.meta_box
-            : {};
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
+        const productsRes = await unfetch(
+            NEXT_PUBLIC_API_URL +
+                `/product?product-tag=${productTagData[0]?.id}&per_page=30`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
+
+        const productsData = await productsRes.json();
+
+        const formRes = await unfetch(
+            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
+
+        const form_data = await formRes.json();
 
         return {
             props: {
-                ...meta_box,
-                product_tag_list: productTagData || [],
-                product_list: productData || [],
                 menu,
-                title: productPageData[0]?.title?.rendered || "",
-                content: productPageData[0]?.content?.rendered || "",
+                default_page: default_meta_box,
+                form_data,
+                products_list: productsData || [],
+                product_tag: productTagData[0],
+                title: productTagData[0]?.name,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
+                revalidate: 3600, // In seconds 1h
             },
         };
     } catch (error) {
@@ -144,6 +162,7 @@ export async function getServerSideProps(context) {
                 message: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
             },
         };
     }

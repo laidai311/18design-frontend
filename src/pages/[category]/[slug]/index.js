@@ -25,26 +25,16 @@ export default function Page({
     default_image,
     tag_name,
     tag,
-    category,
+    categories,
 }) {
     useEffect(() => {
-        const fn = async () => {
+        const fn = () => {
             try {
-                // Default options are marked with *
-                await fetch(api_url + `/api/posts/${id || ""}`, {
-                    method: "PUT", // *GET, POST, PUT, DELETE, etc.
-                    mode: "cors", // no-cors, *cors, same-origin
-                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                    headers: {
-                        "Content-Type": "application/json",
-                        // 'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: JSON.stringify({
-                        data: { total_view: +total_view + 1 },
-                    }), // body data type must match "Content-Type" header
-                });
+                if (id) {
+                    fetch(api_url + `/total_view/` + id);
+                }
             } catch (error) {
-                console.error(error.message);
+                console.error(error?.message);
             }
         };
         fn();
@@ -61,13 +51,23 @@ export default function Page({
                     <div className="-mx-4 flex flex-wrap">
                         <div className="p-4 w-full lg:w-2/3">
                             <div className="p-8 shadow-lg rounded-lg">
-                                {tag_name ? (
-                                    <Link href={`/${tag}`}>
-                                        <div className="inline-block opacity-80 border rounded-full px-2 mb-2 text-sm hover:bg-black/5 transition-colors">
-                                            {tag_name || ""}
-                                        </div>
-                                    </Link>
-                                ) : null}
+                                <div className="space-x-1">
+                                    {Array.isArray(categories)
+                                        ? categories.map((item, index) => {
+                                              if (index >= 3) return null;
+                                              return (
+                                                  <Link
+                                                      key={index}
+                                                      href={`/` + item?.slug}
+                                                  >
+                                                      <div className="inline-block opacity-80 border rounded-full px-2 mb-2 text-sm hover:bg-black/5 transition-colors">
+                                                          {item?.name || ""}
+                                                      </div>
+                                                  </Link>
+                                              );
+                                          })
+                                        : null}
+                                </div>
                                 <h1 className="font-semibold text-2xl pb-5">
                                     {title || ""}
                                 </h1>
@@ -98,7 +98,9 @@ export default function Page({
                                               <CardItem
                                                   key={item?.id || index}
                                                   slug={slug}
-                                                  category={category}
+                                                  category={
+                                                      categories?.[0] || {}
+                                                  }
                                                   default_image={default_image}
                                                   {...item}
                                               />
@@ -114,37 +116,22 @@ export default function Page({
     );
 }
 
-const CardItem = ({ title, meta_box, slug, category, default_image }) => {
-    const image_link = meta_box?.image?.full_url || default_image?.full_url;
-
-    const image_name = meta_box?.image?.name || "18 design";
-
-    const url = category && slug ? `/${category}/${slug}` : "";
-
-    return (
-        <Link href={url} className="block">
-            <div className="flex space-x-3 hover:bg-black/5 rounded-xl transition-colors px-3 py-3">
-                <div className="w-24 h-24 overflow-hidden rounded-lg shrink-0">
-                    <Img
-                        src={image_link}
-                        alt={image_name}
-                        className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
-                    />
-                </div>
-                <h3 className="">{title?.rendered || ""}</h3>
-            </div>
-        </Link>
-    );
+export const getStaticPaths = async (context) => {
+    return {
+        paths: [],
+        fallback: "blocking",
+    };
 };
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
     const {
         NEXT_PUBLIC_SITE_NAME,
         NEXT_PUBLIC_API_URL,
         NEXT_PUBLIC_USER_NAME,
         NEXT_PUBLIC_PASSWORD,
+        NEXT_PUBLIC_GRAVITY_FORMS_URL,
     } = process.env;
-    const { slug, category } = context.params;
+    const { slug } = context.params;
 
     try {
         const [menuData, defaulPageData, postPageData] = await Promise.all(
@@ -168,40 +155,71 @@ export async function getServerSideProps(context) {
         );
 
         const menu = getMenu(menuData);
-        const meta_box = defaulPageData[0]?.meta_box || {};
-        const post_meta_box = postPageData[0]?.meta_box || {};
 
-        const [postsData] = await Promise.all(
-            [`/posts?categories=${postPageData[0]?.categories[0]}`].map(
-                async (url) => {
-                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                        method: "GET",
-                        headers: {
-                            Authorization:
-                                "Basic " +
-                                btoa(
-                                    NEXT_PUBLIC_USER_NAME +
-                                        ":" +
-                                        NEXT_PUBLIC_PASSWORD
-                                ),
-                        },
-                    });
-                    return res.json();
-                }
-            )
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
+        const meta_box = postPageData[0]?.meta_box || {};
+
+        const postsRes = await unfetch(
+            NEXT_PUBLIC_API_URL +
+                `/posts?categories=` +
+                postPageData[0]?.categories[0] +
+                `&per_page=${8}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
         );
+        const postsData = await postsRes.json();
+
+        let categoriesData = postPageData?.[0]?.categories || [];
+
+        categoriesData = await Promise.all(
+            categoriesData.map(async (item) => {
+                const res = await unfetch(
+                    NEXT_PUBLIC_API_URL + `/categories/` + item
+                );
+
+                return res.json();
+            })
+        );
+
+        const formRes = await unfetch(
+            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
+
+        const form_data = await formRes.json();
 
         return {
             props: {
                 ...meta_box,
                 menu,
-                post: post_meta_box || {},
+                default_page: default_meta_box,
+                form_data,
                 posts: postsData,
-                category: category || "",
+                categories: categoriesData,
+                id: postPageData[0]?.id || "",
                 title: postPageData[0]?.title?.rendered || "",
                 content: postPageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
                 status: true,
             },
         };
@@ -212,6 +230,7 @@ export async function getServerSideProps(context) {
                 message: error.message,
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
                 status: false,
             },
         };
@@ -221,3 +240,26 @@ export async function getServerSideProps(context) {
 Page.getLayout = (page, pageProps) => (
     <DefaultLayout {...pageProps}>{page}</DefaultLayout>
 );
+
+const CardItem = ({ title, meta_box, slug, category, default_image }) => {
+    const image_link = meta_box?.image?.full_url || default_image?.full_url;
+
+    const image_name = meta_box?.image?.name || "18 design";
+
+    const url = category?.slug && slug ? `/${category?.slug}/${slug}` : "";
+
+    return (
+        <Link href={url} className="block">
+            <div className="flex space-x-3 hover:bg-black/5 rounded-xl transition-colors px-3 py-3">
+                <div className="w-24 h-24 overflow-hidden rounded-lg shrink-0">
+                    <Img
+                        src={image_link}
+                        alt={image_name}
+                        className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover"
+                    />
+                </div>
+                <h3 className="">{title?.rendered || ""}</h3>
+            </div>
+        </Link>
+    );
+};

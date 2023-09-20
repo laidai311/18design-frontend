@@ -2,7 +2,7 @@
 import ContactForm from "../ContactForm";
 import { Img } from "../UI";
 
-export function Contact({ contact_background }) {
+export function Contact({ contact_background, ...other }) {
     return (
         <section className="bg-white pt-10 relative">
             <div className="container max-w-7xl mx-auto">
@@ -11,7 +11,7 @@ export function Contact({ contact_background }) {
                 </h2>
                 <div className="-mx-4 flex flex-wrap px-4 pb-10">
                     <div className="w-full p-4 lg:w-1/2">
-                        <ContactForm />
+                        <ContactForm {...other} />
                     </div>
                     <div className="w-full p-4 lg:w-1/2">
                         <div className="relative w-full h-full">
