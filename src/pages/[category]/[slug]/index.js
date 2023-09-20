@@ -224,7 +224,6 @@ export async function getStaticProps(context) {
             },
         };
     } catch (error) {
-        console.log(error);
         return {
             props: {
                 message: error.message,

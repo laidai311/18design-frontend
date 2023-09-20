@@ -29,7 +29,7 @@ export const getMenu = (value, defaultValue = []) => {
     return result === undefined ? defaultValue : result;
 };
 
-const getUrl = (value) => {
+export const getUrl = (value) => {
     const result = value.split('/')
     // const result = `${value}`.match(/(?<=\/)(.*?)(?=\/)/g);
     return result.length === 0 ? "/#" : "/" + result[result.length - 2];

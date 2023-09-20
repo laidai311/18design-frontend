@@ -134,7 +134,7 @@ export default function Header({ isHomePage, menu, default_page }) {
                     )}
                 >
                     <div className="lg:px-5 lg:py-3 bg-header rounded-lg divide-y w-full">
-                        <SearchForm className="py-1" />
+                        <SearchForm className="py-1" open={openSearch} />
                     </div>
                 </div>
             </div>
