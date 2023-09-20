@@ -26,7 +26,14 @@ export default function Page({ seo_title, seo_description, ...props }) {
     );
 }
 
-export async function getServerSideProps() {
+// export const getStaticPaths = async (context) => {
+//     return {
+//         paths: [],
+//         fallback: true,
+//     };
+// };
+
+export const getStaticProps = async (context) => {
     const {
         NEXT_PUBLIC_SITE_NAME,
         NEXT_PUBLIC_API_URL,
@@ -35,11 +42,11 @@ export async function getServerSideProps() {
     } = process.env;
 
     try {
-        const [menuData, homePageData, posts] = await Promise.all(
+        const [menuData, defaulPageData, homePageData] = await Promise.all(
             [
                 "/menu-items",
+                "/pages?slug=mac-dinh",
                 "/pages?slug=trang-chu",
-                `/posts?category=thiet-ke-noi-that`,
             ].map(async (url) => {
                 const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
                     method: "GET",
@@ -59,19 +66,90 @@ export async function getServerSideProps() {
 
         const menu = getMenu(menuData);
 
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
         const meta_box = homePageData[0]?.meta_box
             ? homePageData[0]?.meta_box
             : {};
+
+        let about_group = meta_box?.about_group || [];
+
+        about_group = await Promise.all(
+            about_group.map(async (item) => {
+                const res = await unfetch(
+                    NEXT_PUBLIC_API_URL + `/media/` + item?.icon
+                );
+                const icon = await res.json();
+
+                return {
+                    ...item,
+                    icon_link: icon?.source_url,
+                    icon_name: icon?.title?.rendered || "",
+                };
+            })
+        );
+
+        let why_choose_group = meta_box?.why_choose_group || [];
+
+        why_choose_group = await Promise.all(
+            why_choose_group.map(async (item) => {
+                const res = await unfetch(
+                    NEXT_PUBLIC_API_URL + `/media/` + item?.icon
+                );
+                const icon = await res.json();
+
+                return {
+                    ...item,
+                    icon_link: icon?.source_url,
+                    icon_name: icon?.title?.rendered || "",
+                };
+            })
+        );
+
+        let posts_tab = meta_box?.posts_tab || [];
+
+        posts_tab = await Promise.all(
+            posts_tab.map(async (item) => {
+                const res = await unfetch(
+                    NEXT_PUBLIC_API_URL + `/categories/` + item?.category_id
+                );
+
+                return {
+                    ...item,
+                    category: await res.json(),
+                };
+            })
+        );
+
+        posts_tab = await Promise.all(
+            posts_tab.map(async (item) => {
+                const res = await unfetch(
+                    NEXT_PUBLIC_API_URL +
+                        `/posts?categories=` +
+                        item?.category_id +
+                        "&per_page=6"
+                );
+
+                return {
+                    ...item,
+                    posts_list: await res.json(),
+                };
+            })
+        );
 
         return {
             props: {
                 ...meta_box,
                 menu,
-                posts,
+                default_page: default_meta_box,
+                about_group,
+                why_choose_group,
+                posts_tab,
                 title: homePageData[0]?.title?.rendered || "",
                 content: homePageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
+                revalidate: 3600, // In seconds 1h
             },
         };
     } catch (error) {
@@ -83,7 +161,7 @@ export async function getServerSideProps() {
             },
         };
     }
-}
+};
 
 Page.getLayout = (page, pageProps) => (
     <DefaultLayout {...pageProps}>{page}</DefaultLayout>

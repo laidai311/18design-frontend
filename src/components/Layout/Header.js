@@ -10,7 +10,7 @@ import { useSwipesHoriziontal } from "@/hooks";
 import { MENU } from "@/constant/menu";
 import { COLOR_LOGO_URL, LOGO_NAME, WHITE_LOGO_URL } from "@/constant/default";
 
-export default function Header({ isHomePage, menu, white_logo, color_logo }) {
+export default function Header({ isHomePage, menu, default_page }) {
     const {
         openSidebar,
         setOpenSidebar,
@@ -26,10 +26,10 @@ export default function Header({ isHomePage, menu, white_logo, color_logo }) {
         },
     });
 
-    const colorLogoUrl = color_logo?.full_url || COLOR_LOGO_URL;
-    const whiteLogoUrl = white_logo?.full_url || WHITE_LOGO_URL;
-    const colorLogoName = color_logo?.name || LOGO_NAME;
-    const whiteLogoName = white_logo?.name || LOGO_NAME;
+    const colorLogoUrl = default_page?.color_logo?.full_url || COLOR_LOGO_URL;
+    const whiteLogoUrl = default_page?.white_logo?.full_url || WHITE_LOGO_URL;
+    const colorLogoName = default_page?.color_logo?.name || LOGO_NAME;
+    const whiteLogoName = default_page?.white_logo?.name || LOGO_NAME;
 
     return (
         <header id="header">

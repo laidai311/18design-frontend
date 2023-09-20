@@ -11,14 +11,10 @@ import { IconChevronRight } from "../Icons";
 import { Card } from "../Card";
 import { POST_TAB } from "@/constant/post_tab";
 
-export const TypicalProject = ({
-    post_group,
-    default_image,
-    category,
-    posts,
-}) => {
-    const [activedTab, setActivedTab] = useState(POST_TAB?.[0]?.key);
-    console.log(posts);
+export const TypicalProject = ({ posts_tab }) => {
+    const postsTab = Array.isArray(posts_tab) ? posts_tab : POST_TAB;
+    const [activedTab, setActivedTab] = useState(postsTab?.[0]?.category_id);
+
     return (
         <div className="bg-white pt-10 relative">
             <div className="container max-w-7xl mx-auto">
@@ -27,52 +23,50 @@ export const TypicalProject = ({
                 </h2>
                 <TabWrap>
                     <NavTabList>
-                        {POST_TAB.map((item, index) => (
+                        {postsTab.map((item, index) => (
                             <NavTabItem
                                 key={index}
-                                $actived={activedTab === item?.key}
-                                onClick={() => setActivedTab(item?.key)}
+                                $actived={activedTab === item?.category_id}
+                                onClick={() => setActivedTab(item?.category_id)}
                             >
-                                <span>{item?.title || ""}</span>
+                                <span>{item?.label || ""}</span>
                             </NavTabItem>
                         ))}
                     </NavTabList>
-                    {Array.isArray(POST_TAB)
-                        ? POST_TAB.map((post) => (
-                              <TabContent
-                                  key={post?.key}
-                                  $actived={activedTab === post?.key}
-                              >
-                                  <div className="-mx-4 flex flex-wrap">
-                                      {Array.isArray(posts)
-                                          ? posts.map((item, index) => {
-                                                if (index >= 6) return;
-                                                return (
-                                                    <Card
-                                                        key={item?.id}
-                                                        {...item}
-                                                        category={category}
-                                                        default_image={
-                                                            default_image
-                                                        }
-                                                        className="w-full p-4 md:w-1/2 lg:w-1/3"
-                                                    />
-                                                );
-                                            })
-                                          : null}
-                                  </div>
-                                  <ContentBottom>
-                                      <ViewMoreLink
-                                          href={post?.url}
-                                          className="mt-5"
-                                      >
-                                          <span>Xem thêm</span>
-                                          <IconChevronRight />
-                                      </ViewMoreLink>
-                                  </ContentBottom>
-                              </TabContent>
-                          ))
-                        : null}
+                    {postsTab.map((item) => (
+                        <TabContent
+                            key={item?.category_id}
+                            $actived={activedTab === item?.category_id}
+                        >
+                            <div className="-mx-4 flex flex-wrap">
+                                {Array.isArray(item?.posts_list)
+                                    ? item.posts_list.map((itm, index) => {
+                                          if (index >= 6) return;
+                                          return (
+                                              <Card
+                                                  key={itm?.id}
+                                                  {...itm}
+                                                  category={item?.category}
+                                                  className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                              />
+                                          );
+                                      })
+                                    : null}
+                            </div>
+                            <ContentBottom>
+                                <ViewMoreLink
+                                    href={`/${
+                                        item?.category?.slug ||
+                                        item?.category_id
+                                    }`}
+                                    className="mt-5"
+                                >
+                                    <span>Xem thêm</span>
+                                    <IconChevronRight />
+                                </ViewMoreLink>
+                            </ContentBottom>
+                        </TabContent>
+                    ))}
                 </TabWrap>
             </div>
         </div>

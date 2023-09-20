@@ -9,7 +9,7 @@ import {
 import { useRouter } from "next/router";
 import { createContext, useContext, useState } from "react";
 
-export const StoreProvider = ({ children, api_url }) => {
+export const StoreProvider = ({ children, api_url, default_image }) => {
     // bật tắt sub menu
     const [openSubMenu, setOpenSubMenu] = useState({});
     // bật tắt sidebar
@@ -80,6 +80,7 @@ export const StoreProvider = ({ children, api_url }) => {
                 setOpenContactForm,
                 isHomePage,
                 api_url,
+                default_image,
             }}
         >
             {children}
@@ -104,6 +105,7 @@ export const StoreContext = createContext({
     setOpenContactForm() {},
     isHomePage: true,
     api_url: "",
+    default_image: {},
 });
 
 export const useStore = () => useContext(StoreContext);
