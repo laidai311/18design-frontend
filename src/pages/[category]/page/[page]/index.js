@@ -8,6 +8,7 @@ import { usePagination } from "@/hooks";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import Component404 from "@/components/404";
+import Link from "next/link";
 
 export default function Page({
     posts,
@@ -33,11 +34,11 @@ export default function Page({
         page: (curr_page || 0) === 0 ? curr_page + 1 : curr_page,
         siblings: 1,
         boundaries: 1,
-        onChange: (value) => {
-            router.push({
-                pathname: window.location.pathname + "/page/" + value,
-            });
-        },
+        // onChange: (value) => {
+        //     router.push({
+        //         pathname: window.location.pathname + "/page/" + value,
+        //     });
+        // },
     });
 
     return (
@@ -62,7 +63,9 @@ export default function Page({
                                 ? posts.map((itm) => (
                                       <Card
                                           {...itm}
-                                          category={category}
+                                          category={{
+                                              slug: router.query?.category,
+                                          }}
                                           default_image={default_image}
                                           key={itm.id}
                                           className="w-full p-4 md:w-1/2 lg:w-1/3"
@@ -79,8 +82,14 @@ export default function Page({
                                         );
                                     }
                                     return (
-                                        <button
+                                        <Link
                                             key={item}
+                                            href={
+                                                "/" +
+                                                category?.slug +
+                                                "/page/" +
+                                                item
+                                            }
                                             onClick={() => {
                                                 paginationParam.setPage(item);
                                             }}
@@ -94,7 +103,7 @@ export default function Page({
                                             )}
                                         >
                                             {item}
-                                        </button>
+                                        </Link>
                                     );
                                 })}
                             </div>
@@ -123,8 +132,9 @@ export async function getStaticProps(context) {
         NEXT_PUBLIC_PASSWORD,
         NEXT_PUBLIC_GRAVITY_FORMS_URL,
     } = process.env;
+
     const { category } = context.params;
-    const curr_page = context.query?.page || 1;
+    const curr_page = +context.params?.page || 1;
     const per_page = 9;
 
     try {
@@ -160,7 +170,8 @@ export async function getStaticProps(context) {
             NEXT_PUBLIC_API_URL +
                 `/posts?categories=` +
                 categoryPageData[0]?.id +
-                `&per_page=${per_page}`,
+                `&per_page=${per_page}` +
+                `&offset=${per_page * (curr_page - 1)}`,
             {
                 method: "GET",
                 headers: {

@@ -1,8 +1,9 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
 import { Img } from "../UI";
 import { SLIDER_LIST } from "@/constant/slider-list";
+import { media } from "../theme";
 
 export function Slider({ slider_images, site_name }) {
     return (
@@ -29,7 +30,9 @@ export function Slider({ slider_images, site_name }) {
                                       itm?.full_url ||
                                       "/images/default-image.jpg"
                                   }
-                                  className={"select-none w-full h-full"}
+                                  className={
+                                      "select-none w-full h-full object-cover"
+                                  }
                               />
                           </SwiperSlide>
                       ))
@@ -38,7 +41,9 @@ export function Slider({ slider_images, site_name }) {
                               <Img
                                   alt={itm.name}
                                   src={itm.url}
-                                  className={"select-none w-full h-full"}
+                                  className={
+                                      "select-none w-full h-full object-cover"
+                                  }
                               />
                           </SwiperSlide>
                       ))}
@@ -50,6 +55,10 @@ export function Slider({ slider_images, site_name }) {
 const StyledSwiper = styled.section`
     position: relative;
     padding-top: 60%;
+
+    ${media.lg(css`
+        padding-top: 40%;
+    `)}
 
     .mySwiper {
         position: absolute;
