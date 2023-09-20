@@ -118,27 +118,34 @@ function SearchForm({ open, ...props }) {
                     Sản phẩm
                 </button>
             </div>
-            {error ? (
-                <div>{error || ""}</div>
-            ) : (
-                <div className="flex flex-col mt-2">
-                    {Array.isArray(result)
-                        ? result.map((item, index) => (
-                              <Link
-                                  key={index}
-                                  href={`${
-                                      selected === "post"
-                                          ? "/khac"
-                                          : "/san-pham/chi-tiet"
-                                  }${getUrl(item.url)}`}
-                                  className="bg-white text-black rounded-md my-2 px-2 py-1"
-                              >
-                                  {item?.title || ""}
-                              </Link>
-                          ))
-                        : null}
-                </div>
-            )}
+            <div
+                className={clsx(
+                    "transition-all opacity-0 lg:opacity-100 h-0 lg:h-auto pointer-events-none lg:pointer-events-auto",
+                    { "opacity-100 h-auto pt-2 pointer-events-auto": isFocused }
+                )}
+            >
+                {error ? (
+                    <div>{error || ""}</div>
+                ) : (
+                    <div className="flex flex-col mt-2 -mx-4">
+                        {Array.isArray(result)
+                            ? result.map((item, index) => (
+                                  <Link
+                                      key={index}
+                                      href={`${
+                                          selected === "post"
+                                              ? "/khac"
+                                              : "/san-pham/chi-tiet"
+                                      }${getUrl(item.url)}`}
+                                      className="text-white rounded-md px-4 py-2 hover:bg-white/10"
+                                  >
+                                      {item?.title || ""}
+                                  </Link>
+                              ))
+                            : null}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
