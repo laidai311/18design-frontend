@@ -1,0 +1,1 @@
+vc-domain-verify=18design.vn,a2a006b1fd3702de4af2
