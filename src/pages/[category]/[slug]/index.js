@@ -1,16 +1,14 @@
-import DefaultLayout from "@/components/Layout";
-import ContactForm from "@/components/ContactForm";
-import unfetch from "isomorphic-unfetch";
-import { NextSeo } from "next-seo";
-import ReadOnlyEditor from "@/components/ReadOnlyEditor";
+import { getMenu } from "@/utils";
 import { IconEye } from "@/components/Icons";
-import { useEffect } from "react";
-import { getArrayStrapi, getMenu, updateImgSrc } from "@/utils";
-import { useStore } from "@/stores";
 import { Img } from "@/components/UI";
-import Link from "next/link";
-import { fakePost, fakePosts, fakeProperty } from "@/stores/fakeData";
+import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
+import { useEffect } from "react";
+import ContactForm from "@/components/ContactForm";
+import DefaultLayout from "@/components/Layout";
+import Link from "next/link";
+import ReadOnlyEditor from "@/components/ReadOnlyEditor";
+import unfetch from "isomorphic-unfetch";
 
 export default function Page({
     seo_body,
