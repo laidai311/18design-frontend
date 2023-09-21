@@ -9,6 +9,7 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import Component404 from "@/components/404";
 import Link from "next/link";
+import { REVALIDATE } from "@/constant/setting";
 
 export default function Page({
     posts,
@@ -218,8 +219,8 @@ export async function getStaticProps(context) {
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
                 status: true,
-                revalidate: 3600, // In seconds 1h
             },
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
         return {

@@ -1,30 +1,13 @@
-import Head from "next/head";
-import DefaultLayout from "@/components/Layout";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { CategorySection, CategoryTitle } from "@/components/CategoryProduct";
-import { Quote } from "@/components/Home";
 import { CardProductItem } from "@/components/CardProduct";
-import { styled } from "styled-components";
-import { Container } from "@/components/Styled";
-import unfetch from "isomorphic-unfetch";
-import { get, getArrayStrapi, getMenu } from "@/utils";
+import { ProductTagsList } from "@/components/ProductTagsList";
+import { getMenu } from "@/utils";
 import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
-
-const Card = styled.div`
-    padding: 80px 0;
-`;
-const CardList = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    gap: 30px;
-    @media (max-width: 992px) {
-        grid-template-columns: repeat(2, auto);
-    }
-    @media (max-width: 456px) {
-        grid-template-columns: repeat(1, auto);
-    }
-`;
+import { Quote } from "@/components/Home";
+import { REVALIDATE } from "@/constant/setting";
+import DefaultLayout from "@/components/Layout";
+import unfetch from "isomorphic-unfetch";
 
 export default function Page({
     title,
@@ -56,15 +39,13 @@ export default function Page({
                 </div>
             </div>
             <Breadcrumb />
-            <CategorySection product_tag_list={product_tag_list} />
+            <ProductTagsList product_tag_list={product_tag_list} />
             <Quote />
-            <Card>
-                <Container>
-                    <CategoryTitle>
-                        <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
-                            Sản phẩm nổi bật
-                        </h2>
-                    </CategoryTitle>
+            <div className="py-12">
+                <div className="container mx-auto max-w-7xl">
+                    <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                        Sản phẩm nổi bật
+                    </h2>
                     <div className="-mx-4 flex flex-wrap">
                         {Array.isArray(product_list)
                             ? product_list.map((item, index) => (
@@ -77,8 +58,8 @@ export default function Page({
                               ))
                             : null}
                     </div>
-                </Container>
-            </Card>
+                </div>
+            </div>
         </>
     );
 }
@@ -160,11 +141,10 @@ export async function getStaticProps() {
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-                revalidate: 3600, // In seconds 1h
             },
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        console.error(error);
         return {
             props: {
                 message: error.message,

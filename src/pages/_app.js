@@ -1,21 +1,22 @@
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/free-mode";
-import "swiper/css/thumbs";
 import "../styles/globals.css";
 import "nprogress/nprogress.css";
-import { ThemeProvider } from "styled-components";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/thumbs";
+import { DefaultSeo } from "next-seo";
 import { defaultTheme } from "@/components/theme";
 import { StoreProvider } from "@/stores";
-import SEO from "../../next-seo.config";
-import { DefaultSeo } from "next-seo";
+import { ThemeProvider } from "styled-components";
 import { useScrollRestoration } from "@/hooks";
 import nProgress from "nprogress";
 import Router from "next/router";
+import SEO from "../../next-seo.config";
 
 export default function App({ Component, pageProps, router }) {
     const getLayout = Component.getLayout || ((page) => page);
+    
     useScrollRestoration(router);
 
     Router.events.on("routeChangeStart", nProgress.start);

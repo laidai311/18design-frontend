@@ -1,9 +1,10 @@
-import DefaultLayout from "@/components/Layout";
 import { AboutUs } from "@/components/AboutUs";
-import Component404 from "@/components/404";
-import unfetch from "isomorphic-unfetch";
-import { NextSeo } from "next-seo";
 import { getMenu } from "@/utils";
+import { NextSeo } from "next-seo";
+import { REVALIDATE } from "@/constant/setting";
+import Component404 from "@/components/404";
+import DefaultLayout from "@/components/Layout";
+import unfetch from "isomorphic-unfetch";
 
 export default function Page({
     message,
@@ -76,8 +77,8 @@ export async function getStaticProps() {
                 content: aboutPageData[0]?.content?.rendered || "",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
-                revalidate: 3600, // In seconds 1h
             },
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
         return {

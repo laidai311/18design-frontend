@@ -7,6 +7,7 @@ import Whychoose from "@/components/Home/Whychoose";
 import { NextSeo } from "next-seo";
 import unfetch from "isomorphic-unfetch";
 import { getMenu } from "@/utils";
+import { REVALIDATE } from "@/constant/setting";
 
 export default function Page({ seo_title, seo_description, ...props }) {
     return (
@@ -168,8 +169,8 @@ export const getStaticProps = async (context) => {
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-                revalidate: 3600, // In seconds 1h
             },
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
         return {
