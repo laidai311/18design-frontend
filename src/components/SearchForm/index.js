@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { IconLoading, IconSearch } from "../Icons";
-import { useForm } from "react-hook-form";
-import clsx from "clsx";
-import { useClickOutside } from "@/hooks";
-import { useStore } from "@/stores";
-import unfetch from "isomorphic-unfetch";
-import Link from "next/link";
 import { getUrl } from "@/utils";
+import { IconLoading, IconSearch } from "../Icons";
+import { useClickOutside } from "@/hooks";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useStore } from "@/stores";
+import clsx from "clsx";
+import Link from "next/link";
+import unfetch from "isomorphic-unfetch";
 
 function SearchForm({ open, ...props }) {
     const [selected, setSelected] = useState("post");
@@ -19,20 +19,13 @@ function SearchForm({ open, ...props }) {
     });
     const { api_url } = useStore();
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-        reset,
-        setFocus,
-    } = useForm();
+    const { register, handleSubmit, reset, setFocus } = useForm();
 
     useEffect(() => {
         if (open) {
             setFocus("search");
         }
-    }, [open]);
+    }, [open, setFocus]);
 
     const onSubmit = async (value) => {
         setIsLoading(true);

@@ -1,14 +1,14 @@
-import DefaultLayout from "@/components/Layout";
 import { Card } from "@/components/Card";
-import unfetch from "isomorphic-unfetch";
-import { NextSeo } from "next-seo";
-import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 import { getMenu } from "@/utils";
-import { usePagination } from "@/hooks";
-import clsx from "clsx";
-import { useRouter } from "next/router";
-import Component404 from "@/components/404";
+import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
+import { usePagination } from "@/hooks";
+import { useRouter } from "next/router";
+import clsx from "clsx";
+import Component404 from "@/components/404";
+import DefaultLayout from "@/components/Layout";
+import ReadOnlyEditor from "@/components/ReadOnlyEditor";
+import unfetch from "isomorphic-unfetch";
 
 export default function Page({
     posts,
@@ -110,9 +110,28 @@ export default function Page({
 }
 
 export const getStaticPaths = async (context) => {
+    const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_USER_NAME, NEXT_PUBLIC_PASSWORD } =
+        process.env;
+
+    const categoriesRes = await unfetch(NEXT_PUBLIC_API_URL + `/categories`, {
+        method: "GET",
+        headers: {
+            Authorization:
+                "Basic " +
+                btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+        },
+    });
+
+    const categoriesData = await categoriesRes.json();
+
+    const paths = categoriesData.map((item) => ({
+        params: { category: item?.slug },
+    }));
+
     return {
-        paths: [],
-        fallback: "blocking",
+        paths,
+        fallback: false,
+        revalidate: REVALIDATE,
     };
 };
 
@@ -128,41 +147,13 @@ export async function getStaticProps(context) {
     const curr_page = context.query?.page || 1;
     const per_page = 9;
 
-    try {
-        const [menuData, defaulPageData, categoryPageData] = await Promise.all(
-            [
-                "/menu-items",
-                "/pages?slug=mac-dinh",
-                `/categories?slug=${category}`,
-            ].map(async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                    method: "GET",
-                    headers: {
-                        Authorization:
-                            "Basic " +
-                            btoa(
-                                NEXT_PUBLIC_USER_NAME +
-                                    ":" +
-                                    NEXT_PUBLIC_PASSWORD
-                            ),
-                    },
-                });
-                return res.json();
-            })
-        );
-
-        const menu = getMenu(menuData);
-
-        const default_meta_box = defaulPageData[0]?.meta_box || {};
-
-        const meta_box = categoryPageData[0]?.meta_box || {};
-
-        const postRes = await unfetch(
-            NEXT_PUBLIC_API_URL +
-                `/posts?categories=` +
-                categoryPageData[0]?.id +
-                `&per_page=${per_page}`,
-            {
+    const [menuData, defaulPageData, categoryPageData] = await Promise.all(
+        [
+            "/menu-items",
+            "/pages?slug=mac-dinh",
+            `/categories?slug=${category}`,
+        ].map(async (url) => {
+            const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
                 method: "GET",
                 headers: {
                     Authorization:
@@ -171,57 +162,64 @@ export async function getStaticProps(context) {
                             NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
                         ),
                 },
-            }
-        );
+            });
+            return res.json();
+        })
+    );
 
-        const total = postRes.headers.get("x-wp-total");
-        const postsData = await postRes.json();
+    const menu = getMenu(menuData);
 
-        const formRes = await unfetch(
-            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization:
-                        "Basic " +
-                        btoa(
-                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
-                        ),
-                },
-            }
-        );
+    const default_meta_box = defaulPageData[0]?.meta_box || {};
 
-        const form_data = await formRes.json();
+    const meta_box = categoryPageData[0]?.meta_box || {};
 
-        return {
-            props: {
-                ...meta_box,
-                menu,
-                default_page: default_meta_box,
-                form_data,
-                category: categoryPageData[0],
-                posts: postsData,
-                total_posts: +total,
-                limit_posts: +per_page,
-                curr_page: +curr_page,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-                status: true,
+    const postRes = await unfetch(
+        NEXT_PUBLIC_API_URL +
+            `/posts?categories=` +
+            categoryPageData[0]?.id +
+            `&per_page=${per_page}`,
+        {
+            method: "GET",
+            headers: {
+                Authorization:
+                    "Basic " +
+                    btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
             },
-            revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-                status: false,
-            },
-        };
-    }
+        }
+    );
+
+    const total = postRes.headers.get("x-wp-total");
+    const postsData = await postRes.json();
+
+    const formRes = await unfetch(NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`, {
+        method: "GET",
+        headers: {
+            Authorization:
+                "Basic " +
+                btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+        },
+    });
+
+    const form_data = await formRes.json();
+
+    return {
+        props: {
+            ...meta_box,
+            menu,
+            default_page: default_meta_box,
+            form_data,
+            category: categoryPageData[0],
+            posts: postsData,
+            total_posts: +total,
+            limit_posts: +per_page,
+            curr_page: +curr_page,
+            site_name: NEXT_PUBLIC_SITE_NAME || "",
+            api_url: NEXT_PUBLIC_API_URL || "",
+            form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
+            status: true,
+        },
+        revalidate: REVALIDATE, // In seconds 1h
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

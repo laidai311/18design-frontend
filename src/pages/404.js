@@ -25,48 +25,36 @@ export async function getStaticProps() {
         NEXT_PUBLIC_PASSWORD,
     } = process.env;
 
-    try {
-        const [menuData, defaulPageData] = await Promise.all(
-            ["/menu-items", "/pages?slug=mac-dinh"].map(async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                    method: "GET",
-                    headers: {
-                        Authorization:
-                            "Basic " +
-                            btoa(
-                                NEXT_PUBLIC_USER_NAME +
-                                    ":" +
-                                    NEXT_PUBLIC_PASSWORD
-                            ),
-                    },
-                });
-                return res.json();
-            })
-        );
+    const [menuData, defaulPageData] = await Promise.all(
+        ["/menu-items", "/pages?slug=mac-dinh"].map(async (url) => {
+            const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            });
+            return res.json();
+        })
+    );
 
-        const menu = getMenu(menuData);
+    const menu = getMenu(menuData);
 
-        const default_meta_box = defaulPageData[0]?.meta_box || {};
+    const default_meta_box = defaulPageData[0]?.meta_box || {};
 
-        return {
-            props: {
-                menu,
-                default_page: default_meta_box,
-                title: "404",
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-            },
-            revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-            },
-        };
-    }
+    return {
+        props: {
+            menu,
+            default_page: default_meta_box,
+            title: "404",
+            site_name: NEXT_PUBLIC_SITE_NAME || "",
+            api_url: NEXT_PUBLIC_API_URL || "",
+        },
+        revalidate: REVALIDATE, // In seconds 1h
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

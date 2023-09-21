@@ -1,11 +1,12 @@
 import { css, styled } from "styled-components";
-import { Container } from "../Styled/Common";
+import { IconSearch } from "../Icons";
 import { media } from "../theme";
-import SearchForm from "../SearchForm";
+import { useStore } from "@/stores";
 
 export default function Component404({ message }) {
+    const { setOpenSearch } = useStore();
     return (
-        <Container>
+        <section className="container max-w-7xl mx-auto">
             <View404Styled>
                 <div className="row">
                     <div className="content404">
@@ -18,12 +19,32 @@ export default function Component404({ message }) {
                                 Có vẻ như không tìm thấy nội dung của bạn. Hãy
                                 thử cách khác hoặc tìm kiếm?
                             </p>
-                            <SearchForm />
+                            <div
+                                onClick={() => {
+                                    setOpenSearch(true);
+                                }}
+                                className="p-2 border rounded-lg flex space-x-2 cursor-pointer"
+                            >
+                                <input
+                                    placeholder="Bạn đang tìm kiếm gì ...?"
+                                    inputMode="search"
+                                    autoCapitalize="off"
+                                    className={
+                                        "grow focus:outline-none appearance-none bg-inherit"
+                                    }
+                                />
+                                <button
+                                    type="submit"
+                                    className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-gray-400"
+                                >
+                                    <IconSearch width={18} height={18} />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </View404Styled>
-        </Container>
+        </section>
     );
 }
 

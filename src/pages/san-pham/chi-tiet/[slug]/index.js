@@ -1,18 +1,14 @@
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { BreadcrumbDetail } from "@/components/BreadcrumbDetail";
-import { CategoryTitle } from "@/components/ProductTagsList";
+import { formatCurrency, getMenu } from "@/utils";
+import { NextSeo } from "next-seo";
+import { REVALIDATE } from "@/constant/setting";
+import { SpecificationTab } from "@/components/SpecificationsTab";
+import { styled } from "styled-components";
+import { ThumbDetail } from "@/components/ThumbDetail";
+import { useStore } from "@/stores";
 import DefaultLayout from "@/components/Layout";
 import ProductOther from "@/components/ProductOther";
-import { SpecificationTab } from "@/components/SpecificationsTab";
-import { Container } from "@/components/Styled";
-import { ThumbDetail } from "@/components/ThumbDetail";
-import { Img } from "@/components/UI";
-import { REVALIDATE } from "@/constant/setting";
-import { useStore } from "@/stores";
-import { formatCurrency, getArrayStrapi, getMenu } from "@/utils";
 import unfetch from "isomorphic-unfetch";
-import { NextSeo } from "next-seo";
-import { styled } from "styled-components";
 
 export default function Page({
     title,
@@ -78,9 +74,9 @@ export default function Page({
                         {...product?.meta_box}
                         content={product?.content.rendered || ""}
                     />
-                    <CategoryTitle>
-                        <h3>Sản phẩm khác</h3>
-                    </CategoryTitle>
+                    <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                        Sản phẩm khác
+                    </h2>
                     <ProductOther products_list={products_list} />
                 </div>
             </ProductDetail>
@@ -91,7 +87,7 @@ export default function Page({
 export const getStaticPaths = async (context) => {
     return {
         paths: [],
-        fallback: "blocking",
+        fallback: false,
     };
 };
 
@@ -105,13 +101,9 @@ export async function getStaticProps(context) {
     } = process.env;
     const slug = context.params?.slug;
 
-    try {
-        const [menuData, defaulPageData, productData] = await Promise.all(
-            [
-                "/menu-items",
-                "/pages?slug=mac-dinh",
-                `/product?slug=${slug}`,
-            ].map(async (url) => {
+    const [menuData, defaulPageData, productData] = await Promise.all(
+        ["/menu-items", "/pages?slug=mac-dinh", `/product?slug=${slug}`].map(
+            async (url) => {
                 const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
                     method: "GET",
                     headers: {
@@ -125,70 +117,54 @@ export async function getStaticProps(context) {
                     },
                 });
                 return res.json();
-            })
-        );
-
-        const menu = getMenu(menuData);
-
-        const default_meta_box = defaulPageData[0]?.meta_box || {};
-
-        const productsRes = await unfetch(
-            NEXT_PUBLIC_API_URL +
-                `/product?product-tag=${productData[0]?.["product-tag"]?.[0]}&per_page=10`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization:
-                        "Basic " +
-                        btoa(
-                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
-                        ),
-                },
             }
-        );
+        )
+    );
 
-        const productsData = await productsRes.json();
+    const menu = getMenu(menuData);
 
-        const formRes = await unfetch(
-            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization:
-                        "Basic " +
-                        btoa(
-                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
-                        ),
-                },
-            }
-        );
+    const default_meta_box = defaulPageData[0]?.meta_box || {};
 
-        const form_data = await formRes.json();
-
-        return {
-            props: {
-                menu,
-                default_page: default_meta_box,
-                form_data,
-                products_list: productsData,
-                product: productData?.[0] || {},
-                title: productData?.[0]?.title?.rendered || "",
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
+    const productsRes = await unfetch(
+        NEXT_PUBLIC_API_URL +
+            `/product?product-tag=${productData[0]?.["product-tag"]?.[0]}&per_page=10`,
+        {
+            method: "GET",
+            headers: {
+                Authorization:
+                    "Basic " +
+                    btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
             },
-            revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-            },
-        };
-    }
+        }
+    );
+
+    const productsData = await productsRes.json();
+
+    const formRes = await unfetch(NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`, {
+        method: "GET",
+        headers: {
+            Authorization:
+                "Basic " +
+                btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+        },
+    });
+
+    const form_data = await formRes.json();
+
+    return {
+        props: {
+            menu,
+            default_page: default_meta_box,
+            form_data,
+            products_list: productsData,
+            product: productData?.[0] || {},
+            title: productData?.[0]?.title?.rendered || "",
+            site_name: NEXT_PUBLIC_SITE_NAME || "",
+            api_url: NEXT_PUBLIC_API_URL || "",
+            form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
+        },
+        revalidate: REVALIDATE, // In seconds 1h
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

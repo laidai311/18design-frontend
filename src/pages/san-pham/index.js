@@ -65,15 +65,15 @@ export default function Page({
 }
 
 export async function getStaticProps() {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-        NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    } = process.env;
-
     try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+            NEXT_PUBLIC_GRAVITY_FORMS_URL,
+        } = process.env;
+
         const [
             menuData,
             defaulPageData,
@@ -108,9 +108,7 @@ export async function getStaticProps() {
 
         const default_meta_box = defaulPageData[0]?.meta_box || {};
 
-        const meta_box = productPageData[0]?.meta_box
-            ? productPageData[0]?.meta_box
-            : {};
+        const meta_box = productPageData[0]?.meta_box || {};
 
         const formRes = await unfetch(
             NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
@@ -145,14 +143,7 @@ export async function getStaticProps() {
             revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-            },
-        };
+        return { props: { error: error?.message }, notFound: true };
     }
 }
 

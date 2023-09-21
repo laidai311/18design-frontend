@@ -1,17 +1,11 @@
-import Head from "next/head";
-import DefaultLayout from "@/components/Layout";
-import { Breadcrumb } from "@/components/Breadcrumb";
-import { ProductTagsList, CategoryTitle } from "@/components/ProductTagsList";
-import { Quote } from "@/components/Home";
-import { CardProductItem } from "@/components/CardProduct";
-import { styled } from "styled-components";
-import { Container } from "@/components/Styled";
-import unfetch from "isomorphic-unfetch";
-import { get, getArrayStrapi, getMenu } from "@/utils";
+import { getMenu } from "@/utils";
 import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
-import Link from "next/link";
 import { REVALIDATE } from "@/constant/setting";
+import { styled } from "styled-components";
+import DefaultLayout from "@/components/Layout";
+import Link from "next/link";
+import unfetch from "isomorphic-unfetch";
 
 export default function Page({
     title,
@@ -69,20 +63,20 @@ export default function Page({
 }
 
 export async function getStaticProps() {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-        NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    } = process.env;
-
     try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+            NEXT_PUBLIC_GRAVITY_FORMS_URL,
+        } = process.env;
+
         const [menuData, defaulPageData, productTagData] = await Promise.all(
             [
                 "/menu-items",
                 "/pages?slug=mac-dinh",
-                "/product-tag?per_page=40",
+                "/product-tag?per_page=30",
             ].map(async (url) => {
                 const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
                     method: "GET",
@@ -133,14 +127,7 @@ export async function getStaticProps() {
             revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-            },
-        };
+        return { props: { error: error?.message }, notFound: true };
     }
 }
 

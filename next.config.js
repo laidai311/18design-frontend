@@ -7,10 +7,7 @@ const nextConfig = {
             displayName: true,
             fileName: false,
         },
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
+    }
 };
 
 module.exports = nextConfig;

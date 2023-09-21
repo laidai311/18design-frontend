@@ -3,7 +3,6 @@ import {
     IconEmail,
     IconFacebook,
     IconLocation,
-    IconMessenger,
     IconPhoneRight,
     IconTwitter,
     IconZalo,
@@ -26,7 +25,6 @@ const BannerContact = styled.div`
     }
 `;
 
-const BannerImage = styled.img``;
 const ContactInfo = styled.div`
     background-color: rgb(212, 225, 231);
     position: relative;
@@ -89,34 +87,7 @@ const ContactTitle = styled.div`
         }
     }
 `;
-const ContactSocial = styled.div`
-    padding-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(3, 33.333333%);
 
-    @media (max-width: 768px) {
-        grid-template-columns: repeat(1, auto);
-    }
-`;
-const ContactSocialItem = styled.div``;
-
-const ContactIcon = styled.div`
-    font-size: 28px;
-    margin-bottom: 20px;
-`;
-const ContactDescription = styled.div`
-    & h4 {
-        font-weight: 600;
-        color: #333333;
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-
-    & p {
-        margin-bottom: 20px;
-        font-weight: 300;
-    }
-`;
 const Follow = styled.div`
     padding: 120px 0;
     position: relative;
@@ -154,84 +125,6 @@ const FollowTitle = styled.div`
     }
 `;
 
-const FollowImage = styled.div`
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(3, auto);
-
-    @media (max-width: 992px) {
-        grid-template-columns: repeat(1, auto);
-    }
-`;
-
-const SectionSocial = styled.div`
-    padding: 100px 0;
-    background-color: rgb(212, 225, 231);
-    margin: auto;
-    text-align: center;
-`;
-const SocialTitle = styled.div`
-    & h2 {
-        text-transform: capitalize;
-        margin-bottom: 20px;
-        font-size: 38px;
-        font-weight: 400;
-
-        @media (max-width: 756px) {
-            font-size: 32px;
-        }
-        @media (max-width: 456px) {
-            font-size: 24px;
-        }
-    }
-`;
-
-const SocialList = styled.div`
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-
-    & .icon__box:nth-child(1) {
-        & a {
-            background: #3a589d;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-        }
-    }
-    & .icon__box:nth-child(2) {
-        & a {
-            background: #2478ba;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-        }
-    }
-    & .icon__box:nth-child(3) {
-        & a {
-            background: #0072b7;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-        }
-    }
-    & .icon__box:nth-child(4) {
-        & a {
-            background: #527498;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-        }
-    }
-`;
 export function Banner({ banner_img, api_url }) {
     return (
         <BannerContact>
@@ -364,14 +257,14 @@ export function Social({ social_group }) {
                                       </div>
                                   ) : item?.social === "Instagram" ? (
                                       <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex justify-center items-center">
-                                          <img
+                                          <Img
                                               alt="icon"
                                               src="/images/Instagram_logo.svg"
                                           />
                                       </div>
                                   ) : item?.social === "Messenger" ? (
                                       <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex justify-center items-center">
-                                          <img
+                                          <Img
                                               alt="icon"
                                               src="/images/Messenger_logo.svg"
                                           />
