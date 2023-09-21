@@ -1,7 +1,7 @@
 import Head from "next/head";
 import DefaultLayout from "@/components/Layout";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { CategorySection, CategoryTitle } from "@/components/CategoryProduct";
+import { ProductTagsList, CategoryTitle } from "@/components/ProductTagsList";
 import { Quote } from "@/components/Home";
 import { CardProductItem } from "@/components/CardProduct";
 import { styled } from "styled-components";
@@ -10,6 +10,7 @@ import unfetch from "isomorphic-unfetch";
 import { getArrayStrapi, getMenu } from "@/utils";
 import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
+import { REVALIDATE } from "@/constant/setting";
 
 const Card = styled.div`
     padding: 10px 0;
@@ -152,11 +153,10 @@ export async function getStaticProps(context) {
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-                revalidate: 3600, // In seconds 1h
             },
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        console.error(error);
         return {
             props: {
                 message: error.message,

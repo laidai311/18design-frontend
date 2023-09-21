@@ -3,9 +3,6 @@ import { IconBook, IconEnvelope, IconLocationDot, IconPhone } from "../Icons";
 import { Container } from "../Styled/Common";
 import {
     FooterBottom,
-    Wrapper,
-    Seasion,
-    FooterBGOverlay,
     FooterDescription,
     FooterLogo,
 } from "../Styled/Layout/Footer";
@@ -29,8 +26,8 @@ export default function Footer({ onContactClick, default_page }) {
     const footerBG = default_page?.footer_background?.full_url || FOOTER_BG;
 
     return (
-        <Wrapper id="footer">
-            <Seasion>
+        <footer id="footer" className="relative">
+            <section className="bg-gray-800">
                 <div
                     className="absolute inset-0"
                     style={{
@@ -42,9 +39,9 @@ export default function Footer({ onContactClick, default_page }) {
                         backgroundSize: "cover",
                     }}
                 >
-                    <FooterBGOverlay />
+                    <div className="bg-black/70 h-full" />
                 </div>
-                <div className="relative pt-8">
+                <div className="relative py-10">
                     <div className="container mx-auto max-w-7xl">
                         <div className="-mx-4 flex flex-wrap text-white">
                             <div className="w-full p-7 md:w-1/2 lg:w-1/3 flex flex-col items-center">
@@ -117,7 +114,7 @@ export default function Footer({ onContactClick, default_page }) {
                                 {default_page?.facebook_page_name ? (
                                     <div
                                         dangerouslySetInnerHTML={{
-                                            __html: `<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2${default_page?.facebook_page_name}%2F&tabs=timeline&width=340&height=350&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="350" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`,
+                                            __html: `<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2${default_page?.facebook_page_name}%2F&width=340&height=350&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="130" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`,
                                         }}
                                     />
                                 ) : (
@@ -131,12 +128,12 @@ export default function Footer({ onContactClick, default_page }) {
                         </div>
                     </div>
                 </div>
-            </Seasion>
+            </section>
             <FooterBottom>
                 <Container>
                     <p>{default_page?.copyright || COPYRIGHT}</p>
                 </Container>
             </FooterBottom>
-        </Wrapper>
+        </footer>
     );
 }

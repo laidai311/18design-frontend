@@ -10,6 +10,7 @@ import { useStore } from "@/stores";
 import { Img } from "@/components/UI";
 import Link from "next/link";
 import { fakePost, fakePosts, fakeProperty } from "@/stores/fakeData";
+import { REVALIDATE } from "@/constant/setting";
 
 export default function Page({
     seo_body,
@@ -28,16 +29,7 @@ export default function Page({
     categories,
 }) {
     useEffect(() => {
-        const fn = () => {
-            try {
-                if (id) {
-                    fetch(api_url + `/total_view/` + id);
-                }
-            } catch (error) {
-                console.error(error?.message);
-            }
-        };
-        fn();
+        if (id) unfetch(api_url + `/total_view/` + id);
     }, []);
 
     return (
@@ -221,8 +213,8 @@ export async function getStaticProps(context) {
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
                 status: true,
-                revalidate: 3600, // In seconds 1h
             },
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
         return {

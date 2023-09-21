@@ -3,6 +3,7 @@ import Component404 from "@/components/404";
 import { getMenu } from "@/utils";
 import unfetch from "isomorphic-unfetch";
 import { NextSeo } from "next-seo";
+import { REVALIDATE } from "@/constant/setting";
 
 export default function Page({ title, site_name }) {
     return (
@@ -54,8 +55,8 @@ export async function getStaticProps() {
                 title: "404",
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
-                revalidate: 3600, // In seconds 1h
             },
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
         return {

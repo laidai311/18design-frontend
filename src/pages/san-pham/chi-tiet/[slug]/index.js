@@ -1,12 +1,13 @@
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { BreadcrumbDetail } from "@/components/BreadcrumbDetail";
-import { CategoryTitle } from "@/components/CategoryProduct";
+import { CategoryTitle } from "@/components/ProductTagsList";
 import DefaultLayout from "@/components/Layout";
 import ProductOther from "@/components/ProductOther";
 import { SpecificationTab } from "@/components/SpecificationsTab";
 import { Container } from "@/components/Styled";
 import { ThumbDetail } from "@/components/ThumbDetail";
 import { Img } from "@/components/UI";
+import { REVALIDATE } from "@/constant/setting";
 import { useStore } from "@/stores";
 import { formatCurrency, getArrayStrapi, getMenu } from "@/utils";
 import unfetch from "isomorphic-unfetch";
@@ -175,11 +176,10 @@ export async function getStaticProps(context) {
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-                revalidate: 3600, // In seconds 1h
             },
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        console.error(error);
         return {
             props: {
                 message: error.message,

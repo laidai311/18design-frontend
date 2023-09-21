@@ -1,19 +1,8 @@
-import { formatCurrency, getArrayStrapi } from "@/utils";
+import { formatCurrency } from "@/utils";
 import Link from "next/link";
 import { styled } from "styled-components";
 import { Img } from "../UI";
-import { useStore } from "@/stores";
 
-const CardProduct = styled.div`
-    border-radius: 12px;
-    border: 0.5px solid #b9b9b9;
-    background: #fff;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-
-    & img {
-        border-radius: 12px 12px 0px 0px;
-    }
-`;
 const CardDescription = styled.div`
     padding: 20px;
 
@@ -47,14 +36,7 @@ const CardDescription = styled.div`
         font-size: 14px;
     }
 `;
-export function CardProductItem({
-    title,
-    slug,
-    new_price,
-    old_price,
-    meta_box,
-    tag,
-}) {
+export function CardProductItem({ title, slug, meta_box }) {
     const image_link =
         meta_box?.images?.[0]?.full_url || "/images/slider-1.jpg";
 

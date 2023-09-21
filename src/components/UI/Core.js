@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import "lazysizes";
 import { forwardRef } from "react";
 import clsx from "clsx";
