@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import Component404 from "@/components/404";
 import DefaultLayout from "@/components/Layout";
+import Link from "next/link";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 import unfetch from "isomorphic-unfetch";
 
@@ -34,11 +35,6 @@ export default function Page({
         page: (curr_page || 0) === 0 ? curr_page + 1 : curr_page,
         siblings: 1,
         boundaries: 1,
-        onChange: (value) => {
-            router.push({
-                pathname: window.location.pathname + "/page/" + value,
-            });
-        },
     });
 
     return (
@@ -80,8 +76,14 @@ export default function Page({
                                         );
                                     }
                                     return (
-                                        <button
+                                        <Link
                                             key={item}
+                                            href={
+                                                "/danh-muc/" +
+                                                category?.slug +
+                                                "/page/" +
+                                                item
+                                            }
                                             onClick={() => {
                                                 paginationParam.setPage(item);
                                             }}
@@ -95,7 +97,7 @@ export default function Page({
                                             )}
                                         >
                                             {item}
-                                        </button>
+                                        </Link>
                                     );
                                 })}
                             </div>
