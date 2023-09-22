@@ -51,10 +51,10 @@ export default function Page({
                         </h1>
                         <ReadOnlyEditor
                             content={content || ""}
-                            className={"mb-10"}
+                            className={"mb-10"} 
                         />
 
-                        <div className="-m-4 flex flex-wrap">
+                        <div className="-m-4 flex flex-wrap px-4 md:px-0">
                             {Array.isArray(posts)
                                 ? posts.map((itm) => (
                                       <Card

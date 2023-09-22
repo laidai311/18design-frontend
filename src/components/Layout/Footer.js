@@ -43,7 +43,7 @@ export default function Footer({ onContactClick, default_page }) {
                 </div>
                 <div className="relative py-10">
                     <div className="container mx-auto max-w-7xl">
-                        <div className="-mx-4 flex flex-wrap text-white">
+                        <div className="-mx-4 flex flex-wrap text-white ">
                             <div className="w-full p-7 md:w-1/2 lg:w-1/3 flex flex-col items-center">
                                 <FooterLogo>
                                     <Link href={"/"}>

@@ -12,7 +12,7 @@ const SwiperWrapper = styled.div`
 
 export default function ProductOther({ products_list }) {
     return (
-        <SwiperWrapper>
+        <SwiperWrapper className="px-4 md:px-0">
             <Swiper
                 slidesPerView={4}
                 loop={true}

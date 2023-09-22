@@ -11,7 +11,7 @@ export function ProductTagsList({ product_tag_list }) {
                 <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     Danh mục nổi bật
                 </h2>
-                <div className="-mx-4 flex flex-wrap">
+                <div className="-mx-4 flex flex-wrap px-4 md:px-0">
                     {Array.isArray(product_tag_list)
                         ? product_tag_list.map((item, index) => (
                               <ProductTagCard

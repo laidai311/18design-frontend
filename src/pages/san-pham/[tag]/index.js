@@ -24,7 +24,7 @@ export default function Page({ seo_body, title, site_name, products_list }) {
                     <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                         Sản phẩm
                     </h2>
-                    <div className="-mx-4 flex flex-wrap">
+                    <div className="-mx-4 flex flex-wrap px-4 md:px-0">
                         {Array.isArray(products_list) &&
                         products_list.length ? (
                             products_list.map((item, index) => (

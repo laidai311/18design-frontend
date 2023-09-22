@@ -38,7 +38,7 @@ export const TypicalProject = ({ posts_tab }) => {
                             key={item?.category_id}
                             $actived={activedTab === item?.category_id}
                         >
-                            <div className="-mx-4 flex flex-wrap">
+                            <div className="-mx-4 flex flex-wrap px-4 md:px-0">
                                 {Array.isArray(item?.posts_list)
                                     ? item.posts_list.map((itm, index) => {
                                           if (index >= 6) return;

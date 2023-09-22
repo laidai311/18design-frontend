@@ -29,7 +29,7 @@ export default function Page({
             <ProductDetail key={product?.slug}>
                 <div className="container mx-auto max-w-7xl my-10">
                     <Breadcrumb value1={product?.title?.rendered || ""} />
-                    <div className="detail">
+                    <div className="detail px-4 md:px-0">
                         <ThumbDetail images={product?.meta_box?.images} />
                         <ProductDescription>
                             <h3 className="font-semibold text-lg">{title}</h3>

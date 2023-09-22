@@ -40,7 +40,7 @@ export function SpecificationTab({ content, policy, maintain }) {
     const [activedTab, setActivedTab] = useState(1);
 
     return (
-        <div className="bg-white pt-10 relative pb-10">
+        <div className="bg-white pt-10 relative pb-10 px-4 md:px-0">
             <div className="container max-w-7xl mx-auto">
                 <TileOption>Thông số khác</TileOption>
                 <TabWrap>
