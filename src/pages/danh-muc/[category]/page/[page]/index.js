@@ -1,15 +1,15 @@
-import DefaultLayout from "@/components/Layout";
 import { Card } from "@/components/Card";
-import unfetch from "isomorphic-unfetch";
+import { getMenu, range } from "@/utils";
 import { NextSeo } from "next-seo";
-import ReadOnlyEditor from "@/components/ReadOnlyEditor";
-import { getMenu } from "@/utils";
-import { usePagination } from "@/hooks";
-import clsx from "clsx";
-import { useRouter } from "next/router";
-import Component404 from "@/components/404";
-import Link from "next/link";
 import { REVALIDATE } from "@/constant/setting";
+import { usePagination } from "@/hooks";
+import { useRouter } from "next/router";
+import clsx from "clsx";
+import Component404 from "@/components/404";
+import DefaultLayout from "@/components/Layout";
+import Link from "next/link";
+import ReadOnlyEditor from "@/components/ReadOnlyEditor";
+import unfetch from "isomorphic-unfetch";
 
 export default function Page({
     posts,
@@ -35,11 +35,6 @@ export default function Page({
         page: (curr_page || 0) === 0 ? curr_page + 1 : curr_page,
         siblings: 1,
         boundaries: 1,
-        // onChange: (value) => {
-        //     router.push({
-        //         pathname: window.location.pathname + "/page/" + value,
-        //     });
-        // },
     });
 
     return (
@@ -49,7 +44,7 @@ export default function Page({
                 description={seo_description || ""}
             />
             {status ? (
-                <section key={tag + curr_page} className="min-h-[80vh] pt-10">
+                <section key={tag + curr_page} className="min-h-[80vh] py-10">
                     <div className="container max-w-7xl mx-auto">
                         <h1 className="border-b-2 border-primary uppercase mb-8 text-center text-2xl leading-9">
                             {title || ""}
@@ -118,27 +113,20 @@ export default function Page({
     );
 }
 
-export const getStaticPaths = async (context) => {
-    return {
-        paths: [],
-        fallback: "blocking",
-    };
-};
-
-export async function getStaticProps(context) {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-        NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    } = process.env;
-
-    const { category } = context.params;
-    const curr_page = +context.params?.page || 1;
-    const per_page = 9;
-
+export async function getServerSideProps(context) {
     try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+            NEXT_PUBLIC_GRAVITY_FORMS_URL,
+        } = process.env;
+
+        const category = context.params?.category || "";
+        const curr_page = +context.params?.page || 1;
+        const per_page = 9;
+
         const [menuData, defaulPageData, categoryPageData] = await Promise.all(
             [
                 "/menu-items",
@@ -220,18 +208,9 @@ export async function getStaticProps(context) {
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
                 status: true,
             },
-            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-                status: false,
-            },
-        };
+        return { props: { error: error?.message }, notFound: true };
     }
 }
 

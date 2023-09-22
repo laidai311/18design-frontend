@@ -9,11 +9,11 @@ import DefaultLayout from "@/components/Layout";
 import Link from "next/link";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 import unfetch from "isomorphic-unfetch";
+import Comment from "@/components/Comment";
 
 export default function Page({
     seo_body,
     site_name,
-    error,
     title,
     content,
     total_view,
@@ -22,13 +22,11 @@ export default function Page({
     posts,
     slug,
     default_image,
-    tag_name,
-    tag,
     categories,
 }) {
     useEffect(() => {
         if (id) unfetch(api_url + `/total_view/` + id);
-    }, []);
+    }, [api_url, id]);
 
     return (
         <>
@@ -36,10 +34,10 @@ export default function Page({
                 title={(seo_body?.meta_title || title) + " - " + site_name}
                 description={seo_body?.meta_description || ""}
             />
-            <section className="py-10 min-h-[80vh]">
+            <section className="relative py-10 min-h-[80vh]">
                 <div className="container mx-auto max-w-7xl">
                     <div className="-mx-4 flex flex-wrap">
-                        <div className="p-4 w-full lg:w-2/3">
+                        <div className="p-4 w-full lg:w-2/3 space-y-3">
                             <div className="p-8 shadow-lg rounded-lg">
                                 <div className="space-x-1">
                                     {Array.isArray(categories)
@@ -67,6 +65,9 @@ export default function Page({
                                 </div>
                                 <ReadOnlyEditor content={content || ""} />
                             </div>
+                            {/* <div className="overflow-hidden shadow-lg rounded-lg">
+                                <Comment />
+                            </div> */}
                         </div>
                         <div className="p-4 w-full lg:w-1/3 space-y-8">
                             <div className="shadow-lg p-4 bg-white rounded-lg">
@@ -106,24 +107,24 @@ export default function Page({
     );
 }
 
-export const getStaticPaths = async (context) => {
-    return {
-        paths: [],
-        fallback: "blocking",
-    };
-};
+// export const getStaticPaths = async (context) => {
+//     return {
+//         paths: [],
+//         fallback: false,
+//     };
+// };
 
-export async function getStaticProps(context) {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-        NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    } = process.env;
-    const { slug } = context.params;
-
+export async function getServerSideProps(context) {
     try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+            NEXT_PUBLIC_GRAVITY_FORMS_URL,
+        } = process.env;
+        const { slug } = context.params;
+
         const [menuData, defaulPageData, postPageData] = await Promise.all(
             ["/menu-items", "/pages?slug=mac-dinh", `/posts?slug=${slug}`].map(
                 async (url) => {
@@ -212,18 +213,10 @@ export async function getStaticProps(context) {
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
                 status: true,
             },
-            revalidate: REVALIDATE, // In seconds 1h
+            // revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-                status: false,
-            },
-        };
+        return { props: { error: error?.message }, notFound: true };
     }
 }
 

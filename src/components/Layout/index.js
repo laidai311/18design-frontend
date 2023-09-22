@@ -1,12 +1,12 @@
-import Header from "./Header";
-import Footer from "./Footer";
-import FloatButton from "./FloatButton";
-import { useEffect } from "react";
-import ContactForm from "../ContactForm";
 import { css, styled } from "styled-components";
-import { media } from "../theme";
 import { IconXmark } from "../Icons";
+import { media } from "../theme";
+import { useEffect } from "react";
 import { useStore } from "@/stores";
+import ContactForm from "../ContactForm";
+import FloatButton from "./FloatButton";
+import Footer from "./Footer";
+import Header from "./Header";
 import Modal from "../Modal";
 
 export default function DefaultLayout({ children, ...props }) {
@@ -31,7 +31,7 @@ export default function DefaultLayout({ children, ...props }) {
             }
         };
         window.addEventListener("storage", onLocalStorageEvent, false);
-    }, []);
+    }, [setOpenContactForm]);
 
     return (
         <>

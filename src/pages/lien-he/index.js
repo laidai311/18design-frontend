@@ -1,14 +1,13 @@
-import Head from "next/head";
-import DefaultLayout from "@/components/Layout";
 import { Contact, FollowUs, Social } from "@/components/Contact/Banner";
-import unfetch from "isomorphic-unfetch";
-import { Img } from "@/components/UI";
-import { useStore } from "@/stores";
 import { getMenu } from "@/utils";
+import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
+import { useStore } from "@/stores";
+import DefaultLayout from "@/components/Layout";
+import unfetch from "isomorphic-unfetch";
 
-export default function ContactPage({
+export default function Page({
     background,
     seo_title,
     seo_description,
@@ -40,15 +39,15 @@ export default function ContactPage({
     );
 }
 
-export async function getStaticProps() {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-    } = process.env;
-
+export async function getServerSideProps() {
     try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+        } = process.env;
+
         const [menuData, defaulPageData, contactPageData] = await Promise.all(
             ["/menu-items", "/pages?slug=mac-dinh", "/pages?slug=lien-he"].map(
                 async (url) => {
@@ -87,19 +86,13 @@ export async function getStaticProps() {
                 site_name: NEXT_PUBLIC_SITE_NAME || "",
                 api_url: NEXT_PUBLIC_API_URL || "",
             },
-            revalidate: REVALIDATE, // In seconds 1h
+            // revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-            },
-        };
+        return { props: { error: error?.message }, notFound: true };
     }
 }
 
-ContactPage.getLayout = (page, pageProps) => (
+Page.getLayout = (page, pageProps) => (
     <DefaultLayout {...pageProps}>{page}</DefaultLayout>
 );

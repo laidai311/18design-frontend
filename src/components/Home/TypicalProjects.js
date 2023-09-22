@@ -55,7 +55,7 @@ export const TypicalProject = ({ posts_tab }) => {
                             </div>
                             <ContentBottom>
                                 <ViewMoreLink
-                                    href={`/${
+                                    href={`/danh-muc/${
                                         item?.category?.slug ||
                                         item?.category_id
                                     }`}

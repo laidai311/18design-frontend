@@ -49,10 +49,7 @@ export default function Footer({ onContactClick, default_page }) {
                                     <Link href={"/"}>
                                         <Img
                                             alt={colorLogoName}
-                                            src={
-                                                "/images/18-design-cut.png" ||
-                                                colorLogoUrl
-                                            }
+                                            src={colorLogoUrl}
                                         />
                                     </Link>
                                 </FooterLogo>

@@ -1,30 +1,14 @@
-import Head from "next/head";
-import DefaultLayout from "@/components/Layout";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { ProductTagsList, CategoryTitle } from "@/components/ProductTagsList";
-import { Quote } from "@/components/Home";
 import { CardProductItem } from "@/components/CardProduct";
-import { styled } from "styled-components";
-import { Container } from "@/components/Styled";
-import unfetch from "isomorphic-unfetch";
-import { getArrayStrapi, getMenu } from "@/utils";
-import { Img } from "@/components/UI";
+import { getMenu } from "@/utils";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
+import { styled } from "styled-components";
+import DefaultLayout from "@/components/Layout";
+import unfetch from "isomorphic-unfetch";
 
 const Card = styled.div`
     padding: 10px 0;
-`;
-const CardList = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    gap: 30px;
-    @media (max-width: 992px) {
-        grid-template-columns: repeat(2, auto);
-    }
-    @media (max-width: 456px) {
-        grid-template-columns: repeat(1, auto);
-    }
 `;
 
 export default function Page({ seo_body, title, site_name, products_list }) {
@@ -37,11 +21,9 @@ export default function Page({ seo_body, title, site_name, products_list }) {
             <Breadcrumb value1={title || ""} />
             <Card>
                 <div className="container mx-auto max-w-7xl">
-                    <CategoryTitle>
-                        <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
-                            Sản phẩm
-                        </h2>
-                    </CategoryTitle>
+                    <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                        Sản phẩm
+                    </h2>
                     <div className="-mx-4 flex flex-wrap">
                         {Array.isArray(products_list) &&
                         products_list.length ? (
@@ -65,24 +47,42 @@ export default function Page({ seo_body, title, site_name, products_list }) {
     );
 }
 
-export const getStaticPaths = async (context) => {
-    return {
-        paths: [],
-        fallback: "blocking",
-    };
-};
+// export const getStaticPaths = async (context) => {
+//     const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_USER_NAME, NEXT_PUBLIC_PASSWORD } =
+//         process.env;
 
-export async function getStaticProps(context) {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-        NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    } = process.env;
-    const tag = context.params?.tag;
+//     const productTagRes = await unfetch(NEXT_PUBLIC_API_URL + `/product-tag`, {
+//         method: "GET",
+//         headers: {
+//             Authorization:
+//                 "Basic " +
+//                 btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+//         },
+//     });
 
+//     const productTagData = await productTagRes.json();
+
+//     const paths = productTagData.map((item) => ({
+//         params: { tag: item?.slug },
+//     }));
+
+//     return {
+//         paths,
+//         fallback: false,
+//     };
+// };
+
+export async function getServerSideProps(context) {
     try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+            NEXT_PUBLIC_GRAVITY_FORMS_URL,
+        } = process.env;
+        const tag = context.params?.tag;
+
         const [menuData, defaulPageData, productTagData] = await Promise.all(
             [
                 "/menu-items",
@@ -154,17 +154,10 @@ export async function getStaticProps(context) {
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
             },
-            revalidate: REVALIDATE, // In seconds 1h
+            // revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        return {
-            props: {
-                message: error.message,
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-            },
-        };
+        return { props: { error: error?.message }, notFound: true };
     }
 }
 
