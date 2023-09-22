@@ -31,7 +31,6 @@ export function ProductTagsList({ product_tag_list }) {
                         }}
                         className="p-4 w-full md:w-1/2 lg:w-1/4"
                     />
-                    ))
                 </div>
             </div>
         </div>
