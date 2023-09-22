@@ -25,7 +25,7 @@ export default function Page({
                     Các loại sản phẩm
                 </h2>
 
-                <div className="-mx-4 flex flex-wrap">
+                <div className="-mx-4 flex flex-wrap px-4 md:px-0">
                     {Array.isArray(product_tag_list)
                         ? product_tag_list.map((item, index) => (
                               <div

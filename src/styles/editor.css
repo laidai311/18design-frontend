@@ -18,7 +18,7 @@ th {
 /* For emoji replacement images */
 img.emoji {
     display: inline !important;
-    border: none !important;
+    border: none !important;    
     height: 1em !important;
     width: 1em !important;
     margin: 0 0.07em !important;
@@ -423,4 +423,10 @@ img.wp-oembed {
 /* rtl */
 .rtl .gallery .gallery-item {
     float: right;
+}
+.mce-content-body menu,.mce-content-body ol,.mce-content-body ul {
+    list-style: unset;
+}
+.mce-content-body ul {
+    padding-left: 30px;
 }

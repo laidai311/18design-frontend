@@ -34,7 +34,7 @@ export function About({
                             content={about_description || ABOUT_DESCRIPTION}
                         />
                     </div>
-                    <div className="-mx-4 flex flex-wrap">
+                    <div className="-mx-4 flex flex-wrap px-4 md:px-0">
                         {Array.isArray(about_group)
                             ? about_group.map((item, index) => {
                                   if (index >= 3) return null;
