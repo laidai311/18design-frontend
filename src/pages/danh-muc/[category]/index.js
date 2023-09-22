@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import Component404 from "@/components/404";
 import DefaultLayout from "@/components/Layout";
-import Link from "next/link";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 import unfetch from "isomorphic-unfetch";
 
@@ -35,6 +34,11 @@ export default function Page({
         page: (curr_page || 0) === 0 ? curr_page + 1 : curr_page,
         siblings: 1,
         boundaries: 1,
+        onChange: (value) => {
+            router.push({
+                pathname: window.location.pathname + "/page/" + value,
+            });
+        },
     });
 
     return (
@@ -44,7 +48,7 @@ export default function Page({
                 description={seo_description || ""}
             />
             {status ? (
-                <section key={tag + curr_page} className="min-h-[80vh] pt-10">
+                <section key={tag + curr_page} className="min-h-[80vh] py-10">
                     <div className="container max-w-7xl mx-auto">
                         <h1 className="border-b-2 border-primary uppercase mb-8 text-center text-2xl leading-9">
                             {title || ""}
@@ -59,9 +63,7 @@ export default function Page({
                                 ? posts.map((itm) => (
                                       <Card
                                           {...itm}
-                                          category={{
-                                              slug: router.query?.category,
-                                          }}
+                                          category={category}
                                           default_image={default_image}
                                           key={itm.id}
                                           className="w-full p-4 md:w-1/2 lg:w-1/3"
@@ -78,14 +80,8 @@ export default function Page({
                                         );
                                     }
                                     return (
-                                        <Link
+                                        <button
                                             key={item}
-                                            href={
-                                                "/" +
-                                                category?.slug +
-                                                "/page/" +
-                                                item
-                                            }
                                             onClick={() => {
                                                 paginationParam.setPage(item);
                                             }}
@@ -99,7 +95,7 @@ export default function Page({
                                             )}
                                         >
                                             {item}
-                                        </Link>
+                                        </button>
                                     );
                                 })}
                             </div>
@@ -113,33 +109,78 @@ export default function Page({
     );
 }
 
-export const getStaticPaths = async (context) => {
-    return {
-        paths: [],
-        fallback: false,
-    };
-};
+// export const getStaticPaths = async (context) => {
+//     const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_USER_NAME, NEXT_PUBLIC_PASSWORD } =
+//         process.env;
 
-export async function getStaticProps(context) {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-        NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    } = process.env;
+//     const categoriesRes = await unfetch(NEXT_PUBLIC_API_URL + `/categories`, {
+//         method: "GET",
+//         headers: {
+//             Authorization:
+//                 "Basic " +
+//                 btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+//         },
+//     });
 
-    const { category } = context.params;
-    const curr_page = +context.params?.page || 1;
-    const per_page = 9;
+//     const categoriesData = await categoriesRes.json();
 
-    const [menuData, defaulPageData, categoryPageData] = await Promise.all(
-        [
-            "/menu-items",
-            "/pages?slug=mac-dinh",
-            `/categories?slug=${category}`,
-        ].map(async (url) => {
-            const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+//     const paths = categoriesData.map((item) => ({
+//         params: { category: item?.slug },
+//     }));
+
+//     return {
+//         paths,
+//         fallback: false,
+//     };
+// };
+
+export async function getServerSideProps(context) {
+    try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+            NEXT_PUBLIC_GRAVITY_FORMS_URL,
+        } = process.env;
+        const category = context.params?.category || "";
+        const curr_page = context.query?.page || 1;
+        const per_page = 9;
+
+        const [menuData, defaulPageData, categoryPageData] = await Promise.all(
+            [
+                "/menu-items",
+                "/pages?slug=mac-dinh",
+                `/categories?slug=${category}`,
+            ].map(async (url) => {
+                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                    method: "GET",
+                    headers: {
+                        Authorization:
+                            "Basic " +
+                            btoa(
+                                NEXT_PUBLIC_USER_NAME +
+                                    ":" +
+                                    NEXT_PUBLIC_PASSWORD
+                            ),
+                    },
+                });
+                return res.json();
+            })
+        );
+
+        const menu = getMenu(menuData);
+
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
+        const meta_box = categoryPageData[0]?.meta_box || {};
+
+        const postRes = await unfetch(
+            NEXT_PUBLIC_API_URL +
+                `/posts?categories=` +
+                categoryPageData[0]?.id +
+                `&per_page=${per_page}`,
+            {
                 method: "GET",
                 headers: {
                     Authorization:
@@ -148,65 +189,49 @@ export async function getStaticProps(context) {
                             NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
                         ),
                 },
-            });
-            return res.json();
-        })
-    );
+            }
+        );
 
-    const menu = getMenu(menuData);
+        const total = postRes.headers.get("x-wp-total");
+        const postsData = await postRes.json();
 
-    const default_meta_box = defaulPageData[0]?.meta_box || {};
+        const formRes = await unfetch(
+            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
 
-    const meta_box = categoryPageData[0]?.meta_box || {};
+        const form_data = await formRes.json();
 
-    const postRes = await unfetch(
-        NEXT_PUBLIC_API_URL +
-            `/posts?categories=` +
-            categoryPageData[0]?.id +
-            `&per_page=${per_page}` +
-            `&offset=${per_page * (curr_page - 1)}`,
-        {
-            method: "GET",
-            headers: {
-                Authorization:
-                    "Basic " +
-                    btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+        return {
+            props: {
+                ...meta_box,
+                menu,
+                default_page: default_meta_box,
+                form_data,
+                category: categoryPageData[0],
+                posts: postsData,
+                total_posts: +total,
+                limit_posts: +per_page,
+                curr_page: +curr_page,
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
+                status: true,
             },
-        }
-    );
-
-    const total = postRes.headers.get("x-wp-total");
-    const postsData = await postRes.json();
-
-    const formRes = await unfetch(NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`, {
-        method: "GET",
-        headers: {
-            Authorization:
-                "Basic " +
-                btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
-        },
-    });
-
-    const form_data = await formRes.json();
-
-    return {
-        props: {
-            ...meta_box,
-            menu,
-            default_page: default_meta_box,
-            form_data,
-            category: categoryPageData[0],
-            posts: postsData,
-            total_posts: +total,
-            limit_posts: +per_page,
-            curr_page: +curr_page,
-            site_name: NEXT_PUBLIC_SITE_NAME || "",
-            api_url: NEXT_PUBLIC_API_URL || "",
-            form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-            status: true,
-        },
-        revalidate: REVALIDATE, // In seconds 1h
-    };
+            // revalidate: REVALIDATE, // In seconds 1h
+        };
+    } catch (error) {
+        return { props: { error: error?.message }, notFound: true };
+    }
 }
 
 Page.getLayout = (page, pageProps) => (

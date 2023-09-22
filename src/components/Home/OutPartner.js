@@ -1,8 +1,7 @@
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Img } from "../UI";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import { styled } from "styled-components";
-import { Container } from "../Styled";
-import { Img } from "../UI";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 export const PricingTitle = styled.div`
     text-align: center;
@@ -28,17 +27,9 @@ export const PricingTitle = styled.div`
     }
 `;
 
-const SwiperWrapper = styled.div`
-    padding: 40px 0;
-
-    & .swiper-wrapper {
-        align-items: center;
-    }
-`;
-
-export function OutPartner({ our_partner_images, api_url }) {
+export function OutPartner({ our_partner_images }) {
     return (
-        <div className="bg-white pt-10 relative">
+        <div className="relative bg-white py-10">
             <div className="container max-w-7xl mx-auto">
                 <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     Đối tác của chúng tôi
@@ -73,14 +64,18 @@ export function OutPartner({ our_partner_images, api_url }) {
                     {Array.isArray(our_partner_images)
                         ? our_partner_images.map((itm, idx) => (
                               <SwiperSlide key={idx}>
-                                  <Img
-                                      alt={itm?.name || ""}
-                                      src={
-                                          itm?.full_url ||
-                                          "/images/default-image.jpg"
-                                      }
-                                      className={"select-none w-full h-full"}
-                                  />
+                                  <div className="relative pt-[56%]">
+                                      <Img
+                                          alt={itm?.name || ""}
+                                          src={
+                                              itm?.full_url ||
+                                              "/images/default-image.jpg"
+                                          }
+                                          className={
+                                              "select-none absolute inset-0"
+                                          }
+                                      />
+                                  </div>
                               </SwiperSlide>
                           ))
                         : null}

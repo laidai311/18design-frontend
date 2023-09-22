@@ -17,7 +17,7 @@ function Comment() {
             }));
         }
     };
-    console.log(errorMessages);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 

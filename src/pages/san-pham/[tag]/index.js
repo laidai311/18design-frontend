@@ -47,26 +47,48 @@ export default function Page({ seo_body, title, site_name, products_list }) {
     );
 }
 
-export const getStaticPaths = async (context) => {
-    return {
-        paths: [],
-        fallback: false,
-    };
-};
+// export const getStaticPaths = async (context) => {
+//     const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_USER_NAME, NEXT_PUBLIC_PASSWORD } =
+//         process.env;
 
-export async function getStaticProps(context) {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-        NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    } = process.env;
-    const tag = context.params?.tag;
+//     const productTagRes = await unfetch(NEXT_PUBLIC_API_URL + `/product-tag`, {
+//         method: "GET",
+//         headers: {
+//             Authorization:
+//                 "Basic " +
+//                 btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+//         },
+//     });
 
-    const [menuData, defaulPageData, productTagData] = await Promise.all(
-        ["/menu-items", "/pages?slug=mac-dinh", `/product-tag?slug=${tag}`].map(
-            async (url) => {
+//     const productTagData = await productTagRes.json();
+
+//     const paths = productTagData.map((item) => ({
+//         params: { tag: item?.slug },
+//     }));
+
+//     return {
+//         paths,
+//         fallback: false,
+//     };
+// };
+
+export async function getServerSideProps(context) {
+    try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+            NEXT_PUBLIC_GRAVITY_FORMS_URL,
+        } = process.env;
+        const tag = context.params?.tag;
+
+        const [menuData, defaulPageData, productTagData] = await Promise.all(
+            [
+                "/menu-items",
+                "/pages?slug=mac-dinh",
+                `/product-tag?slug=${tag}`,
+            ].map(async (url) => {
                 const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
                     method: "GET",
                     headers: {
@@ -80,54 +102,63 @@ export async function getStaticProps(context) {
                     },
                 });
                 return res.json();
+            })
+        );
+
+        const menu = getMenu(menuData);
+
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
+        const productsRes = await unfetch(
+            NEXT_PUBLIC_API_URL +
+                `/product?product-tag=${productTagData[0]?.id}&per_page=30`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
             }
-        )
-    );
+        );
 
-    const menu = getMenu(menuData);
+        const productsData = await productsRes.json();
 
-    const default_meta_box = defaulPageData[0]?.meta_box || {};
+        const formRes = await unfetch(
+            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
 
-    const productsRes = await unfetch(
-        NEXT_PUBLIC_API_URL +
-            `/product?product-tag=${productTagData[0]?.id}&per_page=30`,
-        {
-            method: "GET",
-            headers: {
-                Authorization:
-                    "Basic " +
-                    btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+        const form_data = await formRes.json();
+
+        return {
+            props: {
+                menu,
+                default_page: default_meta_box,
+                form_data,
+                products_list: productsData || [],
+                product_tag: productTagData[0],
+                title: productTagData[0]?.name,
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
             },
-        }
-    );
-
-    const productsData = await productsRes.json();
-
-    const formRes = await unfetch(NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`, {
-        method: "GET",
-        headers: {
-            Authorization:
-                "Basic " +
-                btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
-        },
-    });
-
-    const form_data = await formRes.json();
-
-    return {
-        props: {
-            menu,
-            default_page: default_meta_box,
-            form_data,
-            products_list: productsData || [],
-            product_tag: productTagData[0],
-            title: productTagData[0]?.name,
-            site_name: NEXT_PUBLIC_SITE_NAME || "",
-            api_url: NEXT_PUBLIC_API_URL || "",
-            form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-        },
-        revalidate: REVALIDATE, // In seconds 1h
-    };
+            // revalidate: REVALIDATE, // In seconds 1h
+        };
+    } catch (error) {
+        return { props: { error: error?.message }, notFound: true };
+    }
 }
 
 Page.getLayout = (page, pageProps) => (

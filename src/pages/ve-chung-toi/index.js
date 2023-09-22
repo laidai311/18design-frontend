@@ -29,7 +29,7 @@ export default function Page({
     );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     const {
         NEXT_PUBLIC_SITE_NAME,
         NEXT_PUBLIC_API_URL,
@@ -75,7 +75,7 @@ export async function getStaticProps() {
             site_name: NEXT_PUBLIC_SITE_NAME || "",
             api_url: NEXT_PUBLIC_API_URL || "",
         },
-        revalidate: REVALIDATE, // In seconds 1h
+        // revalidate: REVALIDATE, // In seconds 1h
     };
 }
 

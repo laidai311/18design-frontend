@@ -163,7 +163,7 @@ export const getStaticProps = async (context) => {
                 api_url: NEXT_PUBLIC_API_URL || "",
                 form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
             },
-            revalidate: REVALIDATE, // In seconds 1h
+            // revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
         return { props: { error: error?.message }, notFound: true };

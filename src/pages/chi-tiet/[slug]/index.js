@@ -9,6 +9,7 @@ import DefaultLayout from "@/components/Layout";
 import Link from "next/link";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 import unfetch from "isomorphic-unfetch";
+import Comment from "@/components/Comment";
 
 export default function Page({
     seo_body,
@@ -33,10 +34,10 @@ export default function Page({
                 title={(seo_body?.meta_title || title) + " - " + site_name}
                 description={seo_body?.meta_description || ""}
             />
-            <section className="py-10 min-h-[80vh]">
+            <section className="relative py-10 min-h-[80vh]">
                 <div className="container mx-auto max-w-7xl">
                     <div className="-mx-4 flex flex-wrap">
-                        <div className="p-4 w-full lg:w-2/3">
+                        <div className="p-4 w-full lg:w-2/3 space-y-3">
                             <div className="p-8 shadow-lg rounded-lg">
                                 <div className="space-x-1">
                                     {Array.isArray(categories)
@@ -64,6 +65,9 @@ export default function Page({
                                 </div>
                                 <ReadOnlyEditor content={content || ""} />
                             </div>
+                            {/* <div className="overflow-hidden shadow-lg rounded-lg">
+                                <Comment />
+                            </div> */}
                         </div>
                         <div className="p-4 w-full lg:w-1/3 space-y-8">
                             <div className="shadow-lg p-4 bg-white rounded-lg">
@@ -103,106 +107,117 @@ export default function Page({
     );
 }
 
-export const getStaticPaths = async (context) => {
-    return {
-        paths: [],
-        fallback: false,
-    };
-};
+// export const getStaticPaths = async (context) => {
+//     return {
+//         paths: [],
+//         fallback: false,
+//     };
+// };
 
-export async function getStaticProps(context) {
-    const {
-        NEXT_PUBLIC_SITE_NAME,
-        NEXT_PUBLIC_API_URL,
-        NEXT_PUBLIC_USER_NAME,
-        NEXT_PUBLIC_PASSWORD,
-        NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    } = process.env;
-    const { slug } = context.params;
+export async function getServerSideProps(context) {
+    try {
+        const {
+            NEXT_PUBLIC_SITE_NAME,
+            NEXT_PUBLIC_API_URL,
+            NEXT_PUBLIC_USER_NAME,
+            NEXT_PUBLIC_PASSWORD,
+            NEXT_PUBLIC_GRAVITY_FORMS_URL,
+        } = process.env;
+        const { slug } = context.params;
 
-    const [menuData, defaulPageData, postPageData] = await Promise.all(
-        ["/menu-items", "/pages?slug=mac-dinh", `/posts?slug=${slug}`].map(
-            async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                    method: "GET",
-                    headers: {
-                        Authorization:
-                            "Basic " +
-                            btoa(
-                                NEXT_PUBLIC_USER_NAME +
-                                    ":" +
-                                    NEXT_PUBLIC_PASSWORD
-                            ),
-                    },
-                });
-                return res.json();
+        const [menuData, defaulPageData, postPageData] = await Promise.all(
+            ["/menu-items", "/pages?slug=mac-dinh", `/posts?slug=${slug}`].map(
+                async (url) => {
+                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
+                        method: "GET",
+                        headers: {
+                            Authorization:
+                                "Basic " +
+                                btoa(
+                                    NEXT_PUBLIC_USER_NAME +
+                                        ":" +
+                                        NEXT_PUBLIC_PASSWORD
+                                ),
+                        },
+                    });
+                    return res.json();
+                }
+            )
+        );
+
+        const menu = getMenu(menuData);
+
+        const default_meta_box = defaulPageData[0]?.meta_box || {};
+
+        const meta_box = postPageData[0]?.meta_box || {};
+
+        const postsRes = await unfetch(
+            NEXT_PUBLIC_API_URL +
+                `/posts?categories=` +
+                postPageData[0]?.categories[0] +
+                `&per_page=${8}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
             }
-        )
-    );
+        );
+        const postsData = await postsRes.json();
 
-    const menu = getMenu(menuData);
+        let categoriesData = postPageData?.[0]?.categories || [];
 
-    const default_meta_box = defaulPageData[0]?.meta_box || {};
+        categoriesData = await Promise.all(
+            categoriesData.map(async (item) => {
+                const res = await unfetch(
+                    NEXT_PUBLIC_API_URL + `/categories/` + item
+                );
 
-    const meta_box = postPageData[0]?.meta_box || {};
+                return res.json();
+            })
+        );
 
-    const postsRes = await unfetch(
-        NEXT_PUBLIC_API_URL +
-            `/posts?categories=` +
-            postPageData[0]?.categories[0] +
-            `&per_page=${8}`,
-        {
-            method: "GET",
-            headers: {
-                Authorization:
-                    "Basic " +
-                    btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+        const formRes = await unfetch(
+            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        "Basic " +
+                        btoa(
+                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
+                        ),
+                },
+            }
+        );
+
+        const form_data = await formRes.json();
+
+        return {
+            props: {
+                ...meta_box,
+                menu,
+                default_page: default_meta_box,
+                form_data,
+                posts: postsData,
+                categories: categoriesData,
+                id: postPageData[0]?.id || "",
+                title: postPageData[0]?.title?.rendered || "",
+                content: postPageData[0]?.content?.rendered || "",
+                site_name: NEXT_PUBLIC_SITE_NAME || "",
+                api_url: NEXT_PUBLIC_API_URL || "",
+                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
+                status: true,
             },
-        }
-    );
-    const postsData = await postsRes.json();
-
-    let categoriesData = postPageData?.[0]?.categories || [];
-
-    categoriesData = await Promise.all(
-        categoriesData.map(async (item) => {
-            const res = await unfetch(
-                NEXT_PUBLIC_API_URL + `/categories/` + item
-            );
-
-            return res.json();
-        })
-    );
-
-    const formRes = await unfetch(NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`, {
-        method: "GET",
-        headers: {
-            Authorization:
-                "Basic " +
-                btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
-        },
-    });
-
-    const form_data = await formRes.json();
-
-    return {
-        props: {
-            ...meta_box,
-            menu,
-            default_page: default_meta_box,
-            form_data,
-            posts: postsData,
-            categories: categoriesData,
-            id: postPageData[0]?.id || "",
-            title: postPageData[0]?.title?.rendered || "",
-            content: postPageData[0]?.content?.rendered || "",
-            site_name: NEXT_PUBLIC_SITE_NAME || "",
-            api_url: NEXT_PUBLIC_API_URL || "",
-            form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-            status: true,
-        },
-        revalidate: REVALIDATE, // In seconds 1h
-    };
+            // revalidate: REVALIDATE, // In seconds 1h
+        };
+    } catch (error) {
+        return { props: { error: error?.message }, notFound: true };
+    }
 }
 
 Page.getLayout = (page, pageProps) => (

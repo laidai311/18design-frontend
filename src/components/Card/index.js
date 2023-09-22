@@ -11,7 +11,7 @@ export const Card = ({ title, slug = "#", className, meta_box, category }) => {
 
     const image_name = meta_box?.image?.name || "18 design";
 
-    const url = category?.slug && slug ? `/${category?.slug}/${slug}` : "/#";
+    const url = slug ? `/chi-tiet/${slug}` : "/#";
 
     return (
         <CardStyled className={className || ""}>
