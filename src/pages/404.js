@@ -61,7 +61,7 @@ export async function getStaticProps() {
             revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
+        return { props: { error: error?.message }};
     }
 }
 
