@@ -81,7 +81,7 @@ export default function Page({
                                         <Link
                                             key={item}
                                             href={
-                                                "/" +
+                                                "/danh-muc/" +
                                                 category?.slug +
                                                 "/page/" +
                                                 item
