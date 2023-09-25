@@ -1,14 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import { ABOUT_DESCRIPTION, ABOUT_TITLE } from "@/constant/default";
-import ReadOnlyEditor from "../ReadOnlyEditor";
 import { Img } from "../UI";
+import { useStore } from "@/stores";
 import clsx from "clsx";
+import Loader from "../Loader";
+import ReadOnlyEditor from "../ReadOnlyEditor";
 
 export function About({
     about_title,
     about_description,
     about_background,
-    about_group,
+    aboutGroupLoading,
+    aboutGroup,
 }) {
     return (
         <section
@@ -35,8 +38,8 @@ export function About({
                         />
                     </div>
                     <div className="-mx-4 flex flex-wrap px-4 md:px-0">
-                        {Array.isArray(about_group)
-                            ? about_group.map((item, index) => {
+                        {Array.isArray(aboutGroup)
+                            ? aboutGroup.map((item, index) => {
                                   if (index >= 3) return null;
                                   return (
                                       <div
@@ -55,17 +58,21 @@ export function About({
                                           >
                                               <div className="bg-white text-black p-4 text-center min-h-[250px]">
                                                   <div className="flex justify-center mb-3">
-                                                      <Img
-                                                          alt={
-                                                              item?.icon_name ||
-                                                              ""
-                                                          }
-                                                          src={
-                                                              item?.icon_link ||
-                                                              "/#"
-                                                          }
-                                                          className="transition-transform group-hover:rotate-[360deg] duration-1000 h-16"
-                                                      />
+                                                      {aboutGroupLoading ? (
+                                                          <Loader />
+                                                      ) : (
+                                                          <Img
+                                                              alt={
+                                                                  item?.icon_name ||
+                                                                  ""
+                                                              }
+                                                              src={
+                                                                  item?.icon_link ||
+                                                                  "/#"
+                                                              }
+                                                              className="transition-transform group-hover:rotate-[360deg] duration-1000 h-16"
+                                                          />
+                                                      )}
                                                   </div>
                                                   <h3 className="font-semibold mb-2">
                                                       {item?.title || ""}

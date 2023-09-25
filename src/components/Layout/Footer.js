@@ -19,21 +19,26 @@ import {
     LOGO_NAME,
     PHONE,
 } from "@/constant/default";
+import { useStore } from "@/stores";
+import Loader from "../Loader";
 
-export default function Footer({ onContactClick, default_page }) {
-    const colorLogoUrl = default_page?.color_logo?.full_url || COLOR_LOGO_URL;
-    const colorLogoName = default_page?.color_logo?.name || LOGO_NAME;
-    const footerBG = default_page?.footer_background?.full_url || FOOTER_BG;
+export default function Footer({ onContactClick }) {
+    const { defaultPage, defaultPageLoading } = useStore();
 
-    return (
+    const colorLogoUrl = defaultPage?.color_logo?.full_url || COLOR_LOGO_URL;
+    const colorLogoName = defaultPage?.color_logo?.name || LOGO_NAME;
+    const footerBG = defaultPage?.footer_background?.full_url || FOOTER_BG;
+    const defaulImage = defaultPage?.default_image?.full_url || "/#";
+
+    return defaultPageLoading ? (
+        <Loader className="relative py-10" />
+    ) : (
         <footer id="footer" className="relative">
             <section className="bg-gray-800">
                 <div
                     className="absolute inset-0"
                     style={{
-                        backgroundImage: `url(${
-                            footerBG || default_page?.default_image?.full_url
-                        })`,
+                        backgroundImage: `url(${footerBG || defaulImage})`,
                         backgroundPosition: "50% 50%",
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
@@ -54,7 +59,7 @@ export default function Footer({ onContactClick, default_page }) {
                                     </Link>
                                 </FooterLogo>
                                 <FooterDescription>
-                                    {default_page?.footer_description ||
+                                    {defaultPage?.footer_description ||
                                         FOOTER_DESCRIPTION}
                                 </FooterDescription>
                                 <button
@@ -71,13 +76,13 @@ export default function Footer({ onContactClick, default_page }) {
                                 </h3>
 
                                 <h4 className="mb-4">
-                                    {default_page?.company_name || COMPANY_NAME}
+                                    {defaultPage?.company_name || COMPANY_NAME}
                                 </h4>
                                 <div className="flex flex-col space-y-2">
                                     <div className="flex items-center space-x-2">
                                         <IconLocationDot />
                                         <span>
-                                            {default_page?.address || ADDRESS}
+                                            {defaultPage?.address || ADDRESS}
                                         </span>
                                     </div>
                                     <div>
@@ -87,7 +92,7 @@ export default function Footer({ onContactClick, default_page }) {
                                         >
                                             <IconPhone />
                                             <span>
-                                                {default_page?.phone || PHONE}
+                                                {defaultPage?.phone || PHONE}
                                             </span>
                                         </a>
                                     </div>
@@ -98,7 +103,7 @@ export default function Footer({ onContactClick, default_page }) {
                                         >
                                             <IconEnvelope />
                                             <span>
-                                                {default_page?.email || EMAIL}
+                                                {defaultPage?.email || EMAIL}
                                             </span>
                                         </a>
                                     </div>
@@ -108,10 +113,10 @@ export default function Footer({ onContactClick, default_page }) {
                                 <h3 className="font-semibold mb-3 uppercase">
                                     Fanpage Facebook
                                 </h3>
-                                {default_page?.facebook_page_name ? (
+                                {defaultPage?.facebook_page_name ? (
                                     <div
                                         dangerouslySetInnerHTML={{
-                                            __html: `<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2${default_page?.facebook_page_name}%2F&width=340&height=350&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="130" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`,
+                                            __html: `<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2${defaultPage?.facebook_page_name}%2F&width=340&height=350&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="130" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`,
                                         }}
                                     />
                                 ) : (
@@ -128,7 +133,7 @@ export default function Footer({ onContactClick, default_page }) {
             </section>
             <FooterBottom>
                 <Container>
-                    <p>{default_page?.copyright || COPYRIGHT}</p>
+                    <p>{defaultPage?.copyright || COPYRIGHT}</p>
                 </Container>
             </FooterBottom>
         </footer>

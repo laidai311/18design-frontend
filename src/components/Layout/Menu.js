@@ -4,6 +4,8 @@ import { IconChevronDown, IconHome, IconSearch } from "../Icons";
 import clsx from "clsx";
 import { useStore } from "@/stores";
 import { useRouter } from "next/router";
+import { MENU } from "@/constant/menu";
+import Loader from "../Loader";
 
 const SubMenuItem = ({
     children,
@@ -159,8 +161,14 @@ const MenuItems = ({ items, hasHome, hasSearch, ...props }) => {
     ) : null;
 };
 
-function Menu({ menu }) {
-    return <MenuItems items={menu} hasHome hasSearch />;
+function Menu() {
+    const { menu, menuLoading } = useStore();
+
+    return menuLoading ? (
+        <Loader className="w-full h-full" />
+    ) : (
+        <MenuItems items={menu || MENU} hasHome hasSearch />
+    );
 }
 
 export default Menu;
