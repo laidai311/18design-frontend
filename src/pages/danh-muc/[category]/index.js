@@ -22,23 +22,23 @@ export default function Page({
     tag,
     error,
     default_image,
-    total_posts,
-    limit_posts,
-    curr_page,
     category,
+    category_id,
 }) {
     const { formfieldsLoading } = useStore();
     const [postLoading, setPostLoading] = useState(true);
     const [posts, setPosts] = useState([]);
+    const [totalPosts, setTotalPost] = useState(0);
+    const limit_posts = 12;
+    const curr_page = 1;
 
     useEffect(() => {
         const fetchPostbyCategory = async () => {
-            const postsData = await fetcher(
-                `/posts?categories=` +
-                    categoryPageData[0]?.id +
-                    `&per_page=${per_page}`
+            const _posts = await fetcher(
+                `/posts?categories=` + category_id + `&per_page=` + limit_posts
             );
-            setPosts(postsData);
+            setTotalPost(_posts?.total || 0);
+            setPosts(_posts?.data);
             setPostLoading(false);
         };
         if (formfieldsLoading) return;
@@ -46,7 +46,7 @@ export default function Page({
     }, [formfieldsLoading]);
 
     const paginationParam = usePagination({
-        total: Math.ceil(total_posts / limit_posts),
+        total: Math.ceil(totalPosts / limit_posts),
         initialPage: 1,
         page: (curr_page || 0) === 0 ? curr_page + 1 : curr_page,
         siblings: 1,
@@ -156,21 +156,22 @@ export async function getStaticProps(context) {
     try {
         const category = context.params?.category || "";
 
-        const categoryPageData =
-            (await fetcher(
-                isNaN(category)
-                    ? `/categories?slug=${category}`
-                    : `/categories/${category}`
-            ).catch((err) => undefined)?.data) || {};
+        const categoryPage = await fetcher(
+            isNaN(+category)
+                ? `/categories?slug=${category}`
+                : `/categories/${category}`
+        ).catch((err) => undefined);
 
         let meta_box = {};
 
-        if (typeof categoryPageData === "object") {
-            meta_box = categoryPageData?.meta_box;
-            meta_box.category_slug = categoryPageData?.slug || "";
+        if (Array.isArray(categoryPage?.data)) {
+            meta_box = categoryPage?.data?.[0]?.meta_box;
+            meta_box.category_slug = categoryPage?.data?.[0]?.slug || "";
+            meta_box.category_id = categoryPage?.data?.[0]?.id || "";
         } else {
-            meta_box = categoryPageData?.[0]?.meta_box;
-            meta_box.category_slug = categoryPageData?.[0]?.slug || "";
+            meta_box = categoryPage?.data?.meta_box;
+            meta_box.category_slug = categoryPage?.data?.slug || "";
+            meta_box.category_id = categoryPage?.data?.id || "";
         }
 
         // const postRes = await unfetch(

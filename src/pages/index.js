@@ -24,22 +24,20 @@ export default function Page({
 
     useEffect(() => {
         const fetchAboutGroup = async () => {
-            const aboutGroup = await Promise.all(
+            const _aboutGroup = await Promise.all(
                 Array.isArray(about_group)
                     ? about_group.map(async (item) => {
-                          const icon =
-                              (await fetcher(`/media/` + item?.icon)?.data) ||
-                              {};
+                          const icon = await fetcher(`/media/` + item?.icon);
 
                           return {
                               ...item,
-                              icon_link: icon?.source_url,
-                              icon_name: icon?.title?.rendered || "",
+                              icon_link: icon?.data?.source_url || "",
+                              icon_name: icon?.data?.title?.rendered || "",
                           };
                       })
                     : []
             );
-            setAboutGroup(aboutGroup);
+            setAboutGroup(_aboutGroup);
             setAboutGroupLoading(false);
         };
         if (formfieldsLoading) return;
@@ -53,16 +51,16 @@ export default function Page({
 
     useEffect(() => {
         const fetchPostsTab = async () => {
-            const posts_list =
-                (await fetcher(
-                    `/posts?categories=` + (activedTab || "") + "&per_page=6"
-                )?.data) || "";
+            const posts_list = await fetcher(
+                `/posts?categories=` + (activedTab || "") + "&per_page=6"
+            );
+
             setPostsTab((current) =>
                 current.map((item) => {
                     if (item.category_id === activedTab) {
                         return {
                             ...item,
-                            posts_list,
+                            posts_list: posts_list?.data || {},
                         };
                     }
                     return item;
@@ -81,22 +79,21 @@ export default function Page({
 
     useEffect(() => {
         const fetchWhyChooseGroup = async () => {
-            const whyChooseGroup = await Promise.all(
+            const _whyChooseGroup = await Promise.all(
                 Array.isArray(why_choose_group)
                     ? why_choose_group.map(async (item) => {
                           const icon =
-                              (await fetcher(`/media/` + item?.icon)?.data) ||
-                              {};
+                              (await fetcher(`/media/` + item?.icon)) || {};
 
                           return {
                               ...item,
-                              icon_link: icon?.source_url || "",
-                              icon_name: icon?.title?.rendered || "",
+                              icon_link: icon?.data?.source_url || "",
+                              icon_name: icon?.data?.title?.rendered || "",
                           };
                       })
                     : []
             );
-            setWhyChooseGroup(whyChooseGroup);
+            setWhyChooseGroup(_whyChooseGroup);
             setWhyChooseGroupLoading(false);
         };
         if (postsLoading) return;
@@ -137,8 +134,8 @@ export default function Page({
 export const getStaticProps = async (context) => {
     try {
         const homePageData =
-            (await fetcher("/pages?slug=trang-chu").catch((err) => undefined)
-                )?.data || {};
+            (await fetcher("/pages?slug=trang-chu").catch((err) => undefined))
+                ?.data || {};
 
         const meta_box = homePageData?.[0]
             ? {
