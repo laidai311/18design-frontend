@@ -113,7 +113,32 @@ export default function Page({
     );
 }
 
-export async function getServerSideProps(context) {
+export const getStaticPaths = async (context) => {
+    // const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_USER_NAME, NEXT_PUBLIC_PASSWORD } =
+    //     process.env;
+
+    // const categoriesRes = await unfetch(NEXT_PUBLIC_API_URL + `/categories`, {
+    //     method: "GET",
+    //     headers: {
+    //         Authorization:
+    //             "Basic " +
+    //             btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
+    //     },
+    // });
+
+    // const categoriesData = await categoriesRes.json();
+
+    // const paths = categoriesData.map((item) => ({
+    //     params: { category: item?.slug },
+    // }));
+
+    return {
+        paths: [],
+        fallback: false,
+    };
+};
+
+export async function getStaticProps(context) {
     try {
         const {
             NEXT_PUBLIC_SITE_NAME,

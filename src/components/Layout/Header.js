@@ -51,7 +51,10 @@ export default function Header({ isHomePage }) {
                     <div className="lg:hidden absolute top-0 right-0 h-header w-header flex items-center justify-center">
                         <button
                             onClick={() => setOpenSidebar(true)}
-                            className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10 text-white"
+                            className={clsx(
+                                "w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10 text-white",
+                                { hidden: openSidebar }
+                            )}
                         >
                             <IconMenu width={20} height={20} />
                         </button>
@@ -96,7 +99,13 @@ export default function Header({ isHomePage }) {
                                 "pointer-events-auto opacity-100": openSidebar,
                             }
                         )}
-                    />
+                    >
+                        <div className="absolute top-0 right-7 h-header flex items-center justify-center lg:hidden">
+                            <CloseButton
+                                onClick={() => setOpenSidebar(false)}
+                            />
+                        </div>
+                    </div>
                     <div
                         ref={drawRef}
                         className={clsx(
@@ -121,11 +130,6 @@ export default function Header({ isHomePage }) {
                                 }
                             />
                         </Link>
-                        <div className="absolute top-0 right-2 h-header flex items-center justify-center lg:hidden">
-                            <CloseButton
-                                onClick={() => setOpenSidebar(false)}
-                            />
-                        </div>
                         <Menu />
                     </div>
                 </div>

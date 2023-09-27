@@ -1,11 +1,10 @@
 import { Contact, FollowUs, Social } from "@/components/Contact/Banner";
-import { getMenu } from "@/utils";
+import { fetcher } from "@/utils";
 import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
 import { useStore } from "@/stores";
 import DefaultLayout from "@/components/Layout";
-import unfetch from "isomorphic-unfetch";
 
 export default function Page({
     background,
@@ -39,54 +38,21 @@ export default function Page({
     );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
     try {
-        const {
-            NEXT_PUBLIC_SITE_NAME,
-            NEXT_PUBLIC_API_URL,
-            NEXT_PUBLIC_USER_NAME,
-            NEXT_PUBLIC_PASSWORD,
-        } = process.env;
-
-        const [menuData, defaulPageData, contactPageData] = await Promise.all(
-            ["/menu-items", "/pages?slug=mac-dinh", "/pages?slug=lien-he"].map(
-                async (url) => {
-                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                        method: "GET",
-                        headers: {
-                            Authorization:
-                                "Basic " +
-                                btoa(
-                                    NEXT_PUBLIC_USER_NAME +
-                                        ":" +
-                                        NEXT_PUBLIC_PASSWORD
-                                ),
-                        },
-                    });
-                    return res.json();
-                }
-            )
+        const contactPage = await fetcher("/pages?slug=lien-he").catch(
+            (err) => undefined
         );
-
-        const menu = getMenu(menuData);
-
-        const default_meta_box = defaulPageData[0]?.meta_box || {};
-
-        const meta_box = contactPageData[0]?.meta_box
-            ? contactPageData[0]?.meta_box
-            : {};
+        const contactPageData = contactPage?.data?.[0] || {};
+        const meta_box = {
+            ...contactPageData?.meta_box,
+            title: contactPageData?.title?.rendered || "",
+            content: contactPageData?.content?.rendered || "",
+        };
 
         return {
-            props: {
-                ...meta_box,
-                menu,
-                default_page: default_meta_box,
-                title: contactPageData[0]?.title?.rendered || "",
-                content: contactPageData[0]?.content?.rendered || "",
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-            },
-            // revalidate: REVALIDATE, // In seconds 1h
+            props: meta_box,
+            revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
         return { props: { error: error?.message }, notFound: true };

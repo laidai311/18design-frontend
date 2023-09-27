@@ -18,9 +18,9 @@ export default function Page({
     why_choose_group,
     ...props
 }) {
+    const { formfieldsLoading } = useStore();
     const [aboutGroupLoading, setAboutGroupLoading] = useState(true);
     const [aboutGroup, setAboutGroup] = useState(about_group);
-    const { formfieldsLoading } = useStore();
 
     useEffect(() => {
         const fetchAboutGroup = async () => {
@@ -133,17 +133,15 @@ export default function Page({
 
 export const getStaticProps = async (context) => {
     try {
-        const homePageData =
-            (await fetcher("/pages?slug=trang-chu").catch((err) => undefined))
-                ?.data || {};
-
-        const meta_box = homePageData?.[0]
-            ? {
-                  ...homePageData?.[0]?.meta_box,
-                  title: homePageData[0]?.title?.rendered || "",
-                  content: homePageData[0]?.content?.rendered || "",
-              }
-            : {};
+        const homePage = await fetcher("/pages?slug=trang-chu").catch(
+            (err) => undefined
+        );
+        const homePageData = homePage?.data?.[0] || {};
+        const meta_box = {
+            ...homePageData?.meta_box,
+            title: homePageData?.title?.rendered || "",
+            content: homePageData?.content?.rendered || "",
+        };
 
         return {
             props: meta_box,

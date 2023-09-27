@@ -12,6 +12,7 @@ import unfetch from "isomorphic-unfetch";
 import { fetcher } from "@/utils";
 import { useEffect, useState } from "react";
 import { useStore } from "@/stores";
+import Loader from "@/components/Loader";
 
 export default function Page({
     seo_title,
@@ -71,17 +72,19 @@ export default function Page({
                         />
 
                         <div className="-m-4 flex flex-wrap px-4 md:px-0">
-                            {Array.isArray(posts)
-                                ? posts.map((itm) => (
-                                      <Card
-                                          {...itm}
-                                          category={category}
-                                          default_image={default_image}
-                                          key={itm.id}
-                                          className="w-full p-4 md:w-1/2 lg:w-1/3"
-                                      />
-                                  ))
-                                : null}
+                            {postLoading ? (
+                                <Loader />
+                            ) : Array.isArray(posts) ? (
+                                posts.map((itm) => (
+                                    <Card
+                                        {...itm}
+                                        category={category}
+                                        default_image={default_image}
+                                        key={itm.id}
+                                        className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                    />
+                                ))
+                            ) : null}
                         </div>
                         {posts?.length ? (
                             <div className="flex items-center justify-center space-x-2 mt-10">
@@ -156,23 +159,21 @@ export async function getStaticProps(context) {
     try {
         const category = context.params?.category || "";
 
-        const categoryPage = await fetcher(
+        const categoriesPage = await fetcher(
             isNaN(+category)
                 ? `/categories?slug=${category}`
                 : `/categories/${category}`
         ).catch((err) => undefined);
 
-        let meta_box = {};
+        const categoriesData = Array.isArray(categoriesPage?.data)
+            ? categoriesPage?.data?.[0]
+            : categoriesPage?.data || {};
 
-        if (Array.isArray(categoryPage?.data)) {
-            meta_box = categoryPage?.data?.[0]?.meta_box;
-            meta_box.category_slug = categoryPage?.data?.[0]?.slug || "";
-            meta_box.category_id = categoryPage?.data?.[0]?.id || "";
-        } else {
-            meta_box = categoryPage?.data?.meta_box;
-            meta_box.category_slug = categoryPage?.data?.slug || "";
-            meta_box.category_id = categoryPage?.data?.id || "";
-        }
+        const meta_box = {
+            ...categoriesData,
+            category_slug: categoriesData?.slug || "",
+            category_id: categoriesData?.id || "",
+        };
 
         // const postRes = await unfetch(
         //     NEXT_PUBLIC_API_URL +
@@ -185,16 +186,10 @@ export async function getStaticProps(context) {
         // const postsData = await postRes.json();
 
         return {
-            props: {
-                ...meta_box,
-                // category: categoryPageData[0],
-                // posts: postsData,
-                // total_posts: +total,
-            },
+            props: meta_box,
             revalidate: REVALIDATE, // In seconds 1h
         };
     } catch (error) {
-        console.log(error);
         return { props: { error: error?.message }, notFound: true };
     }
 }

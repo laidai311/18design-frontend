@@ -132,6 +132,7 @@ export const StoreProvider = ({
                 formfieldsLoading: formFieldData.isLoading,
                 menu,
                 menuLoading: menuItems.isLoading,
+                site_name: process.env.SITE_NAME,
             }}
             {...props}
         />
@@ -160,6 +161,7 @@ export const StoreContext = createContext({
     formfieldsLoading: true,
     menu: [],
     menuLoading: true,
+    site_name: "",
 });
 
 export const useStore = () => useContext(StoreContext);

@@ -1,8 +1,9 @@
 import { Img } from "../UI";
 import { useStore } from "@/stores";
 import Link from "next/link";
+import Loader from "../Loader";
 
-export function ProductTagsList({ product_tag_list }) {
+export function ProductTagsList({ loading, product_tag_list }) {
     const { default_image } = useStore();
 
     return (
@@ -11,36 +12,41 @@ export function ProductTagsList({ product_tag_list }) {
                 <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     Danh mục nổi bật
                 </h2>
-                <div className="-mx-4 flex flex-wrap px-4 md:px-0">
-                    {Array.isArray(product_tag_list)
-                        ? product_tag_list.map((item, index) => (
-                              <ProductTagCard
-                                  key={index}
-                                  {...item}
-                                  className="p-4 w-full md:w-1/2 lg:w-1/4"
-                              />
-                          ))
-                        : null}
-                    <ProductTagCard
-                        name={"Xem tất cả"}
-                        meta_box={{
-                            image: {
-                                name: "18 Design",
-                                full_url: default_image?.full_url || "",
-                            },
-                        }}
-                        className="p-4 w-full md:w-1/2 lg:w-1/4"
-                    />
-                </div>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <div className="-mx-4 flex flex-wrap px-4 md:px-0">
+                        {Array.isArray(product_tag_list)
+                            ? product_tag_list.map((item, index) => (
+                                  <ProductTagCard
+                                      key={index}
+                                      {...item}
+                                      className="p-4 w-full md:w-1/2 lg:w-1/4"
+                                  />
+                              ))
+                            : null}
+                        <ProductTagCard
+                            name={"Xem tất cả"}
+                            meta_box={{
+                                image: {
+                                    name: "18 Design",
+                                    full_url: default_image?.full_url || "",
+                                },
+                            }}
+                            url={"/san-pham/cac-loai"}
+                            className="p-4 w-full md:w-1/2 lg:w-1/4"
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );
 }
 
-const ProductTagCard = ({ slug, meta_box, name, className }) => {
+const ProductTagCard = ({ slug, meta_box, name, className, url }) => {
     return (
         <div className={className || ""}>
-            <Link href={`/san-pham/${slug || ""}`}>
+            <Link href={url ? url : `/san-pham/${slug || ""}`}>
                 <div className="relative pt-[67%] rounded-xl overflow-hidden group">
                     <Img
                         alt={meta_box?.image?.name || ""}
