@@ -1,5 +1,5 @@
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { formatCurrency, getMenu } from "@/utils";
+import { fetcher, formatCurrency } from "@/utils";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
 import { SpecificationTab } from "@/components/SpecificationsTab";
@@ -8,42 +8,68 @@ import { ThumbDetail } from "@/components/ThumbDetail";
 import { useStore } from "@/stores";
 import DefaultLayout from "@/components/Layout";
 import ProductOther from "@/components/ProductOther";
-import unfetch from "isomorphic-unfetch";
+import { useEffect, useState } from "react";
+import Loader from "@/components/Loader";
 
 export default function Page({
-    title,
     seo_title,
     seo_description,
-    site_name,
-    product,
-    products_list,
+    title,
+    slug,
+    images,
+    new_price,
+    old_price,
+    maintain,
+    policy,
+    size,
+    content,
+    material,
+    productTag,
+    id,
 }) {
-    const { setOpenContactForm } = useStore();
+    const [productsLoading, setProductsLoading] = useState(true);
+    const [products, setProducts] = useState();
+    const { formfieldsLoading, site_name, setOpenContactForm } = useStore();
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const _products = productTag?.length
+                ? await fetcher(`/product?product-tag=${productTag[0]}`).catch(
+                      () => {}
+                  )
+                : {};
+
+            setProductsLoading(false);
+
+            if (_products?.data?.length) {
+                setProducts(_products?.data?.filter((item) => item?.id !== id));
+            }
+        };
+        if (!formfieldsLoading) {
+            fetchProducts();
+        }
+    }, [formfieldsLoading, productTag, id]);
 
     return (
         <>
             <NextSeo
-                title={(seo_title || title || "") + " - " + site_name}
+                title={`${title || seo_title || ""} - ${site_name}`}
                 description={seo_description || ""}
             />
-            <ProductDetail key={product?.slug}>
+            <ProductDetail key={id + slug}>
                 <div className="container mx-auto max-w-7xl my-10">
-                    <Breadcrumb value1={product?.title?.rendered || ""} />
+                    <Breadcrumb value1={title || ""} />
                     <div className="detail px-4 md:px-0">
-                        <ThumbDetail images={product?.meta_box?.images} />
+                        <ThumbDetail images={images} />
                         <ProductDescription>
                             <h3 className="font-semibold text-lg">{title}</h3>
                             <div className="price__group">
                                 <p className="price">
-                                    {formatCurrency(
-                                        product?.meta_box?.new_price
-                                    )}
+                                    {formatCurrency(new_price)}
                                 </p>
-                                {product?.meta_box?.old_price ? (
+                                {old_price ? (
                                     <p className="old__price">
-                                        {formatCurrency(
-                                            product?.meta_box?.old_price
-                                        )}
+                                        {formatCurrency(old_price)}
                                     </p>
                                 ) : null}
                             </div>
@@ -51,14 +77,14 @@ export default function Page({
                                 <span>Vật liệu</span>
 
                                 <div className="option__name">
-                                    <p>{product?.meta_box?.material || ""}</p>
+                                    <p>{material || ""}</p>
                                 </div>
                             </div>
                             <div className="size">
                                 <span>Kích thước</span>
 
                                 <div className="option__name">
-                                    <p>{product?.meta_box?.size || ""}</p>
+                                    <p>{size || ""}</p>
                                 </div>
                             </div>
 
@@ -71,134 +97,80 @@ export default function Page({
                         </ProductDescription>
                     </div>
                     <SpecificationTab
-                        {...product?.meta_box}
-                        content={product?.content.rendered || ""}
+                        maintain={maintain}
+                        policy={policy}
+                        content={content || ""}
                     />
-                    <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
-                        Sản phẩm khác
-                    </h2>
-                    <ProductOther products_list={products_list} />
+                    {productsLoading ? (
+                        <Loader />
+                    ) : Array.isArray(products) && products?.length > 0 ? (
+                        <>
+                            <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                                Sản phẩm khác
+                            </h2>
+                            <ProductOther products_list={products} />
+                        </>
+                    ) : null}
                 </div>
             </ProductDetail>
         </>
     );
 }
 
-// export const getStaticPaths = async (context) => {
-//     const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_USER_NAME, NEXT_PUBLIC_PASSWORD } =
-//         process.env;
+export const getStaticPaths = async (context) => {
+    const propduct = await fetcher(`/product`).catch(() => undefined);
 
-//     const productRes = await unfetch(
-//         NEXT_PUBLIC_API_URL + `/product?per_page=20`,
-//         {
-//             method: "GET",
-//             headers: {
-//                 Authorization:
-//                     "Basic " +
-//                     btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
-//             },
-//         }
-//     );
+    const paths = Array.isArray(propduct?.data)
+        ? propduct.data.map((item) => ({
+              params: { slug: item?.slug },
+          }))
+        : [];
 
-//     const productData = await productRes.json();
+    return {
+        paths,
+        fallback: false,
+    };
+};
 
-//     const paths = productData.map((item) => ({
-//         params: { slug: item?.slug },
-//     }));
+export async function getStaticProps(context) {
+    const slug = context.params?.slug;
 
-//     return {
-//         paths,
-//         fallback: false,
-//     };
-// };
+    const propductPage = await fetcher(`/product?slug=${slug}`).catch(
+        () => undefined
+    );
 
-export async function getServerSideProps(context) {
-    try {
-        const {
-            NEXT_PUBLIC_SITE_NAME,
-            NEXT_PUBLIC_API_URL,
-            NEXT_PUBLIC_USER_NAME,
-            NEXT_PUBLIC_PASSWORD,
-            NEXT_PUBLIC_GRAVITY_FORMS_URL,
-        } = process.env;
-        const slug = context.params?.slug;
+    const productPageData = propductPage ? propductPage?.data?.[0] : {};
 
-        const [menuData, defaulPageData, productData] = await Promise.all(
-            [
-                "/menu-items",
-                "/pages?slug=mac-dinh",
-                `/product?slug=${slug}`,
-            ].map(async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                    method: "GET",
-                    headers: {
-                        Authorization:
-                            "Basic " +
-                            btoa(
-                                NEXT_PUBLIC_USER_NAME +
-                                    ":" +
-                                    NEXT_PUBLIC_PASSWORD
-                            ),
-                    },
-                });
-                return res.json();
-            })
-        );
+    const images = productPageData?.meta_box?.images?.length
+        ? productPageData?.meta_box?.images.map((item) => ({
+              alt: item?.alt || item?.title || "",
+              url: item?.full_url || "",
+          }))
+        : [];
 
-        const menu = getMenu(menuData);
+    const meta_box = {
+        seo_title: productPageData?.meta_box?.seo_title || "",
+        seo_description: productPageData?.meta_box?.seo_description || "",
+        size: productPageData?.meta_box?.size || "",
+        new_price: productPageData?.meta_box?.new_price || "",
+        old_price: productPageData?.meta_box?.old_price || "",
+        content: productPageData?.content?.rendered || "",
+        policy: productPageData?.meta_box?.policy || "",
+        maintain: productPageData?.meta_box?.maintain || "",
+        material: productPageData?.meta_box?.material || "",
+        images,
+        slug: productPageData?.slug || "",
+        id: productPageData?.id || "",
+        title: productPageData?.title?.rendered || "",
+        productTag: productPageData?.["product-tag"],
+    };
 
-        const default_meta_box = defaulPageData[0]?.meta_box || {};
-
-        const productsRes = await unfetch(
-            NEXT_PUBLIC_API_URL +
-                `/product?product-tag=${productData[0]?.["product-tag"]?.[0]}&per_page=10`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization:
-                        "Basic " +
-                        btoa(
-                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
-                        ),
-                },
-            }
-        );
-
-        const productsData = await productsRes.json();
-
-        const formRes = await unfetch(
-            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization:
-                        "Basic " +
-                        btoa(
-                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
-                        ),
-                },
-            }
-        );
-
-        const form_data = await formRes.json();
-
-        return {
-            props: {
-                menu,
-                default_page: default_meta_box,
-                form_data,
-                products_list: productsData,
-                product: productData?.[0] || {},
-                title: productData?.[0]?.title?.rendered || "",
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-            },
-            // revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
-    }
+    return {
+        props: meta_box,
+        revalidate: REVALIDATE, // In seconds 1h
+        notFound:
+            propductPage === undefined || propductPage?.data?.length === 0,
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

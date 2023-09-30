@@ -20,24 +20,21 @@ export default function Page({ error, seo_title, seo_description, ...props }) {
 }
 
 export async function getStaticProps() {
-    try {
-        const abputPage = await fetcher("/pages?slug=ve-chung-toi").catch(
-            (err) => undefined
-        );
-        const aboutPageData = abputPage?.data?.[0] || {};
-        const meta_box = {
-            ...aboutPageData?.meta_box,
-            title: aboutPageData?.title?.rendered || "",
-            content: aboutPageData?.content?.rendered || "",
-        };
+    const abputPage = await fetcher("/pages?slug=ve-chung-toi").catch(
+        () => undefined
+    );
+    const aboutPageData = abputPage?.data?.[0] || {};
+    const meta_box = {
+        ...aboutPageData?.meta_box,
+        title: aboutPageData?.title?.rendered || "",
+        content: aboutPageData?.content?.rendered || "",
+    };
 
-        return {
-            props: meta_box,
-            revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
-    }
+    return {
+        props: meta_box,
+        revalidate: REVALIDATE, // In seconds 1h
+        notFound: abputPage === undefined || abputPage?.data?.length === 0,
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

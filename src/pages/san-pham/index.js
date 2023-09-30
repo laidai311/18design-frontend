@@ -23,12 +23,15 @@ export default function Page({
 
     useEffect(() => {
         const fetchProductTag = async () => {
-            const _productTag = await await fetcher(`/product-tag?per_page=7`);
+            const _productTag = await fetcher(`/product-tag?per_page=7`).catch(
+                () => {}
+            );
             setProductTag(_productTag?.data);
             setProductTagLoading(false);
         };
-        if (formfieldsLoading) return;
-        fetchProductTag();
+        if (!formfieldsLoading) {
+            fetchProductTag();
+        }
     }, [formfieldsLoading]);
 
     const [productLoading, setProductLoading] = useState(true);
@@ -36,22 +39,25 @@ export default function Page({
 
     useEffect(() => {
         const fetchProduct = async () => {
-            const _product = await await fetcher(`/product?per_page=8`);
+            const _product = await fetcher(`/product?per_page=8`).catch(
+                () => {}
+            );
             setProduct(_product?.data);
             setProductLoading(false);
         };
-        if (productTagLoading) return;
-        fetchProduct();
+        if (!productTagLoading) {
+            fetchProduct();
+        }
     }, [productTagLoading]);
 
     const image_link =
-        banner_background?.full_url || defaultPage?.default_image?.full_url;
+        banner_background?.url || defaultPage?.default_image?.full_url;
     const image_name = banner_background?.name || site_name;
 
     return (
         <>
             <NextSeo
-                title={(seo_title || title) + " - " + site_name}
+                title={`${seo_title || title} - ${site_name}`}
                 description={seo_description || ""}
             />
             <div className="w-full relative pt-[52%] h-auto lg:pt-[40%]">
@@ -95,105 +101,28 @@ export default function Page({
 }
 
 export async function getStaticProps() {
-    try {
-        const propductPage = await fetcher("/pages?slug=san-pham").catch(
-            (err) => undefined
-        );
-        const productPageData = propductPage?.data?.[0] || {};
-        const meta_box = {
-            ...productPageData?.meta_box,
-            title: productPageData?.title?.rendered || "",
-            content: productPageData?.content?.rendered || "",
-        };
+    const propductPage = await fetcher("/pages?slug=san-pham").catch(
+        () => undefined
+    );
+    const productPageData = propductPage ? propductPage?.data?.[0] : {};
 
-        return {
-            props: meta_box,
-            revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
-    }
+    const meta_box = {
+        banner_background: {
+            url: productPageData?.meta_box?.banner_background?.full_url || "",
+            alt:
+                productPageData?.meta_box?.banner_background?.alt ||
+                productPageData?.meta_box?.banner_background?.title,
+        },
+        title: productPageData?.title?.rendered || "",
+        content: productPageData?.content?.rendered || "",
+    };
 
-    // try {
-    //     const {
-    //         NEXT_PUBLIC_SITE_NAME,
-    //         NEXT_PUBLIC_API_URL,
-    //         NEXT_PUBLIC_USER_NAME,
-    //         NEXT_PUBLIC_PASSWORD,
-    //         NEXT_PUBLIC_GRAVITY_FORMS_URL,
-    //     } = process.env;
-
-    //     const [
-    //         menuData,
-    //         defaulPageData,
-    //         productPageData,
-    //         productTagData,
-    //         productData,
-    //     ] = await Promise.all(
-    //         [
-    //             "/menu-items",
-    //             "/pages?slug=mac-dinh",
-    //             "/pages?slug=san-pham",
-    //             "/product-tag?per_page=7",
-    //             "/product?per_page=8",
-    //         ].map(async (url) => {
-    //             const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-    //                 method: "GET",
-    //                 headers: {
-    //                     Authorization:
-    //                         "Basic " +
-    //                         btoa(
-    //                             NEXT_PUBLIC_USER_NAME +
-    //                                 ":" +
-    //                                 NEXT_PUBLIC_PASSWORD
-    //                         ),
-    //                 },
-    //             });
-    //             return res.json();
-    //         })
-    //     );
-
-    //     const menu = getMenu(menuData);
-
-    //     const default_meta_box = defaulPageData[0]?.meta_box || {};
-
-    //     const meta_box = productPageData[0]?.meta_box || {};
-
-    //     const formRes = await unfetch(
-    //         NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
-    //         {
-    //             method: "GET",
-    //             headers: {
-    //                 Authorization:
-    //                     "Basic " +
-    //                     btoa(
-    //                         NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
-    //                     ),
-    //             },
-    //         }
-    //     );
-
-    //     const form_data = await formRes.json();
-
-    //     return {
-    //         props: {
-    //             ...meta_box,
-    //             menu,
-    //             default_page: default_meta_box,
-    //             form_data,
-    //             product_tag_list: productTagData || [],
-    //             product_list: productData || [],
-    //             title: productPageData[0]?.title?.rendered || "",
-    //             content: productPageData[0]?.content?.rendered || "",
-    //             site_name: NEXT_PUBLIC_SITE_NAME || "",
-    //             api_url: NEXT_PUBLIC_API_URL || "",
-    //             form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-    //         },
-    //         // revalidate: REVALIDATE, // In seconds 1h
-    //     };
-    // } catch (error) {
-    //     return { props: { error: error?.message }, notFound: true };
-    // }
+    return {
+        props: meta_box,
+        revalidate: REVALIDATE, // In seconds 1h
+        notFound:
+            propductPage === undefined || propductPage?.data?.length === 0,
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

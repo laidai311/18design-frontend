@@ -4,10 +4,11 @@ import { IconAnglesRight, IconEye } from "../Icons";
 import { styled } from "styled-components";
 import { useStore } from "@/stores";
 
-export const Card = ({ title, slug = "#", className, meta_box, category }) => {
-    const { default_image } = useStore();
+export const Card = ({ title, slug = "#", className, meta_box }) => {
+    const { defaultPage } = useStore();
 
-    const image_link = meta_box?.image?.full_url || default_image?.full_url;
+    const image_link =
+        meta_box?.image?.full_url || defaultPage?.default_image?.full_url;
 
     const image_name = meta_box?.image?.name || "18 design";
 
@@ -15,7 +16,7 @@ export const Card = ({ title, slug = "#", className, meta_box, category }) => {
 
     return (
         <CardStyled className={className || ""}>
-            <div className="relative border rounded-md overflow-hidden transition-shadow duration-300 ease-out group hover:shadow-xl">
+            <div className="relative border rounded-md overflow-hidden transition-shadow duration-300 ease-out group md:hover:shadow-xl">
                 <Link href={url}>
                     <div className="relative cover-card overflow-hidden h-64 after:group-hover:animate-[circle_0.75s] select-none">
                         <Img

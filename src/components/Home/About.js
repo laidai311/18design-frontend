@@ -17,7 +17,7 @@ export function About({
         <section
             className="relative py-12"
             style={{
-                backgroundImage: `url("${about_background?.full_url || ""}")`,
+                backgroundImage: `url("${about_background?.url || ""}")`,
                 backgroundPosition: "50% 50%",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",

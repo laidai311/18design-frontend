@@ -11,12 +11,7 @@ import { getMenu } from "@/utils";
 import { useRouter } from "next/router";
 import { createContext, useContext, useState } from "react";
 
-export const StoreProvider = ({
-    about_group,
-    why_choose_group,
-    posts_tab,
-    ...props
-}) => {
+export const StoreProvider = (props) => {
     // bật tắt sub menu
     const [openSubMenu, setOpenSubMenu] = useState({});
     // bật tắt sidebar
@@ -62,23 +57,25 @@ export const StoreProvider = ({
         }
     });
 
-    const menuItems = useFetch("/menu-items", {
-        method: "GET",
-        headers: {
-            Authorization:
-                "Basic " +
-                btoa(process.env.USER_NAME + ":" + process.env.USER_PASSWORD),
+    const defaultPage = useFetch("/pages?slug=mac-dinh", {});
+
+    const menuItems = useFetch(
+        "/menu-items",
+        {
+            method: "GET",
+            headers: {
+                Authorization:
+                    "Basic " +
+                    btoa(
+                        process.env.USER_NAME + ":" + process.env.USER_PASSWORD
+                    ),
+            },
         },
-    });
+        false,
+        !defaultPage?.isLoading
+    );
 
     const menu = getMenu(menuItems.data?.data);
-
-    const defaultPage = useFetch(
-        "/pages?slug=mac-dinh",
-        {},
-        false,
-        !menuItems.isLoading
-    );
 
     const formFieldData = useFetch(
         "/forms/1/field-filters",
@@ -88,7 +85,9 @@ export const StoreProvider = ({
                 Authorization:
                     "Basic " +
                     btoa(
-                        process.env.USER_NAME + ":" + process.env.USER_PASSWORD
+                        process.env.FORM_API_KEY +
+                            ":" +
+                            process.env.FORM_API_SECRET
                     ),
             },
         },

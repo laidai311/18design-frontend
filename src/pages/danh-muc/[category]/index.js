@@ -1,55 +1,63 @@
 import { Card } from "@/components/Card";
+import { fetcher } from "@/utils";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
+import { useEffect, useState } from "react";
 import { usePagination } from "@/hooks";
 import { useRouter } from "next/router";
+import { useStore } from "@/stores";
 import clsx from "clsx";
 import Component404 from "@/components/404";
 import DefaultLayout from "@/components/Layout";
 import Link from "next/link";
-import ReadOnlyEditor from "@/components/ReadOnlyEditor";
-import unfetch from "isomorphic-unfetch";
-import { fetcher } from "@/utils";
-import { useEffect, useState } from "react";
-import { useStore } from "@/stores";
 import Loader from "@/components/Loader";
+import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 
 export default function Page({
     seo_title,
     seo_description,
+    error,
+    id,
+    slug,
     title,
     content,
-    site_name,
-    tag,
-    error,
-    default_image,
-    category,
-    category_id,
+    name,
 }) {
-    const { formfieldsLoading } = useStore();
-    const [postLoading, setPostLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState([]);
-    const [totalPosts, setTotalPost] = useState(0);
-    const limit_posts = 12;
-    const curr_page = 1;
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [limit] = useState(12);
+
+    const router = useRouter();
+    const { formfieldsLoading, site_name } = useStore();
 
     useEffect(() => {
         const fetchPostbyCategory = async () => {
-            const _posts = await fetcher(
-                `/posts?categories=` + category_id + `&per_page=` + limit_posts
-            );
-            setTotalPost(_posts?.total || 0);
+            const curr_page = router.query?.page ? +router.query.page : 1;
+            setPage(curr_page);
+
+            const _posts = id
+                ? await fetcher(
+                      `/posts?categories=${id}&per_page=${limit}&offset=${
+                          limit * (curr_page - 1)
+                      }`
+                  ).catch(() => {})
+                : {};
+
+            setTotal(_posts?.total || 0);
             setPosts(_posts?.data);
-            setPostLoading(false);
+            setLoading(false);
         };
-        if (formfieldsLoading) return;
-        fetchPostbyCategory();
-    }, [formfieldsLoading]);
+        if (!formfieldsLoading) {
+            fetchPostbyCategory();
+        }
+    }, [formfieldsLoading, router.query, id, limit]);
 
     const paginationParam = usePagination({
-        total: Math.ceil(totalPosts / limit_posts),
+        total: Math.ceil(total / limit),
         initialPage: 1,
-        page: (curr_page || 0) === 0 ? curr_page + 1 : curr_page,
+        page,
         siblings: 1,
         boundaries: 1,
     });
@@ -57,14 +65,14 @@ export default function Page({
     return (
         <>
             <NextSeo
-                title={(seo_title || title || "") + " - " + site_name}
+                title={`${title || name || seo_title || ""} - ${site_name}`}
                 description={seo_description || ""}
             />
             {!error ? (
-                <section key={tag + curr_page} className="min-h-[80vh] py-10">
+                <section key={slug + page} className="min-h-[80vh] py-10">
                     <div className="container max-w-7xl mx-auto">
                         <h1 className="border-b-2 border-primary uppercase mb-8 text-center text-2xl leading-9">
-                            {title || ""}
+                            {title || name || ""}
                         </h1>
                         <ReadOnlyEditor
                             content={content || ""}
@@ -72,15 +80,13 @@ export default function Page({
                         />
 
                         <div className="-m-4 flex flex-wrap px-4 md:px-0">
-                            {postLoading ? (
+                            {loading ? (
                                 <Loader />
                             ) : Array.isArray(posts) ? (
                                 posts.map((itm) => (
                                     <Card
-                                        {...itm}
-                                        category={category}
-                                        default_image={default_image}
                                         key={itm.id}
+                                        {...itm}
                                         className="w-full p-4 md:w-1/2 lg:w-1/3"
                                     />
                                 ))
@@ -97,12 +103,10 @@ export default function Page({
                                     return (
                                         <Link
                                             key={item}
-                                            href={
-                                                "/danh-muc/" +
-                                                category?.slug +
-                                                "/page/" +
-                                                item
-                                            }
+                                            href={{
+                                                pathname: `/danh-muc/${slug}`,
+                                                query: { page: item },
+                                            }}
                                             onClick={() => {
                                                 paginationParam.setPage(item);
                                             }}
@@ -130,68 +134,52 @@ export default function Page({
     );
 }
 
-export const getStaticPaths = async (context) => {
-    // const { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_USER_NAME, NEXT_PUBLIC_PASSWORD } =
-    //     process.env;
+export const getStaticPaths = async () => {
+    const categories = await fetcher(`/categories`);
 
-    // const categoriesRes = await unfetch(NEXT_PUBLIC_API_URL + `/categories`, {
-    //     method: "GET",
-    //     headers: {
-    //         Authorization:
-    //             "Basic " +
-    //             btoa(NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD),
-    //     },
-    // });
-
-    // const categoriesData = await categoriesRes.json();
-
-    // const paths = categoriesData.map((item) => ({
-    //     params: { category: item?.slug },
-    // }));
+    const paths = Array.isArray(categories?.data)
+        ? categories.data.flatMap((item) =>
+              [`${item?.id}`, item?.slug].map((itm) => ({
+                  params: { category: itm },
+              }))
+          )
+        : [];
 
     return {
-        paths: [],
-        fallback: false,
+        paths,
+        fallback: "blocking",
     };
 };
 
 export async function getStaticProps(context) {
-    try {
-        const category = context.params?.category || "";
+    const category = context.params?.category || "";
 
-        const categoriesPage = await fetcher(
-            isNaN(+category)
-                ? `/categories?slug=${category}`
-                : `/categories/${category}`
-        ).catch((err) => undefined);
+    const categoriesPage = await fetcher(
+        isNaN(+category)
+            ? `/categories?slug=${category}`
+            : `/categories/${category}`
+    ).catch(() => undefined);
 
-        const categoriesData = Array.isArray(categoriesPage?.data)
-            ? categoriesPage?.data?.[0]
-            : categoriesPage?.data || {};
+    const categoriesData = Array.isArray(categoriesPage?.data)
+        ? categoriesPage?.data?.[0]
+        : categoriesPage?.data || {};
 
-        const meta_box = {
-            ...categoriesData,
-            category_slug: categoriesData?.slug || "",
-            category_id: categoriesData?.id || "",
-        };
+    const meta_box = {
+        slug: categoriesData?.slug || "",
+        id: categoriesData?.id || "",
+        name: categoriesData?.name || "",
+        title: categoriesData?.meta_box?.title || "",
+        content: categoriesData?.meta_box?.content || "",
+        seo_title: categoriesData?.meta_box?.seo_title || "",
+        seo_description: categoriesData?.meta_box?.seo_description || "",
+    };
 
-        // const postRes = await unfetch(
-        //     NEXT_PUBLIC_API_URL +
-        //         `/posts?categories=` +
-        //         categoryPageData[0]?.id +
-        //         `&per_page=${per_page}`
-        // );
-
-        // const total = postRes.headers.get("x-wp-total");
-        // const postsData = await postRes.json();
-
-        return {
-            props: meta_box,
-            revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
-    }
+    return {
+        props: meta_box,
+        revalidate: REVALIDATE, // In seconds 1h
+        notFound:
+            categoriesPage === undefined || categoriesPage?.data?.length === 0,
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

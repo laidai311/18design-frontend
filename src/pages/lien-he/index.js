@@ -25,8 +25,8 @@ export default function Page({
             <div className="w-full relative pt-[52%] h-auto lg:pt-0 lg:h-[80vh] bg-[#d4e1e7]">
                 <div className="absolute inset-0 py-32 px-20">
                     <Img
-                        alt={background?.title || default_image?.title || ""}
-                        src={background?.full_url || default_image?.full_url}
+                        alt={background?.name || default_image?.name || ""}
+                        src={background?.url || default_image?.full_url}
                         className={"w-full h-full object-cover"}
                     />
                 </div>
@@ -39,24 +39,29 @@ export default function Page({
 }
 
 export async function getStaticProps() {
-    try {
-        const contactPage = await fetcher("/pages?slug=lien-he").catch(
-            (err) => undefined
-        );
-        const contactPageData = contactPage?.data?.[0] || {};
-        const meta_box = {
-            ...contactPageData?.meta_box,
-            title: contactPageData?.title?.rendered || "",
-            content: contactPageData?.content?.rendered || "",
-        };
+    const contactPage = await fetcher("/pages?slug=lien-he").catch(
+        () => undefined
+    );
+    const contactPageData = contactPage ? contactPage?.data?.[0] : {};
 
-        return {
-            props: meta_box,
-            revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
-    }
+    const meta_box = {
+        ...(contactPageData?.meta_box || {}),
+        background: {
+            alt:
+                contactPageData?.meta_box?.background?.alt ||
+                contactPageData?.meta_box?.background?.title ||
+                "",
+            url: contactPageData?.meta_box?.background?.full_url || "#",
+        },
+        title: contactPageData?.title?.rendered || "",
+        content: contactPageData?.content?.rendered || "",
+    };
+
+    return {
+        props: meta_box,
+        revalidate: REVALIDATE, // In seconds 1h
+        notFound: contactPage === undefined || contactPage?.data?.length === 0,
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

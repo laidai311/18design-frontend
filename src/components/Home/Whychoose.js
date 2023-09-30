@@ -8,7 +8,7 @@ export default function Whychoose({
     whyChooseGroup,
     whyChooseGroupLoading,
 }) {
-    const whyChooseBG = why_choose_background?.full_url || WHY_CHOOSE_BG;
+    const whyChooseBG = why_choose_background?.url || WHY_CHOOSE_BG;
 
     return (
         <section

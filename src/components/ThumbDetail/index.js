@@ -72,8 +72,8 @@ export function ThumbDetail({ images }) {
                     ? images.map((itm, idx) => (
                           <SwiperSlide key={idx}>
                               <Img
-                                  alt={itm?.name || ""}
-                                  src={itm?.full_url}
+                                  alt={itm?.alt || ""}
+                                  src={itm?.url}
                                   className={"select-none"}
                               />
                           </SwiperSlide>
@@ -93,8 +93,8 @@ export function ThumbDetail({ images }) {
                     ? images.map((itm, idx) => (
                           <SwiperSlide key={idx} className="cursor-pointer">
                               <Img
-                                  alt={itm?.name || ""}
-                                  src={itm?.full_url}
+                                  alt={itm?.alt || ""}
+                                  src={itm?.url}
                                   className={"select-none"}
                               />
                           </SwiperSlide>

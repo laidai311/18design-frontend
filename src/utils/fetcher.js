@@ -18,7 +18,7 @@ export const fetcher = async (url, options, isForm = false) => {
                 options
             );
             if (!response.ok) {
-                throw new Error(response.statusText);
+                throw response.statusText;
             }
 
             cache.set(url, {

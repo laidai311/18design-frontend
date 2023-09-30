@@ -33,7 +33,7 @@ export function ProductTagsList({ loading, product_tag_list }) {
                                     full_url: default_image?.full_url || "",
                                 },
                             }}
-                            url={"/san-pham/cac-loai"}
+                            url={"/san-pham/loai-san-pham"}
                             className="p-4 w-full md:w-1/2 lg:w-1/4"
                         />
                     </div>
@@ -43,7 +43,7 @@ export function ProductTagsList({ loading, product_tag_list }) {
     );
 }
 
-const ProductTagCard = ({ slug, meta_box, name, className, url }) => {
+export const ProductTagCard = ({ slug, meta_box, name, className, url }) => {
     return (
         <div className={className || ""}>
             <Link href={url ? url : `/san-pham/${slug || ""}`}>

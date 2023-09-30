@@ -27,7 +27,7 @@ export default function Page({
             const _aboutGroup = await Promise.all(
                 Array.isArray(about_group)
                     ? about_group.map(async (item) => {
-                          const icon = await fetcher(`/media/` + item?.icon);
+                          const icon = await fetcher(`/media/${item?.icon}`);
 
                           return {
                               ...item,
@@ -40,9 +40,10 @@ export default function Page({
             setAboutGroup(_aboutGroup);
             setAboutGroupLoading(false);
         };
-        if (formfieldsLoading) return;
-        fetchAboutGroup();
-    }, [formfieldsLoading]);
+        if (!formfieldsLoading) {
+            fetchAboutGroup();
+        }
+    }, [formfieldsLoading, about_group]);
 
     const [postsLoading, setPostsLoading] = useState(true);
     const [postsFetching, setPostsFetch] = useState(false);
@@ -51,8 +52,10 @@ export default function Page({
 
     useEffect(() => {
         const fetchPostsTab = async () => {
+            setPostsFetch(true);
+
             const posts_list = await fetcher(
-                `/posts?categories=` + (activedTab || "") + "&per_page=6"
+                `/posts?categories=${activedTab || ""}&per_page=6`
             );
 
             setPostsTab((current) =>
@@ -69,9 +72,9 @@ export default function Page({
             setPostsLoading(false);
             setPostsFetch(false);
         };
-        if (aboutGroupLoading) return;
-        setPostsFetch(true);
-        fetchPostsTab();
+        if (!aboutGroupLoading) {
+            fetchPostsTab();
+        }
     }, [aboutGroupLoading, activedTab]);
 
     const [whyChooseGroupLoading, setWhyChooseGroupLoading] = useState(true);
@@ -83,7 +86,7 @@ export default function Page({
                 Array.isArray(why_choose_group)
                     ? why_choose_group.map(async (item) => {
                           const icon =
-                              (await fetcher(`/media/` + item?.icon)) || {};
+                              (await fetcher(`/media/${item?.icon}`)) || {};
 
                           return {
                               ...item,
@@ -96,9 +99,10 @@ export default function Page({
             setWhyChooseGroup(_whyChooseGroup);
             setWhyChooseGroupLoading(false);
         };
-        if (postsLoading) return;
-        fetchWhyChooseGroup();
-    }, [postsLoading]);
+        if (!postsLoading) {
+            fetchWhyChooseGroup();
+        }
+    }, [postsLoading, why_choose_group]);
 
     return (
         <>
@@ -132,24 +136,62 @@ export default function Page({
 }
 
 export const getStaticProps = async (context) => {
-    try {
-        const homePage = await fetcher("/pages?slug=trang-chu").catch(
-            (err) => undefined
-        );
-        const homePageData = homePage?.data?.[0] || {};
-        const meta_box = {
-            ...homePageData?.meta_box,
-            title: homePageData?.title?.rendered || "",
-            content: homePageData?.content?.rendered || "",
-        };
+    const homePage = await fetcher("/pages?slug=trang-chu").catch(
+        () => undefined
+    );
+    const homePageData = homePage?.data?.[0] || {};
 
-        return {
-            props: meta_box,
-            revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
-    }
+    const slider_images = homePageData?.meta_box?.slider_images?.length
+        ? homePageData?.meta_box?.slider_images?.map((item) => ({
+              alt: item?.alt || item?.title || "",
+              url: item?.full_url || "#",
+          }))
+        : [];
+
+    const our_partner_images = homePageData?.meta_box?.our_partner_images
+        ?.length
+        ? homePageData?.meta_box?.our_partner_images?.map((item) => ({
+              alt: item?.alt || item?.title || "",
+              url: item?.full_url || "#",
+          }))
+        : [];
+
+    const meta_box = {
+        description: homePageData?.meta_box?.description || "",
+        email: homePageData?.meta_box?.email || "",
+        address: homePageData?.meta_box?.address || "",
+        phone: homePageData?.meta_box?.phone || "",
+        seo_title: homePageData?.meta_box?.seo_title || "",
+        seo_description: homePageData?.meta_box?.seo_description || "",
+        title: homePageData?.title?.rendered || "",
+        id: homePageData?.id || "",
+        slug: homePageData?.slug || "",
+        slider_images,
+        about_title: homePageData?.meta_box?.about_title || "",
+        about_description: homePageData?.meta_box?.about_description || "",
+        about_group: homePageData?.meta_box?.about_group || [],
+        about_background: {
+            alt: homePageData?.meta_box?.about_background?.alt || "",
+            url: homePageData?.meta_box?.about_background?.full_url || "",
+        },
+        contact_background: {
+            alt: homePageData?.meta_box?.contact_background?.alt || "",
+            url: homePageData?.meta_box?.contact_background?.full_url || "",
+        },
+        why_choose_group: homePageData?.meta_box?.why_choose_group || [],
+        why_choose_background: {
+            alt: homePageData?.meta_box?.why_choose_background?.alt || "",
+            url: homePageData?.meta_box?.why_choose_background?.full_url || "",
+        },
+        our_partner_images,
+        posts_tab: homePageData?.meta_box?.posts_tab || [],
+    };
+
+    return {
+        props: meta_box,
+        revalidate: REVALIDATE, // In seconds 1h
+        notFound: homePage === undefined || homePage?.data?.length === 0,
+    };
 };
 
 Page.getLayout = (page, pageProps) => (
