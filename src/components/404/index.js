@@ -6,7 +6,7 @@ import { useStore } from "@/stores";
 export default function Component404({ message }) {
     const { setOpenSearch } = useStore();
     return (
-        <section className="container max-w-7xl mx-auto">
+        <section className="container max-w-7xl mx-auto px-3">
             <View404Styled>
                 <div className="row">
                     <div className="content404">

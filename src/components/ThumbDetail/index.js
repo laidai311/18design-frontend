@@ -1,15 +1,20 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
 import { useState } from "react";
 import { Navigation, FreeMode, Thumbs } from "swiper/modules";
 import { Img } from "../UI";
+import { media } from "../theme";
 
 const SlideWrapper = styled.div`
     & .swiper {
         width: 100%;
-        height: 300px;
+        height: 500px;
         margin-left: auto;
         margin-right: auto;
+
+        ${media.lg(css`
+            height: 380px;
+        `)}
 
         & .swiper-button-prev:after,
         & .swiper-button-next:after {

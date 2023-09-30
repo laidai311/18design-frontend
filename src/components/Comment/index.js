@@ -34,9 +34,7 @@ function Comment() {
             try {
                 setName("");
                 setComment("");
-                console.log("Dữ liệu form:", { name, comment });
             } catch (error) {
-                console.error("Lỗi khi gửi", error);
             }
         }
     };

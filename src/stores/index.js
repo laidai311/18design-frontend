@@ -22,6 +22,8 @@ export const StoreProvider = (props) => {
     const [openSearch, setOpenSearch] = useState(false);
     // bật from liên hệ
     const [openContactForm, setOpenContactForm] = useState(false);
+    // bật float contact button
+    const [openFloatContactButton, setOpenFloatContactForm] = useState(true);
 
     const router = useRouter();
     const md = useMediaQuery("(min-width: 768px)");
@@ -43,6 +45,7 @@ export const StoreProvider = (props) => {
     useRouteChangeStart(() => {
         if (lg) setOpenSubMenu({});
         setOpenSidebar(false);
+        setOpenSearch(false);
     });
     // khóa cuộn body
     useLockBodyScroll(openSidebar || openSearch || openContactForm);
@@ -132,6 +135,8 @@ export const StoreProvider = (props) => {
                 menu,
                 menuLoading: menuItems.isLoading,
                 site_name: process.env.SITE_NAME,
+                openFloatContactButton,
+                setOpenFloatContactForm,
             }}
             {...props}
         />
@@ -161,6 +166,8 @@ export const StoreContext = createContext({
     menu: [],
     menuLoading: true,
     site_name: "",
+    openFloatContactButton: true,
+    setOpenFloatContactForm() {},
 });
 
 export const useStore = () => useContext(StoreContext);

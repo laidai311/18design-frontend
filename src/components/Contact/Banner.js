@@ -198,7 +198,7 @@ export function Contact({ address, email, phone, description }) {
 export function FollowUs({ images }) {
     return (
         <Follow>
-            <div className="container mx-auto max-w-7xl">
+            <div className="container mx-auto max-w-7xl px-3">
                 <FollowTitle>
                     <h2>Follow Us</h2>
                 </FollowTitle>
@@ -235,7 +235,7 @@ export function FollowUs({ images }) {
 export function Social({ social_group }) {
     return (
         <section className="pt-16 bg-[#d4e1e7] pb-16">
-            <div className="container max-w-7xl mx-auto">
+            <div className="container max-w-7xl mx-auto px-3">
                 <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     kết nối với chúng tôi
                 </h2>

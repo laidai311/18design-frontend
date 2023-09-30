@@ -72,6 +72,7 @@ export const ViewMoreLink = styled(Link)`
     color: white;
     display: inline-block;
     margin: 0 auto;
+    border-radius: 4px;
 
     > svg {
         display: none;

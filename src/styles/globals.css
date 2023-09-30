@@ -16,8 +16,16 @@
         font-family: "Open Sans", sans-serif;
     }
 
-    input {
+    input,
+    select {
         appearance: none;
+        -webkit-appearance: none;
+        border-radius: 0;
+    }
+
+    button {
+        background: transparent;
+        -webkit-appearance: none;
     }
 
     .tooltip {

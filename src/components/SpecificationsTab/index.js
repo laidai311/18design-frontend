@@ -41,7 +41,7 @@ export function SpecificationTab({ content, policy, maintain }) {
 
     return (
         <div className="bg-white pt-10 relative pb-10 px-4 md:px-0">
-            <div className="container max-w-7xl mx-auto">
+            <div className="container max-w-7xl mx-auto px-3">
                 <TileOption>Thông số khác</TileOption>
                 <TabWrap>
                     <NavTabListCustom>

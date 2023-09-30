@@ -5,7 +5,7 @@ import { Img } from "../UI";
 export function Contact({ contact_background, ...other }) {
     return (
         <section className="bg-white pt-10 relative">
-            <div className="container max-w-7xl mx-auto">
+            <div className="container max-w-7xl mx-auto px-3">
                 <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     Dự đoán chi phí thiết kế - Thi công
                 </h2>

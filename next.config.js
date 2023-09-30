@@ -10,6 +10,20 @@ const nextConfig = {
             fileName: false,
         },
     },
+    images: {
+        domains: ["api.18design.vn"],
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "api.18design.vn",
+                port: "",
+                pathname: "/wp-content/uploads/**",
+            },
+        ],
+        unoptimized: true,
+        minimumCacheTTL: 120,
+        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    },
     env: {
         API_URL: process.env.NEXT_PUBLIC_API_URL,
         SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,

@@ -78,8 +78,8 @@ export default function DefaultLayout({ children, ...props }) {
 const Main = styled.main`
     min-height: 80vh;
 
+    padding-top: ${(p) => p.theme.headerHeight};
     ${media.lg(css`
         padding-top: ${(p) => (p.$transparent ? 0 : p.theme.headerHeight)};
-    `)}
-    padding-top: ${(p) => `calc(${p.theme.headerHeight} + 63px)`};
+    `)}/* padding-top: ${(p) => `calc(${p.theme.headerHeight} + 63px)`}; */
 `;
