@@ -1,11 +1,11 @@
 import { cloneElement } from "react";
-import Link from "next/link";
 import { IconChevronDown, IconHome, IconSearch } from "../Icons";
-import clsx from "clsx";
-import { useStore } from "@/stores";
-import { useRouter } from "next/router";
 import { MENU } from "@/constant/menu";
-import Loader from "../Loader";
+import { range } from "@/utils";
+import { useRouter } from "next/router";
+import { useStore } from "@/stores";
+import clsx from "clsx";
+import Link from "next/link";
 
 const SubMenuItem = ({
     children,
@@ -165,7 +165,16 @@ function Menu() {
     const { menu, menuLoading } = useStore();
 
     return menuLoading ? (
-        <Loader className="w-full h-full" />
+        <div class="animate-pulse flex space-x-2 items-stretch">
+            <div className="flex items-center">
+                <div class="rounded-lg bg-black/5 h-5 w-5"></div>
+            </div>
+            {range(1, 7).map((key) => (
+                <div key={key} className="flex items-center">
+                    <div class="rounded-lg bg-white/10 h-5 w-32"></div>
+                </div>
+            ))}
+        </div>
     ) : (
         <MenuItems items={menu || MENU} hasHome hasSearch />
     );

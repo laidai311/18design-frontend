@@ -8,7 +8,7 @@ import {
 } from "../Styled/Home/TypicalProjects";
 import { IconChevronRight } from "../Icons";
 import { Card } from "../Card";
-import Loader from "../Loader";
+import { range } from "@/utils";
 
 export const TypicalProject = ({
     postsTab,
@@ -47,7 +47,25 @@ export const TypicalProject = ({
                                   $actived={activedTab === item?.category_id}
                               >
                                   {isFetching ? (
-                                      <Loader />
+                                      <div className="-mx-4 flex flex-wrap px-4 md:px-0">
+                                          {range(1, 6).map((key) => (
+                                              <div
+                                                  key={key}
+                                                  className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                              >
+                                                  <div className="relative pt-[100%]">
+                                                      <div class="absolute inset-0 animate-pulse flex flex-col space-y-5">
+                                                          <div class="rounded-lg bg-black/10 h-72"></div>
+                                                          <div className="space-y-2">
+                                                              <div class="rounded-lg bg-black/10 h-5"></div>
+                                                              <div class="rounded-lg bg-black/10 h-5 w-1/2"></div>
+                                                          </div>
+                                                          <div class="rounded-lg bg-black/10 h-14"></div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          ))}
+                                      </div>
                                   ) : (
                                       <div className="-mx-4 flex flex-wrap px-4 md:px-0">
                                           {Array.isArray(item?.posts_list)

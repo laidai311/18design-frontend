@@ -1,6 +1,6 @@
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { CardProductItem } from "@/components/CardProduct";
-import { fetcher } from "@/utils";
+import { fetcher, range } from "@/utils";
 import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
 import { ProductTagsList } from "@/components/ProductTagsList";
@@ -9,7 +9,6 @@ import { REVALIDATE } from "@/constant/setting";
 import { useEffect, useState } from "react";
 import { useStore } from "@/stores";
 import DefaultLayout from "@/components/Layout";
-import Loader from "@/components/Loader";
 
 export default function Page({
     title,
@@ -81,18 +80,33 @@ export default function Page({
                         Sản phẩm nổi bật
                     </h2>
                     <div className="-mx-4 flex flex-wrap px-4 md:px-0">
-                        {productLoading ? (
-                            <Loader />
-                        ) : Array.isArray(product) ? (
-                            product.map((item, index) => (
-                                <div
-                                    key={item?.id || index}
-                                    className="p-4 w-full md:w-1/2 lg:w-1/4"
-                                >
-                                    <CardProductItem {...item} />
-                                </div>
-                            ))
-                        ) : null}
+                        {productLoading
+                            ? range(1, 8).map((key) => (
+                                  <div
+                                      key={key}
+                                      className="p-4 w-full md:w-1/2 lg:w-1/4"
+                                  >
+                                      <div className="relative pt-[100%]">
+                                          <div class="absolute inset-0 animate-pulse flex flex-col space-y-5">
+                                              <div class="rounded-lg bg-black/10 h-72"></div>
+                                              <div className="space-y-2">
+                                                  <div class="rounded-lg bg-black/10 h-5"></div>
+                                                  <div class="rounded-lg bg-black/10 h-5 w-1/2"></div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              ))
+                            : Array.isArray(product)
+                            ? product.map((item, index) => (
+                                  <div
+                                      key={item?.id || index}
+                                      className="p-4 w-full md:w-1/2 lg:w-1/4"
+                                  >
+                                      <CardProductItem {...item} />
+                                  </div>
+                              ))
+                            : null}
                     </div>
                 </div>
             </div>
@@ -107,6 +121,8 @@ export async function getStaticProps() {
     const productPageData = propductPage ? propductPage?.data?.[0] : {};
 
     const meta_box = {
+        seo_title: productPageData?.meta_box?.seo_title || "",
+        seo_description: productPageData?.meta_box?.seo_description || "",
         banner_background: {
             url: productPageData?.meta_box?.banner_background?.full_url || "",
             alt:

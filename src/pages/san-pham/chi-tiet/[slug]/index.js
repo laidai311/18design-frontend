@@ -1,15 +1,14 @@
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { fetcher, formatCurrency } from "@/utils";
+import { fetcher, formatCurrency, range } from "@/utils";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
 import { SpecificationTab } from "@/components/SpecificationsTab";
 import { styled } from "styled-components";
 import { ThumbDetail } from "@/components/ThumbDetail";
+import { useEffect, useState } from "react";
 import { useStore } from "@/stores";
 import DefaultLayout from "@/components/Layout";
 import ProductOther from "@/components/ProductOther";
-import { useEffect, useState } from "react";
-import Loader from "@/components/Loader";
 
 export default function Page({
     seo_title,
@@ -107,7 +106,29 @@ export default function Page({
                         content={content || ""}
                     />
                     {productsLoading ? (
-                        <Loader />
+                        <>
+                            <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
+                                Sản phẩm khác
+                            </h2>
+                            <div className="-mx-4 flex flex-wrap px-4 md:px-0">
+                                {range(1, 4).map((key) => (
+                                    <div
+                                        key={key}
+                                        className="p-4 w-full md:w-1/2 lg:w-1/4"
+                                    >
+                                        <div className="relative pt-[100%]">
+                                            <div class="absolute inset-0 animate-pulse flex flex-col space-y-5">
+                                                <div class="rounded-lg bg-black/10 h-72"></div>
+                                                <div className="space-y-2">
+                                                    <div class="rounded-lg bg-black/10 h-5"></div>
+                                                    <div class="rounded-lg bg-black/10 h-5 w-1/2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
                     ) : Array.isArray(products) && products?.length > 0 ? (
                         <>
                             <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
@@ -122,7 +143,7 @@ export default function Page({
     );
 }
 
-export const getStaticPaths = async (context) => {
+export const getStaticPaths = async () => {
     const propduct = await fetcher(`/product`).catch(() => undefined);
 
     const paths = Array.isArray(propduct?.data)
@@ -133,7 +154,7 @@ export const getStaticPaths = async (context) => {
 
     return {
         paths,
-        fallback: false,
+        fallback: "blocking",
     };
 };
 
@@ -195,17 +216,6 @@ const ProductDetail = styled.div`
 const ProductDescription = styled.div`
     padding: 0 20px;
     line-height: 0.8;
-    & h3 {
-        &:after {
-            content: "";
-            position: absolute;
-            bottom: -25%;
-            left: 0;
-            width: 100px;
-            height: 2px;
-            background-color: #d0b247;
-        }
-    }
     & .price__group {
         margin: 40px 0 20px;
         display: flex;

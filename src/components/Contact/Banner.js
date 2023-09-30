@@ -28,7 +28,7 @@ const BannerContact = styled.div`
 const ContactInfo = styled.div`
     background-color: rgb(212, 225, 231);
     position: relative;
-    padding: 30px 0;
+    padding: 15px 0 30px;
     &:after {
         content: "";
         position: absolute;
@@ -214,8 +214,8 @@ export function FollowUs({ images }) {
                                       <div className="relative pt-[100%]">
                                           <div className="absolute inset-0">
                                               <Img
-                                                  alt={itm?.title || ""}
-                                                  src={itm?.full_url}
+                                                  alt={itm?.alt || ""}
+                                                  src={itm?.url}
                                                   className={
                                                       "select-none w-full h-full object-cover"
                                                   }

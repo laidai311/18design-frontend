@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { WHY_CHOOSE_BG } from "@/constant/default";
-import Loader from "../Loader";
-import { useStore } from "@/stores";
 
 export default function Whychoose({
     why_choose_background,
@@ -36,7 +34,9 @@ export default function Whychoose({
                                   >
                                       <div className="flex justify-center">
                                           {whyChooseGroupLoading ? (
-                                              <Loader />
+                                              <div class="animate-pulse">
+                                                  <div class="rounded-full bg-white/10 h-16 w-16"></div>
+                                              </div>
                                           ) : (
                                               <img
                                                   alt={itm?.icon_name || ""}

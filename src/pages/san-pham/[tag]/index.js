@@ -1,6 +1,6 @@
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { CardProductItem } from "@/components/CardProduct";
-import { fetcher } from "@/utils";
+import { fetcher, range } from "@/utils";
 import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
@@ -11,7 +11,6 @@ import { useStore } from "@/stores";
 import clsx from "clsx";
 import DefaultLayout from "@/components/Layout";
 import Link from "next/link";
-import Loader from "@/components/Loader";
 
 export default function Page({
     seo_title,
@@ -81,7 +80,22 @@ export default function Page({
                     </h2>
                     <div className="-mx-4 flex flex-wrap px-4 md:px-0">
                         {loading ? (
-                            <Loader />
+                            range(1, limit).map((key) => (
+                                <div
+                                    key={key}
+                                    className="p-4 w-full md:w-1/2 lg:w-1/4"
+                                >
+                                    <div className="relative pt-[100%]">
+                                        <div class="absolute inset-0 animate-pulse flex flex-col space-y-5">
+                                            <div class="rounded-lg bg-black/10 h-72"></div>
+                                            <div className="space-y-2">
+                                                <div class="rounded-lg bg-black/10 h-5"></div>
+                                                <div class="rounded-lg bg-black/10 h-5 w-1/2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
                         ) : Array.isArray(products) && products.length ? (
                             products.map((item, index) => (
                                 <div
@@ -161,6 +175,8 @@ export async function getStaticProps(context) {
         : {};
 
     const meta_box = {
+        seo_title: productTagPageData?.meta_box?.seo_title || "",
+        seo_description: productTagPageData?.meta_box?.seo_description || "",
         image: {
             url: productTagPageData?.meta_box?.image?.full_url || "",
             alt:

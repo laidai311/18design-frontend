@@ -1,9 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ABOUT_DESCRIPTION, ABOUT_TITLE } from "@/constant/default";
 import { Img } from "../UI";
-import { useStore } from "@/stores";
 import clsx from "clsx";
-import Loader from "../Loader";
 import ReadOnlyEditor from "../ReadOnlyEditor";
 
 export function About({
@@ -59,7 +57,9 @@ export function About({
                                               <div className="bg-white text-black p-4 text-center min-h-[250px]">
                                                   <div className="flex justify-center mb-3">
                                                       {aboutGroupLoading ? (
-                                                          <Loader />
+                                                          <div class="animate-pulse">
+                                                              <div class="rounded-full bg-black/10 h-16 w-16"></div>
+                                                          </div>
                                                       ) : (
                                                           <Img
                                                               alt={
