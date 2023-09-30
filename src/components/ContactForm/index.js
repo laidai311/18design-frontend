@@ -13,7 +13,6 @@ import { useStore } from "@/stores";
 import { useState } from "react";
 import clsx from "clsx";
 import { fetcher } from "@/utils";
-import Loader from "../Loader";
 
 export default function ContactForm({ onClose, className }) {
     const { formFields, formfieldsLoading: formfieldsStatus } = useStore();
@@ -91,7 +90,14 @@ export default function ContactForm({ onClose, className }) {
     };
 
     return formfieldsStatus === "loading" ? (
-        <Loader className="relative py-10" />
+        <div class="animate-pulse flex flex-col space-y-5">
+            <div class="rounded-lg bg-black/10 h-9"></div>
+            <div class="rounded-lg bg-black/10 h-9"></div>
+            <div class="rounded-lg bg-black/10 h-9"></div>
+            <div class="rounded-lg bg-black/10 h-9"></div>
+            <div class="rounded-lg bg-black/10 h-9"></div>
+            <div class="rounded-lg bg-black/20 h-10"></div>
+        </div>
     ) : (
         <form
             style={{ width: "100%", height: "100%" }}

@@ -20,7 +20,6 @@ import {
     PHONE,
 } from "@/constant/default";
 import { useStore } from "@/stores";
-import Loader from "../Loader";
 import { useInView } from "@/hooks";
 import { useRef } from "react";
 
@@ -41,7 +40,9 @@ export default function Footer({ onContactClick }) {
     const defaulImage = defaultPage?.default_image?.full_url || "/#";
 
     return defaultPageLoading ? (
-        <Loader className="relative py-10" />
+        <div class="animate-pulse">
+            <div class="rounded-lg bg-black/5 h-72"></div>
+        </div>
     ) : (
         <footer ref={ref} id="footer" className="relative">
             <section className="bg-gray-800">

@@ -1,5 +1,5 @@
 import { Card } from "@/components/Card";
-import { fetcher } from "@/utils";
+import { fetcher, range } from "@/utils";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
 import { useEffect, useState } from "react";
@@ -10,7 +10,6 @@ import clsx from "clsx";
 import Component404 from "@/components/404";
 import DefaultLayout from "@/components/Layout";
 import Link from "next/link";
-import Loader from "@/components/Loader";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 
 export default function Page({
@@ -81,7 +80,25 @@ export default function Page({
 
                         <div className="-m-4 flex flex-wrap px-4 md:px-0">
                             {loading ? (
-                                <Loader />
+                                <div className="-mx-4 flex flex-wrap px-4 md:px-0">
+                                    {range(1, limit).map((key) => (
+                                        <div
+                                            key={key}
+                                            className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                        >
+                                            <div className="relative pt-[100%]">
+                                                <div class="absolute inset-0 animate-pulse flex flex-col space-y-5">
+                                                    <div class="rounded-lg bg-black/10 h-72"></div>
+                                                    <div className="space-y-2">
+                                                        <div class="rounded-lg bg-black/10 h-5"></div>
+                                                        <div class="rounded-lg bg-black/10 h-5 w-1/2"></div>
+                                                    </div>
+                                                    <div class="rounded-lg bg-black/10 h-14"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             ) : Array.isArray(posts) ? (
                                 posts.map((itm) => (
                                     <Card

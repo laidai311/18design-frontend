@@ -8,7 +8,6 @@ import clsx from "clsx";
 import Link from "next/link";
 import Menu from "./Menu";
 import SearchForm from "../SearchForm";
-import Loader from "../Loader";
 
 export default function Header({ isHomePage }) {
     const {
@@ -77,7 +76,9 @@ export default function Header({ isHomePage }) {
                     </div>
                     <div className="shrink-0 mr-3 flex items-center">
                         {defaultPageLoading ? (
-                            <Loader />
+                            <div class="animate-pulse flex space-x-2">
+                                <div class="rounded-lg bg-white/10 h-24 w-32"></div>
+                            </div>
                         ) : (
                             <Link
                                 href={"/"}
@@ -154,7 +155,7 @@ export default function Header({ isHomePage }) {
                 </div>
                 <div
                     className={clsx(
-                        "transition-all opacity-0 backdrop-blur-md  bg-slate-900/25 fixed inset-0 z-50 pointer-events-none",
+                        "transition-all opacity-0 backdrop-blur-md bg-slate-900/25 fixed inset-0 z-50 pointer-events-none",
                         { "lg:!pointer-events-auto lg:opacity-100": openSearch }
                     )}
                     onClick={() => setOpenSearch(false)}

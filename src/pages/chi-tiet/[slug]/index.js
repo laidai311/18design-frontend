@@ -1,4 +1,4 @@
-import { fetcher } from "@/utils";
+import { fetcher, range } from "@/utils";
 import { IconEye } from "@/components/Icons";
 import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
@@ -9,7 +9,6 @@ import Comment from "@/components/Comment";
 import ContactForm from "@/components/ContactForm";
 import DefaultLayout from "@/components/Layout";
 import Link from "next/link";
-import Loader from "@/components/Loader";
 import ReadOnlyEditor from "@/components/ReadOnlyEditor";
 
 export default function Page({
@@ -95,7 +94,11 @@ export default function Page({
                             <div className="p-4 lg:p-8 shadow-lg rounded-lg">
                                 <div className="space-x-1">
                                     {categoriesLoading ? (
-                                        <Loader />
+                                        <div class="animate-pulse flex space-x-2">
+                                            <div class="rounded-full bg-black/5 h-5 w-20"></div>
+                                            <div class="rounded-full bg-black/5 h-5 w-10"></div>
+                                            <div class="rounded-full bg-black/5 h-5 w-16"></div>
+                                        </div>
                                     ) : Array.isArray(categoriesData) ? (
                                         categoriesData.map((item, index) => {
                                             if (index >= 3) return null;
@@ -141,16 +144,27 @@ export default function Page({
                                     mới nhất
                                 </h3>
                                 <div className="py-4 bg-[#e5b9364a]">
-                                    {postsLoading ? (
-                                        <Loader />
-                                    ) : Array.isArray(posts) ? (
-                                        posts.map((item, index) => (
-                                            <CardItem
-                                                key={item?.id || index}
-                                                {...item}
-                                            />
-                                        ))
-                                    ) : null}
+                                    {postsLoading
+                                        ? range(0, 5).map((key) => (
+                                              <div
+                                                  key={key}
+                                                  class="animate-pulse flex space-x-2 px-3 py-3"
+                                              >
+                                                  <div class="rounded-lg bg-black/5 w-24 h-24"></div>
+                                                  <div className="grow space-y-2">
+                                                      <div class="rounded-full bg-black/5 h-4"></div>
+                                                      <div class="rounded-full bg-black/5 h-4 w-20"></div>
+                                                  </div>
+                                              </div>
+                                          ))
+                                        : Array.isArray(posts)
+                                        ? posts.map((item, index) => (
+                                              <CardItem
+                                                  key={item?.id || index}
+                                                  {...item}
+                                              />
+                                          ))
+                                        : null}
                                 </div>
                             </div>
                         </div>
@@ -188,7 +202,10 @@ export async function getStaticProps(context) {
         : post?.data || {};
 
     const meta_box = {
-        ...(postData?.meta_box || {}),
+        seo_title: postData?.meta_box?.seo_title || "",
+        seo_description: postData?.meta_box?.seo_description || "",
+        total_view: postData?.meta_box?.total_view || "",
+        description: postData?.meta_box?.description || "",
         image: {
             name: postData?.meta_box?.image?.name || "",
             url: postData?.meta_box?.image?.full_url || "",

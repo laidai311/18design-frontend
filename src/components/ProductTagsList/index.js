@@ -1,7 +1,7 @@
 import { Img } from "../UI";
+import { range } from "@/utils";
 import { useStore } from "@/stores";
 import Link from "next/link";
-import Loader from "../Loader";
 
 export function ProductTagsList({ loading, product_tag_list }) {
     const { default_image } = useStore();
@@ -13,7 +13,20 @@ export function ProductTagsList({ loading, product_tag_list }) {
                     Danh mục nổi bật
                 </h2>
                 {loading ? (
-                    <Loader />
+                    <div className="-mx-4 flex flex-wrap px-4 md:px-0">
+                        {range(1, 8).map((key) => (
+                            <div
+                                key={key}
+                                className="p-4 w-full md:w-1/2 lg:w-1/4"
+                            >
+                                <div className="relative pt-[67%]">
+                                    <div class="absolute inset-0 animate-pulse h-full">
+                                        <div class="rounded-lg bg-black/10 h-full w-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 ) : (
                     <div className="-mx-4 flex flex-wrap px-4 md:px-0">
                         {Array.isArray(product_tag_list)
