@@ -11,14 +11,13 @@ import DefaultLayout from "@/components/Layout";
 import Whychoose from "@/components/Home/Whychoose";
 
 export default function Page({
-    seo_title,
-    seo_description,
+    seo,
     about_group,
     posts_tab,
     why_choose_group,
     ...props
 }) {
-    const { formfieldsLoading } = useStore();
+    const { formfieldsLoading, site_name } = useStore();
     const [aboutGroupLoading, setAboutGroupLoading] = useState(true);
     const [aboutGroup, setAboutGroup] = useState(about_group);
 
@@ -107,8 +106,24 @@ export default function Page({
     return (
         <>
             <NextSeo
-                title={seo_title || props?.site_name || ""}
-                description={seo_description || ""}
+                title={seo?.seo_title || site_name || ""}
+                description={seo?.seo_description || ""}
+                noindex={seo?.seo_noindex || ""}
+                titleTemplate={seo?.seo_title_template || ""}
+                defaultTitle={seo?.seo_default_title || ""}
+                canonical={seo?.seo_canonical || ""}
+                openGraph={{
+                    url: seo?.seo_openGraph_url || "",
+                    title: seo?.seo_openGraph_title || "",
+                    description: seo?.seo_openGraph_description || "",
+                    images: seo?.seo_openGraph_images || [],
+                    siteName: seo?.seo_openGraph_siteName || "",
+                }}
+                twitter={{
+                    handle: seo?.seo_twitter_handle || "",
+                    site: seo?.seo_twitter_site || "",
+                    cardType: seo?.seo_twitter_cardType || "",
+                }}
             />
             <Slider {...props} />
             <Quote />
@@ -156,13 +171,21 @@ export const getStaticProps = async (context) => {
           }))
         : [];
 
+    const seo_opengraph_images = homePageData?.meta_box?.seo_opengraph_images
+        ?.length
+        ? homePageData?.meta_box?.seo_opengraph_images?.map((item) => ({
+              alt: item?.alt || item?.title || "",
+              url: item?.sizes?.medium_large?.url || item?.full_url || "#",
+              width: item?.sizes?.medium_large?.width || "",
+              height: item?.sizes?.medium_large?.height || "",
+          }))
+        : [];
+
     const meta_box = {
         description: homePageData?.meta_box?.description || "",
         email: homePageData?.meta_box?.email || "",
         address: homePageData?.meta_box?.address || "",
         phone: homePageData?.meta_box?.phone || "",
-        seo_title: homePageData?.meta_box?.seo_title || "",
-        seo_description: homePageData?.meta_box?.seo_description || "",
         title: homePageData?.title?.rendered || "",
         id: homePageData?.id || "",
         slug: homePageData?.slug || "",
@@ -185,6 +208,28 @@ export const getStaticProps = async (context) => {
         },
         our_partner_images,
         posts_tab: homePageData?.meta_box?.posts_tab || [],
+        seo: {
+            seo_title: homePageData?.meta_box?.seo_title || "",
+            seo_description: homePageData?.meta_box?.seo_description || "",
+            seo_noindex: homePageData?.meta_box?.seo_noindex || "",
+            seo_title_template:
+                homePageData?.meta_box?.seo_title_template || "",
+            seo_default_title: homePageData?.meta_box?.seo_default_title || "",
+            seo_canonical: homePageData?.meta_box?.seo_canonical || "",
+            seo_openGraph_url: homePageData?.meta_box?.seo_openGraph_url || "",
+            seo_openGraph_title:
+                homePageData?.meta_box?.seo_openGraph_title || "",
+            seo_openGraph_description:
+                homePageData?.meta_box?.seo_openGraph_description || "",
+            seo_openGraph_images: seo_opengraph_images,
+            seo_openGraph_siteName:
+                homePageData?.meta_box?.seo_openGraph_siteName || "",
+            seo_twitter_handle:
+                homePageData?.meta_box?.seo_twitter_handle || "",
+            seo_twitter_site: homePageData?.meta_box?.seo_twitter_site || "",
+            seo_twitter_cardType:
+                homePageData?.meta_box?.seo_twitter_cardType || "",
+        },
     };
 
     return {

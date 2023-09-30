@@ -11,8 +11,7 @@ import DefaultLayout from "@/components/Layout";
 import ProductOther from "@/components/ProductOther";
 
 export default function Page({
-    seo_title,
-    seo_description,
+    seo,
     title,
     slug,
     images,
@@ -52,8 +51,24 @@ export default function Page({
     return (
         <>
             <NextSeo
-                title={`${title || seo_title || ""} - ${site_name}`}
-                description={seo_description || ""}
+                title={`${seo?.seo_title || title || ""} - ${site_name}`}
+                description={seo?.seo_description || ""}
+                noindex={seo?.seo_noindex || ""}
+                titleTemplate={seo?.seo_title_template || ""}
+                defaultTitle={seo?.seo_default_title || ""}
+                canonical={seo?.seo_canonical || ""}
+                openGraph={{
+                    url: seo?.seo_openGraph_url || "",
+                    title: seo?.seo_openGraph_title || "",
+                    description: seo?.seo_openGraph_description || "",
+                    images: seo?.seo_openGraph_images || [],
+                    siteName: seo?.seo_openGraph_siteName || "",
+                }}
+                twitter={{
+                    handle: seo?.seo_twitter_handle || "",
+                    site: seo?.seo_twitter_site || "",
+                    cardType: seo?.seo_twitter_cardType || "",
+                }}
             />
             <ProductDetail key={id + slug}>
                 <div className="container mx-auto max-w-7xl my-10 px-3">
@@ -174,9 +189,17 @@ export async function getStaticProps(context) {
           }))
         : [];
 
+    const seo_opengraph_images = productPageData?.meta_box?.seo_opengraph_images
+        ?.length
+        ? productPageData?.meta_box?.seo_opengraph_images?.map((item) => ({
+              alt: item?.alt || item?.title || "",
+              url: item?.sizes?.medium_large?.url || item?.full_url || "#",
+              width: item?.sizes?.medium_large?.width || "",
+              height: item?.sizes?.medium_large?.height || "",
+          }))
+        : [];
+
     const meta_box = {
-        seo_title: productPageData?.meta_box?.seo_title || "",
-        seo_description: productPageData?.meta_box?.seo_description || "",
         size: productPageData?.meta_box?.size || "",
         new_price: productPageData?.meta_box?.new_price || "",
         old_price: productPageData?.meta_box?.old_price || "",
@@ -189,6 +212,30 @@ export async function getStaticProps(context) {
         id: productPageData?.id || "",
         title: productPageData?.title?.rendered || "",
         productTag: productPageData?.["product-tag"],
+        seo: {
+            seo_title: productPageData?.meta_box?.seo_title || "",
+            seo_description: productPageData?.meta_box?.seo_description || "",
+            seo_noindex: productPageData?.meta_box?.seo_noindex || "",
+            seo_title_template:
+                productPageData?.meta_box?.seo_title_template || "",
+            seo_default_title:
+                productPageData?.meta_box?.seo_default_title || "",
+            seo_canonical: productPageData?.meta_box?.seo_canonical || "",
+            seo_openGraph_url:
+                productPageData?.meta_box?.seo_openGraph_url || "",
+            seo_openGraph_title:
+                productPageData?.meta_box?.seo_openGraph_title || "",
+            seo_openGraph_description:
+                productPageData?.meta_box?.seo_openGraph_description || "",
+            seo_openGraph_images: seo_opengraph_images,
+            seo_openGraph_siteName:
+                productPageData?.meta_box?.seo_openGraph_siteName || "",
+            seo_twitter_handle:
+                productPageData?.meta_box?.seo_twitter_handle || "",
+            seo_twitter_site: productPageData?.meta_box?.seo_twitter_site || "",
+            seo_twitter_cardType:
+                productPageData?.meta_box?.seo_twitter_cardType || "",
+        },
     };
 
     return {
