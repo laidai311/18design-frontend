@@ -10,12 +10,7 @@ import { useEffect, useState } from "react";
 import { useStore } from "@/stores";
 import DefaultLayout from "@/components/Layout";
 
-export default function Page({
-    title,
-    banner_background,
-    seo_title,
-    seo_description,
-}) {
+export default function Page({ title, banner_background, seo }) {
     const { formfieldsLoading, defaultPage, site_name } = useStore();
     const [productTagLoading, setProductTagLoading] = useState(true);
     const [productTag, setProductTag] = useState();
@@ -56,8 +51,24 @@ export default function Page({
     return (
         <>
             <NextSeo
-                title={`${seo_title || title} - ${site_name}`}
-                description={seo_description || ""}
+                title={`${seo?.seo_title || title || ""} - ${site_name}`}
+                description={seo?.seo_description || ""}
+                noindex={seo?.seo_noindex || ""}
+                titleTemplate={seo?.seo_title_template || ""}
+                defaultTitle={seo?.seo_default_title || ""}
+                canonical={seo?.seo_canonical || ""}
+                openGraph={{
+                    url: seo?.seo_openGraph_url || "",
+                    title: seo?.seo_openGraph_title || "",
+                    description: seo?.seo_openGraph_description || "",
+                    images: seo?.seo_openGraph_images || [],
+                    siteName: seo?.seo_openGraph_siteName || "",
+                }}
+                twitter={{
+                    handle: seo?.seo_twitter_handle || "",
+                    site: seo?.seo_twitter_site || "",
+                    cardType: seo?.seo_twitter_cardType || "",
+                }}
             />
             <div className="w-full relative pt-[52%] h-auto lg:pt-[40%]">
                 <div className="absolute inset-0">
@@ -120,9 +131,17 @@ export async function getStaticProps() {
     );
     const productPageData = propductPage ? propductPage?.data?.[0] : {};
 
+    const seo_opengraph_images = productPageData?.meta_box?.seo_opengraph_images
+        ?.length
+        ? productPageData?.meta_box?.seo_opengraph_images?.map((item) => ({
+              alt: item?.alt || item?.title || "",
+              url: item?.sizes?.medium_large?.url || item?.full_url || "#",
+              width: item?.sizes?.medium_large?.width || "",
+              height: item?.sizes?.medium_large?.height || "",
+          }))
+        : [];
+
     const meta_box = {
-        seo_title: productPageData?.meta_box?.seo_title || "",
-        seo_description: productPageData?.meta_box?.seo_description || "",
         banner_background: {
             url: productPageData?.meta_box?.banner_background?.full_url || "",
             alt:
@@ -131,6 +150,30 @@ export async function getStaticProps() {
         },
         title: productPageData?.title?.rendered || "",
         content: productPageData?.content?.rendered || "",
+        seo: {
+            seo_title: productPageData?.meta_box?.seo_title || "",
+            seo_description: productPageData?.meta_box?.seo_description || "",
+            seo_noindex: productPageData?.meta_box?.seo_noindex || "",
+            seo_title_template:
+                productPageData?.meta_box?.seo_title_template || "",
+            seo_default_title:
+                productPageData?.meta_box?.seo_default_title || "",
+            seo_canonical: productPageData?.meta_box?.seo_canonical || "",
+            seo_openGraph_url:
+                productPageData?.meta_box?.seo_openGraph_url || "",
+            seo_openGraph_title:
+                productPageData?.meta_box?.seo_openGraph_title || "",
+            seo_openGraph_description:
+                productPageData?.meta_box?.seo_openGraph_description || "",
+            seo_openGraph_images: seo_opengraph_images,
+            seo_openGraph_siteName:
+                productPageData?.meta_box?.seo_openGraph_siteName || "",
+            seo_twitter_handle:
+                productPageData?.meta_box?.seo_twitter_handle || "",
+            seo_twitter_site: productPageData?.meta_box?.seo_twitter_site || "",
+            seo_twitter_cardType:
+                productPageData?.meta_box?.seo_twitter_cardType || "",
+        },
     };
 
     return {

@@ -79,35 +79,33 @@ export default function Page({
                         />
 
                         <div className="-m-4 flex flex-wrap px-4 md:px-0">
-                            {loading ? (
-                                <div className="-mx-4 flex flex-wrap px-4 md:px-0">
-                                    {range(1, limit).map((key) => (
-                                        <div
-                                            key={key}
-                                            className="w-full p-4 md:w-1/2 lg:w-1/3"
-                                        >
-                                            <div className="relative pt-[100%]">
-                                                <div class="absolute inset-0 animate-pulse flex flex-col space-y-5">
-                                                    <div class="rounded-lg bg-black/10 h-72"></div>
-                                                    <div className="space-y-2">
-                                                        <div class="rounded-lg bg-black/10 h-5"></div>
-                                                        <div class="rounded-lg bg-black/10 h-5 w-1/2"></div>
-                                                    </div>
-                                                    <div class="rounded-lg bg-black/10 h-14"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : Array.isArray(posts) ? (
-                                posts.map((itm) => (
-                                    <Card
-                                        key={itm.id}
-                                        {...itm}
-                                        className="w-full p-4 md:w-1/2 lg:w-1/3"
-                                    />
-                                ))
-                            ) : null}
+                            {loading
+                                ? range(1, limit).map((key) => (
+                                      <div
+                                          key={key}
+                                          className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                      >
+                                          <div className="relative pt-[100%]">
+                                              <div class="absolute inset-0 animate-pulse flex flex-col space-y-5">
+                                                  <div class="rounded-lg bg-black/10 h-72"></div>
+                                                  <div className="space-y-2">
+                                                      <div class="rounded-lg bg-black/10 h-5"></div>
+                                                      <div class="rounded-lg bg-black/10 h-5 w-1/2"></div>
+                                                  </div>
+                                                  <div class="rounded-lg bg-black/10 h-14"></div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  ))
+                                : Array.isArray(posts)
+                                ? posts.map((itm) => (
+                                      <Card
+                                          key={itm.id}
+                                          {...itm}
+                                          className="w-full p-4 md:w-1/2 lg:w-1/3"
+                                      />
+                                  ))
+                                : null}
                         </div>
                         {posts?.length ? (
                             <div className="flex items-center justify-center space-x-2 mt-10">
