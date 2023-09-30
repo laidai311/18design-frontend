@@ -1,16 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import { IconMenu } from "@/components/Icons";
-import SearchForm from "../SearchForm";
-import clsx from "clsx";
-import Menu from "./Menu";
-import { useStore } from "@/stores";
-import Link from "next/link";
-import CloseButton from "../CloseButton";
-import { useSwipesHoriziontal } from "@/hooks";
-import { MENU } from "@/constant/menu";
 import { COLOR_LOGO_URL, LOGO_NAME, WHITE_LOGO_URL } from "@/constant/default";
+import { IconMenu } from "@/components/Icons";
+import { useStore } from "@/stores";
+import { useSwipesHoriziontal } from "@/hooks";
+import CloseButton from "../CloseButton";
+import clsx from "clsx";
+import Link from "next/link";
+import Menu from "./Menu";
+import SearchForm from "../SearchForm";
+import Loader from "../Loader";
 
-export default function Header({ isHomePage, menu, default_page }) {
+export default function Header({ isHomePage }) {
     const {
         openSidebar,
         setOpenSidebar,
@@ -18,6 +18,8 @@ export default function Header({ isHomePage, menu, default_page }) {
         openSearch,
         setOpenSearch,
         responsive,
+        defaultPage,
+        defaultPageLoading,
     } = useStore();
 
     const drawRef = useSwipesHoriziontal({
@@ -26,10 +28,10 @@ export default function Header({ isHomePage, menu, default_page }) {
         },
     });
 
-    const colorLogoUrl = default_page?.color_logo?.full_url || COLOR_LOGO_URL;
-    const whiteLogoUrl = default_page?.white_logo?.full_url || WHITE_LOGO_URL;
-    const colorLogoName = default_page?.color_logo?.name || LOGO_NAME;
-    const whiteLogoName = default_page?.white_logo?.name || LOGO_NAME;
+    const colorLogoUrl = defaultPage?.color_logo?.full_url || COLOR_LOGO_URL;
+    const whiteLogoUrl = defaultPage?.white_logo?.full_url || WHITE_LOGO_URL;
+    const colorLogoName = defaultPage?.color_logo?.name || LOGO_NAME;
+    const whiteLogoName = defaultPage?.white_logo?.name || LOGO_NAME;
 
     return (
         <header id="header">
@@ -49,28 +51,45 @@ export default function Header({ isHomePage, menu, default_page }) {
                     <div className="lg:hidden absolute top-0 right-0 h-header w-header flex items-center justify-center">
                         <button
                             onClick={() => setOpenSidebar(true)}
-                            className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10 text-white"
+                            className={clsx(
+                                "w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10 text-white",
+                                { hidden: openSidebar }
+                            )}
                         >
                             <IconMenu width={20} height={20} />
                         </button>
                     </div>
                     <div className="shrink-0 mr-3 flex items-center">
-                        <Link href={"/"} className="w-40 ml-3 lg:ml-0">
-                            <img
-                                alt={colorLogoName}
-                                src={colorLogoUrl}
-                                className={clsx({ "lg:hidden": isHomePage })}
-                            />
-                            <img
-                                alt={
-                                    stickyHeader ? colorLogoName : whiteLogoName
-                                }
-                                src={stickyHeader ? colorLogoUrl : whiteLogoUrl}
-                                className={
-                                    isHomePage ? "hidden lg:block" : "hidden"
-                                }
-                            />
-                        </Link>
+                        {defaultPageLoading ? (
+                            <Loader />
+                        ) : (
+                            <Link href={"/"} className="w-40 ml-3 lg:ml-0">
+                                <img
+                                    alt={colorLogoName}
+                                    src={colorLogoUrl}
+                                    className={clsx({
+                                        "lg:hidden": isHomePage,
+                                    })}
+                                />
+                                <img
+                                    alt={
+                                        stickyHeader
+                                            ? colorLogoName
+                                            : whiteLogoName
+                                    }
+                                    src={
+                                        stickyHeader
+                                            ? colorLogoUrl
+                                            : whiteLogoUrl
+                                    }
+                                    className={
+                                        isHomePage
+                                            ? "hidden lg:block"
+                                            : "hidden"
+                                    }
+                                />
+                            </Link>
+                        )}
                     </div>
                     <div
                         onClick={() => setOpenSidebar(false)}
@@ -80,7 +99,13 @@ export default function Header({ isHomePage, menu, default_page }) {
                                 "pointer-events-auto opacity-100": openSidebar,
                             }
                         )}
-                    />
+                    >
+                        <div className="absolute top-0 right-7 h-header flex items-center justify-center lg:hidden">
+                            <CloseButton
+                                onClick={() => setOpenSidebar(false)}
+                            />
+                        </div>
+                    </div>
                     <div
                         ref={drawRef}
                         className={clsx(
@@ -105,12 +130,7 @@ export default function Header({ isHomePage, menu, default_page }) {
                                 }
                             />
                         </Link>
-                        <div className="absolute top-0 right-2 h-header flex items-center justify-center lg:hidden">
-                            <CloseButton
-                                onClick={() => setOpenSidebar(false)}
-                            />
-                        </div>
-                        <Menu menu={menu || MENU} />
+                        <Menu />
                     </div>
                 </div>
                 <div

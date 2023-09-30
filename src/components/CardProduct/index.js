@@ -43,7 +43,7 @@ export function CardProductItem({ title, slug, meta_box }) {
     const image_name = meta_box?.images?.[0]?.name || "pic";
 
     return (
-        <div className="bg-white transition-all overflow-hidden rounded-lg shadow-md hover:shadow-xl group">
+        <div className="bg-white transition-all overflow-hidden rounded-lg shadow-md md:hover:shadow-xl group">
             <div className="relative pt-[60%] overflow-hidden">
                 <Link href={`/san-pham/chi-tiet/${slug || ""}`}>
                     <div className="absolute inset-0">

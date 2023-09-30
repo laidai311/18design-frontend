@@ -2,7 +2,6 @@ import { styled } from "styled-components";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CardProductItem } from "../CardProduct";
-import { fakeProductOther } from "./fetchData";
 
 const SwiperWrapper = styled.div`
     & .swiper-wrapper {
@@ -11,7 +10,7 @@ const SwiperWrapper = styled.div`
 `;
 
 export default function ProductOther({ products_list }) {
-    return (
+    return Array.isArray(products_list) ? (
         <SwiperWrapper className="px-4 md:px-0">
             <Swiper
                 slidesPerView={4}
@@ -44,14 +43,12 @@ export default function ProductOther({ products_list }) {
                     },
                 }}
             >
-                {Array.isArray(products_list)
-                    ? products_list.map((item) => (
-                          <SwiperSlide key={item.id}>
-                              <CardProductItem {...item} />
-                          </SwiperSlide>
-                      ))
-                    : null}
+                {products_list.map((item) => (
+                    <SwiperSlide key={item.id}>
+                        <CardProductItem {...item} />
+                    </SwiperSlide>
+                ))}
             </Swiper>
         </SwiperWrapper>
-    );
+    ) : null;
 }

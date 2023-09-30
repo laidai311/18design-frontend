@@ -1,21 +1,17 @@
 import {
     useDetectKeyboard,
+    useFetch,
     useLockBodyScroll,
     useMediaQuery,
     useRouteChangeStart,
     useViewportSize,
     useWindowEvent,
 } from "@/hooks";
+import { getMenu } from "@/utils";
 import { useRouter } from "next/router";
 import { createContext, useContext, useState } from "react";
 
-export const StoreProvider = ({
-    children,
-    api_url,
-    default_image,
-    form_url,
-    form_data,
-}) => {
+export const StoreProvider = (props) => {
     // bật tắt sub menu
     const [openSubMenu, setOpenSubMenu] = useState({});
     // bật tắt sidebar
@@ -61,6 +57,50 @@ export const StoreProvider = ({
         }
     });
 
+    const defaultPage = useFetch("/pages?slug=mac-dinh", {});
+
+    const menuItems = useFetch(
+        "/menu-items",
+        {
+            method: "GET",
+            headers: {
+                Authorization:
+                    "Basic " +
+                    btoa(
+                        process.env.USER_NAME + ":" + process.env.USER_PASSWORD
+                    ),
+            },
+        },
+        false,
+        !defaultPage?.isLoading
+    );
+
+    const menu = getMenu(menuItems.data?.data);
+
+    const formFieldData = useFetch(
+        "/forms/1/field-filters",
+        {
+            method: "GET",
+            headers: {
+                Authorization:
+                    "Basic " +
+                    btoa(
+                        process.env.FORM_API_KEY +
+                            ":" +
+                            process.env.FORM_API_SECRET
+                    ),
+            },
+        },
+        true,
+        !defaultPage.isLoading
+    );
+
+    const formFields = formFieldData.data
+        ? formFieldData.data?.data?.filter(
+              (item) => "key" in item && typeof item?.key === "number"
+          )
+        : [];
+
     const pathNameDynamic = router.query?.page_type
         ? "/" + router.query.page_type
         : null;
@@ -85,14 +125,16 @@ export const StoreProvider = ({
                 openContactForm,
                 setOpenContactForm,
                 isHomePage,
-                api_url,
-                default_image,
-                form_url,
-                form_data,
+                defaultPage: defaultPage.data?.data?.[0]?.meta_box,
+                defaultPageLoading: defaultPage.isLoading,
+                formFields,
+                formfieldsLoading: formFieldData.isLoading,
+                menu,
+                menuLoading: menuItems.isLoading,
+                site_name: process.env.SITE_NAME,
             }}
-        >
-            {children}
-        </StoreContext.Provider>
+            {...props}
+        />
     );
 };
 
@@ -112,10 +154,13 @@ export const StoreContext = createContext({
     openContactForm: {},
     setOpenContactForm() {},
     isHomePage: true,
-    api_url: "",
-    default_image: {},
-    form_url: "",
-    form_data: {},
+    defaultPage: {},
+    defaultPageLoading: true,
+    formFields: [],
+    formfieldsLoading: true,
+    menu: [],
+    menuLoading: true,
+    site_name: "",
 });
 
 export const useStore = () => useContext(StoreContext);

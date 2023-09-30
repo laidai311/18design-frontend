@@ -1,11 +1,14 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import { css, styled } from "styled-components";
 import { Img } from "../UI";
-import { SLIDER_LIST } from "@/constant/slider-list";
 import { media } from "../theme";
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
+import { SLIDER_LIST } from "@/constant/slider-list";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useStore } from "@/stores";
 
-export function Slider({ slider_images, site_name }) {
+export function Slider({ slider_images }) {
+    const { site_name } = useStore();
+
     return (
         <StyledSwiper>
             <Swiper
@@ -25,11 +28,8 @@ export function Slider({ slider_images, site_name }) {
                     ? slider_images.map((itm, idx) => (
                           <SwiperSlide key={idx}>
                               <Img
-                                  alt={itm?.name || site_name || ""}
-                                  src={
-                                      itm?.full_url ||
-                                      "/images/default-image.jpg"
-                                  }
+                                  alt={itm?.alt || site_name || ""}
+                                  src={itm?.url || "/images/default-image.jpg"}
                                   className={
                                       "select-none w-full h-full object-cover"
                                   }

@@ -1,15 +1,109 @@
 import { Contact } from "@/components/Home/Contact";
-import { getMenu } from "@/utils";
+import { fetcher } from "@/utils";
 import { NextSeo } from "next-seo";
 import { OutPartner } from "@/components/Home/OutPartner";
 import { Quote, About, TypicalProject } from "@/components/Home";
 import { REVALIDATE } from "@/constant/setting";
 import { Slider } from "@/components/Home/Slider";
+import { useEffect, useState } from "react";
+import { useStore } from "@/stores";
 import DefaultLayout from "@/components/Layout";
-import unfetch from "isomorphic-unfetch";
 import Whychoose from "@/components/Home/Whychoose";
 
-export default function Page({ seo_title, seo_description, ...props }) {
+export default function Page({
+    seo_title,
+    seo_description,
+    about_group,
+    posts_tab,
+    why_choose_group,
+    ...props
+}) {
+    const { formfieldsLoading } = useStore();
+    const [aboutGroupLoading, setAboutGroupLoading] = useState(true);
+    const [aboutGroup, setAboutGroup] = useState(about_group);
+
+    useEffect(() => {
+        const fetchAboutGroup = async () => {
+            const _aboutGroup = await Promise.all(
+                Array.isArray(about_group)
+                    ? about_group.map(async (item) => {
+                          const icon = await fetcher(`/media/${item?.icon}`);
+
+                          return {
+                              ...item,
+                              icon_link: icon?.data?.source_url || "",
+                              icon_name: icon?.data?.title?.rendered || "",
+                          };
+                      })
+                    : []
+            );
+            setAboutGroup(_aboutGroup);
+            setAboutGroupLoading(false);
+        };
+        if (!formfieldsLoading) {
+            fetchAboutGroup();
+        }
+    }, [formfieldsLoading, about_group]);
+
+    const [postsLoading, setPostsLoading] = useState(true);
+    const [postsFetching, setPostsFetch] = useState(false);
+    const [postsTab, setPostsTab] = useState(posts_tab || []);
+    const [activedTab, setActivedTab] = useState(posts_tab?.[0]?.category_id);
+
+    useEffect(() => {
+        const fetchPostsTab = async () => {
+            setPostsFetch(true);
+
+            const posts_list = await fetcher(
+                `/posts?categories=${activedTab || ""}&per_page=6`
+            );
+
+            setPostsTab((current) =>
+                current.map((item) => {
+                    if (item.category_id === activedTab) {
+                        return {
+                            ...item,
+                            posts_list: posts_list?.data || {},
+                        };
+                    }
+                    return item;
+                })
+            );
+            setPostsLoading(false);
+            setPostsFetch(false);
+        };
+        if (!aboutGroupLoading) {
+            fetchPostsTab();
+        }
+    }, [aboutGroupLoading, activedTab]);
+
+    const [whyChooseGroupLoading, setWhyChooseGroupLoading] = useState(true);
+    const [whyChooseGroup, setWhyChooseGroup] = useState(why_choose_group);
+
+    useEffect(() => {
+        const fetchWhyChooseGroup = async () => {
+            const _whyChooseGroup = await Promise.all(
+                Array.isArray(why_choose_group)
+                    ? why_choose_group.map(async (item) => {
+                          const icon =
+                              (await fetcher(`/media/${item?.icon}`)) || {};
+
+                          return {
+                              ...item,
+                              icon_link: icon?.data?.source_url || "",
+                              icon_name: icon?.data?.title?.rendered || "",
+                          };
+                      })
+                    : []
+            );
+            setWhyChooseGroup(_whyChooseGroup);
+            setWhyChooseGroupLoading(false);
+        };
+        if (!postsLoading) {
+            fetchWhyChooseGroup();
+        }
+    }, [postsLoading, why_choose_group]);
+
     return (
         <>
             <NextSeo
@@ -18,156 +112,86 @@ export default function Page({ seo_title, seo_description, ...props }) {
             />
             <Slider {...props} />
             <Quote />
-            <About {...props} />
-            <TypicalProject {...props} />
+            <About
+                aboutGroup={aboutGroup}
+                aboutGroupLoading={aboutGroupLoading}
+                {...props}
+            />
+            <TypicalProject
+                postsTab={postsTab}
+                activedTab={activedTab}
+                isFetching={postsLoading || postsFetching}
+                setActivedTab={setActivedTab}
+                {...props}
+            />
             <Contact {...props} />
-            <Whychoose {...props} />
+            <Whychoose
+                whyChooseGroup={whyChooseGroup}
+                whyChooseGroupLoading={whyChooseGroupLoading}
+                {...props}
+            />
             <OutPartner {...props} />
         </>
     );
 }
 
 export const getStaticProps = async (context) => {
-    try {
-        const {
-            NEXT_PUBLIC_SITE_NAME,
-            NEXT_PUBLIC_API_URL,
-            NEXT_PUBLIC_USER_NAME,
-            NEXT_PUBLIC_PASSWORD,
-            NEXT_PUBLIC_GRAVITY_FORMS_URL,
-        } = process.env;
+    const homePage = await fetcher("/pages?slug=trang-chu").catch(
+        () => undefined
+    );
+    const homePageData = homePage?.data?.[0] || {};
 
-        const [menuData, defaulPageData, homePageData] = await Promise.all(
-            [
-                "/menu-items",
-                "/pages?slug=mac-dinh",
-                "/pages?slug=trang-chu",
-            ].map(async (url) => {
-                const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                    method: "GET",
-                    headers: {
-                        Authorization:
-                            "Basic " +
-                            btoa(
-                                NEXT_PUBLIC_USER_NAME +
-                                    ":" +
-                                    NEXT_PUBLIC_PASSWORD
-                            ),
-                    },
-                });
-                return res.json();
-            })
-        );
+    const slider_images = homePageData?.meta_box?.slider_images?.length
+        ? homePageData?.meta_box?.slider_images?.map((item) => ({
+              alt: item?.alt || item?.title || "",
+              url: item?.full_url || "#",
+          }))
+        : [];
 
-        const menu = getMenu(menuData);
+    const our_partner_images = homePageData?.meta_box?.our_partner_images
+        ?.length
+        ? homePageData?.meta_box?.our_partner_images?.map((item) => ({
+              alt: item?.alt || item?.title || "",
+              url: item?.full_url || "#",
+          }))
+        : [];
 
-        const default_meta_box = defaulPageData[0]?.meta_box || {};
+    const meta_box = {
+        description: homePageData?.meta_box?.description || "",
+        email: homePageData?.meta_box?.email || "",
+        address: homePageData?.meta_box?.address || "",
+        phone: homePageData?.meta_box?.phone || "",
+        seo_title: homePageData?.meta_box?.seo_title || "",
+        seo_description: homePageData?.meta_box?.seo_description || "",
+        title: homePageData?.title?.rendered || "",
+        id: homePageData?.id || "",
+        slug: homePageData?.slug || "",
+        slider_images,
+        about_title: homePageData?.meta_box?.about_title || "",
+        about_description: homePageData?.meta_box?.about_description || "",
+        about_group: homePageData?.meta_box?.about_group || [],
+        about_background: {
+            alt: homePageData?.meta_box?.about_background?.alt || "",
+            url: homePageData?.meta_box?.about_background?.full_url || "",
+        },
+        contact_background: {
+            alt: homePageData?.meta_box?.contact_background?.alt || "",
+            url: homePageData?.meta_box?.contact_background?.full_url || "",
+        },
+        why_choose_group: homePageData?.meta_box?.why_choose_group || [],
+        why_choose_background: {
+            alt: homePageData?.meta_box?.why_choose_background?.alt || "",
+            url: homePageData?.meta_box?.why_choose_background?.full_url || "",
+        },
+        our_partner_images,
+        posts_tab: homePageData?.meta_box?.posts_tab || [],
+    };
 
-        const meta_box = homePageData[0]?.meta_box
-            ? homePageData[0]?.meta_box
-            : {};
-
-        let about_group = meta_box?.about_group || [];
-
-        about_group = await Promise.all(
-            about_group.map(async (item) => {
-                const res = await unfetch(
-                    NEXT_PUBLIC_API_URL + `/media/` + item?.icon
-                );
-                const icon = await res.json();
-
-                return {
-                    ...item,
-                    icon_link: icon?.source_url,
-                    icon_name: icon?.title?.rendered || "",
-                };
-            })
-        );
-
-        let why_choose_group = meta_box?.why_choose_group || [];
-
-        why_choose_group = await Promise.all(
-            why_choose_group.map(async (item) => {
-                const res = await unfetch(
-                    NEXT_PUBLIC_API_URL + `/media/` + item?.icon
-                );
-                const icon = await res.json();
-
-                return {
-                    ...item,
-                    icon_link: icon?.source_url,
-                    icon_name: icon?.title?.rendered || "",
-                };
-            })
-        );
-
-        let posts_tab = meta_box?.posts_tab || [];
-
-        posts_tab = await Promise.all(
-            posts_tab.map(async (item) => {
-                const res = await unfetch(
-                    NEXT_PUBLIC_API_URL + `/categories/` + item?.category_id
-                );
-
-                return {
-                    ...item,
-                    category: await res.json(),
-                };
-            })
-        );
-
-        posts_tab = await Promise.all(
-            posts_tab.map(async (item) => {
-                const res = await unfetch(
-                    NEXT_PUBLIC_API_URL +
-                        `/posts?categories=` +
-                        item?.category_id +
-                        "&per_page=6"
-                );
-
-                return {
-                    ...item,
-                    posts_list: await res.json(),
-                };
-            })
-        );
-
-        const formRes = await unfetch(
-            NEXT_PUBLIC_GRAVITY_FORMS_URL + `/forms/1`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization:
-                        "Basic " +
-                        btoa(
-                            NEXT_PUBLIC_USER_NAME + ":" + NEXT_PUBLIC_PASSWORD
-                        ),
-                },
-            }
-        );
-
-        const form_data = await formRes.json();
-
-        return {
-            props: {
-                ...meta_box,
-                menu,
-                default_page: default_meta_box,
-                about_group,
-                why_choose_group,
-                posts_tab,
-                form_data,
-                title: homePageData[0]?.title?.rendered || "",
-                content: homePageData[0]?.content?.rendered || "",
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-                form_url: NEXT_PUBLIC_GRAVITY_FORMS_URL || "",
-            },
-            // revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
-    }
+    return {
+        props: meta_box,
+        revalidate: REVALIDATE, // In seconds 1h
+        notFound: homePage === undefined || homePage?.data?.length === 0,
+    };
 };
 
 Page.getLayout = (page, pageProps) => (

@@ -6,12 +6,18 @@ import {
     FloatRight,
     PulseRing,
 } from "../Styled/Layout/FloatButton";
+import { useStore } from "@/stores";
 
-export default function FloatButton({ onContactClick, phone, email }) {
-    return (
+export default function FloatButton({ onContactClick }) {
+    const { defaultPage, defaultPageLoading: defaultPageStatus } = useStore();
+
+    return defaultPageStatus === "loading" ? null : (
         <>
             <FloatLeft $bottom={170}>
-                <a href={`tel:${phone || PHONE}`} className="tooltip">
+                <a
+                    href={`tel:${defaultPage?.phone || PHONE}`}
+                    className="tooltip"
+                >
                     <FloatIcon>
                         <PulseRing />
                         <IconPhone
@@ -21,28 +27,35 @@ export default function FloatButton({ onContactClick, phone, email }) {
                         />
                     </FloatIcon>
                     <span className="tooltiptext">
-                        Gọi ngay: {phone || PHONE}
+                        Gọi ngay: {defaultPage?.phone || PHONE}
                     </span>
                 </a>
             </FloatLeft>
             <FloatLeft $bottom={110}>
-                <a href={`mailto:${email || EMAIL}`} className="tooltip">
+                <a
+                    href={`mailto:${defaultPage?.email || EMAIL}`}
+                    className="tooltip"
+                >
                     <FloatIcon>
                         <IconEnvelope width={24} height={24} />
                     </FloatIcon>
-                    <span className="tooltiptext">{email || EMAIL}</span>
+                    <span className="tooltiptext">
+                        {defaultPage?.email || EMAIL}
+                    </span>
                 </a>
             </FloatLeft>
             <FloatLeft $bottom={50}>
                 <a
                     target="_blank"
-                    href={`https://zalo.me/${phone || PHONE}`}
+                    href={`https://zalo.me/${defaultPage?.phone || PHONE}`}
                     className="tooltip"
                 >
                     <FloatIcon>
                         <IconZalo width={24} height={24} />
                     </FloatIcon>
-                    <span className="tooltiptext">Zalo:{phone || PHONE}</span>
+                    <span className="tooltiptext">
+                        Zalo:{defaultPage?.phone || PHONE}
+                    </span>
                 </a>
             </FloatLeft>
             <FloatRight>

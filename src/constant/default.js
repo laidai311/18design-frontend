@@ -3,7 +3,7 @@ export const COLOR_LOGO_URL = "./images/18-design-cut.png";
 export const WHITE_LOGO_URL = "./images/18-design-cut-white.png";
 export const LOGO_NAME = "Logo 18 Design";
 export const FACEBOOK_PAGE_IFRAME =
-    '<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F18designsAI%2F&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="350" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>';
+    '<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F18designsAI%2F&width=340&height=350&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="350" scrolling="no" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>';
 export const EMAIL = "arch18designs@gmail.com";
 export const PHONE = "0838586444";
 export const ADDRESS = "Số 1, Nguyễn Cảnh Dị, Đại Kim, Hoàng Mai, TP. Hà Nội";

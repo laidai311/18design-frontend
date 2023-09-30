@@ -19,7 +19,7 @@ export function Contact({ contact_background, ...other }) {
                                 <Img
                                     alt="sesion-bg-2"
                                     src={
-                                        contact_background?.full_url ||
+                                        contact_background?.url ||
                                         "/images/default-image.jpg"
                                     }
                                     className={"w-full h-full object-cover"}

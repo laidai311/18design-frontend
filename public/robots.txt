@@ -1,0 +1,14 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /danh-muc/[category]
+Disallow: /chi-tiet/[slug]
+Disallow: /san-pham/[tag]
+Disallow: /san-pham/chi-tiet/[slug]
+
+# Host
+Host: http://localhost:3000
+
+# Sitemaps
+Sitemap: http://localhost:3000/sitemap.xml
+Sitemap: https://18design.vn/sitemap-18design.xml

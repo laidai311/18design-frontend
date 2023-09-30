@@ -1,11 +1,10 @@
 import { Contact, FollowUs, Social } from "@/components/Contact/Banner";
-import { getMenu } from "@/utils";
+import { fetcher } from "@/utils";
 import { Img } from "@/components/UI";
 import { NextSeo } from "next-seo";
 import { REVALIDATE } from "@/constant/setting";
 import { useStore } from "@/stores";
 import DefaultLayout from "@/components/Layout";
-import unfetch from "isomorphic-unfetch";
 
 export default function Page({
     background,
@@ -26,8 +25,8 @@ export default function Page({
             <div className="w-full relative pt-[52%] h-auto lg:pt-0 lg:h-[80vh] bg-[#d4e1e7]">
                 <div className="absolute inset-0 py-32 px-20">
                     <Img
-                        alt={background?.title || default_image?.title || ""}
-                        src={background?.full_url || default_image?.full_url}
+                        alt={background?.name || default_image?.name || ""}
+                        src={background?.url || default_image?.full_url}
                         className={"w-full h-full object-cover"}
                     />
                 </div>
@@ -39,58 +38,30 @@ export default function Page({
     );
 }
 
-export async function getServerSideProps() {
-    try {
-        const {
-            NEXT_PUBLIC_SITE_NAME,
-            NEXT_PUBLIC_API_URL,
-            NEXT_PUBLIC_USER_NAME,
-            NEXT_PUBLIC_PASSWORD,
-        } = process.env;
+export async function getStaticProps() {
+    const contactPage = await fetcher("/pages?slug=lien-he").catch(
+        () => undefined
+    );
+    const contactPageData = contactPage ? contactPage?.data?.[0] : {};
 
-        const [menuData, defaulPageData, contactPageData] = await Promise.all(
-            ["/menu-items", "/pages?slug=mac-dinh", "/pages?slug=lien-he"].map(
-                async (url) => {
-                    const res = await unfetch(NEXT_PUBLIC_API_URL + url, {
-                        method: "GET",
-                        headers: {
-                            Authorization:
-                                "Basic " +
-                                btoa(
-                                    NEXT_PUBLIC_USER_NAME +
-                                        ":" +
-                                        NEXT_PUBLIC_PASSWORD
-                                ),
-                        },
-                    });
-                    return res.json();
-                }
-            )
-        );
+    const meta_box = {
+        ...(contactPageData?.meta_box || {}),
+        background: {
+            alt:
+                contactPageData?.meta_box?.background?.alt ||
+                contactPageData?.meta_box?.background?.title ||
+                "",
+            url: contactPageData?.meta_box?.background?.full_url || "#",
+        },
+        title: contactPageData?.title?.rendered || "",
+        content: contactPageData?.content?.rendered || "",
+    };
 
-        const menu = getMenu(menuData);
-
-        const default_meta_box = defaulPageData[0]?.meta_box || {};
-
-        const meta_box = contactPageData[0]?.meta_box
-            ? contactPageData[0]?.meta_box
-            : {};
-
-        return {
-            props: {
-                ...meta_box,
-                menu,
-                default_page: default_meta_box,
-                title: contactPageData[0]?.title?.rendered || "",
-                content: contactPageData[0]?.content?.rendered || "",
-                site_name: NEXT_PUBLIC_SITE_NAME || "",
-                api_url: NEXT_PUBLIC_API_URL || "",
-            },
-            // revalidate: REVALIDATE, // In seconds 1h
-        };
-    } catch (error) {
-        return { props: { error: error?.message }, notFound: true };
-    }
+    return {
+        props: meta_box,
+        revalidate: REVALIDATE, // In seconds 1h
+        notFound: contactPage === undefined || contactPage?.data?.length === 0,
+    };
 }
 
 Page.getLayout = (page, pageProps) => (

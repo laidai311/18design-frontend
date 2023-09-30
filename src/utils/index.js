@@ -4,3 +4,4 @@ export * from "./updateImgSrc";
 export * from "./get";
 export * from "./formatMoney";
 export * from "./getWP";
+export * from "./fetcher";

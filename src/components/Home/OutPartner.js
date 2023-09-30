@@ -68,7 +68,7 @@ export function OutPartner({ our_partner_images }) {
                                       <Img
                                           alt={itm?.name || ""}
                                           src={
-                                              itm?.full_url ||
+                                              itm?.url ||
                                               "/images/default-image.jpg"
                                           }
                                           className={
