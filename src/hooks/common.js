@@ -314,13 +314,14 @@ export const useInView = (ref, options = {}) => {
     useEffect(() => {
         const callback = (entries) => {
             setIsIntersecting(entries[0].isIntersecting);
+            options?.callback?.(entries[0].isIntersecting);
         };
 
         observer?.disconnect();
 
         if (ref.current) {
             const _observer = new IntersectionObserver(callback, options);
-            _observer.observe(ref);
+            _observer.observe(ref.current);
             setObserver(_observer);
         }
 

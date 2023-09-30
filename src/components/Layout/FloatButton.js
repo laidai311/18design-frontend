@@ -1,15 +1,15 @@
 import { EMAIL, PHONE } from "@/constant/default";
 import { IconBook, IconEnvelope, IconPhone, IconZalo } from "../Icons";
-import {
-    FloatIcon,
-    FloatLeft,
-    FloatRight,
-    PulseRing,
-} from "../Styled/Layout/FloatButton";
+import { FloatIcon, FloatLeft, PulseRing } from "../Styled/Layout/FloatButton";
 import { useStore } from "@/stores";
+import clsx from "clsx";
 
 export default function FloatButton({ onContactClick }) {
-    const { defaultPage, defaultPageLoading: defaultPageStatus } = useStore();
+    const {
+        defaultPage,
+        defaultPageLoading: defaultPageStatus,
+        openFloatContactButton,
+    } = useStore();
 
     return defaultPageStatus === "loading" ? null : (
         <>
@@ -58,15 +58,21 @@ export default function FloatButton({ onContactClick }) {
                     </span>
                 </a>
             </FloatLeft>
-            <FloatRight>
-                <button
-                    onClick={onContactClick || null}
-                    className="px-5 py-3 font-medium text-white rounded-t-lg hover:shadow inline-flex space-x-2 items-center justify-center bg-primary transition-colors"
+            <div className="fixed z-10 right-5 bottom-0">
+                <div
+                    className={clsx("transition-transform translate-y-full", {
+                        "!translate-y-0": openFloatContactButton,
+                    })}
                 >
-                    <IconBook />
-                    <span>Nhận tư vấn thiết kế</span>
-                </button>
-            </FloatRight>
+                    <button
+                        onClick={onContactClick || null}
+                        className="px-5 py-3 font-medium text-white rounded-t-lg hover:shadow inline-flex space-x-2 items-center justify-center bg-primary transition-colors"
+                    >
+                        <IconBook />
+                        <span>Nhận tư vấn thiết kế</span>
+                    </button>
+                </div>
+            </div>
         </>
     );
 }

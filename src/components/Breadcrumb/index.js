@@ -1,55 +1,37 @@
-import { styled } from "styled-components";
 import { IconHome } from "../Icons";
-import { Container } from "../Styled";
 import Link from "next/link";
 
-const BreadcrumbList = styled.div`
-    padding: 20px 0;
-`;
-const Breadcrumbs = styled.ul`
-    display: flex;
-    list-style: none;
-    padding: 0;
-    & > li:after {
-        content: "${(props) => props.separator || "/"}";
-        padding: 0 8px;
-    }
-`;
-
-const Crumb = styled.li`
-    display: flex;
-    align-items: center;
-    &:last-of-type:after {
-        content: "";
-        padding: 0;
-    }
-
-    a {
-        display: flex;
-        color: #bd8b1b;
-        text-decoration: none;
-        &:hover,
-        &:active {
-            text-decoration: underline;
-        }
-    }
-`;
-
-export function Breadcrumb({ value1, value2 }) {
+export function Breadcrumb({ value1 }) {
     return (
-        <BreadcrumbList className="breadcrumb">
-            <Container>
-                <Breadcrumbs>
-                    <Crumb>
-                        <Link href="/">
-                            <IconHome />
-                        </Link>
-                    </Crumb>
-                    <Crumb>Sản phẩm</Crumb>
-                    {value1 && <Crumb>{value1}</Crumb>}
-                    {value2 && <Crumb>{value2}</Crumb>}
-                </Breadcrumbs>
-            </Container>
-        </BreadcrumbList>
+        <div className="my-4">
+            <div className="container max-w-7xl mx-auto px-3">
+                <div className="leading-7">
+                    <Link
+                        href="/"
+                        className="inline-block hover:text-primary -mb-0.5"
+                    >
+                        <IconHome width={16} height={16} />
+                    </Link>
+                    <span> / </span>
+                    <Link
+                        href={"/san-pham"}
+                        className="inline-block hover:text-primary"
+                    >
+                        Sản phẩm
+                    </Link>
+                    {value1?.label ? (
+                        <>
+                            <span> / </span>
+                            <Link
+                                href={"/san-pham" + value1?.url}
+                                className="inline-block hover:text-primary"
+                            >
+                                {value1?.label}
+                            </Link>
+                        </>
+                    ) : null}
+                </div>
+            </div>
+        </div>
     );
 }

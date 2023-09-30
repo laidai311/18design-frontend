@@ -8,7 +8,7 @@ export function ProductTagsList({ loading, product_tag_list }) {
 
     return (
         <div className="relative py-10">
-            <div className="container mx-auto max-w-7xl">
+            <div className="container mx-auto max-w-7xl px-3">
                 <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     Danh mục nổi bật
                 </h2>

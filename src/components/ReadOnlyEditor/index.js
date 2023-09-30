@@ -4,7 +4,7 @@ function ReadOnlyEditor({ content, className }) {
     return (
         <div
             id="tinymce"
-            className={clsx("mce-content-body px-4 md:px-0", className || "")}
+            className={clsx("mce-content-body", className || "")}
             dangerouslySetInnerHTML={{ __html: content || "" }}
         />
     );

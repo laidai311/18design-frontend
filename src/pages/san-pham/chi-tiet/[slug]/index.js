@@ -57,8 +57,13 @@ export default function Page({
                 description={seo_description || ""}
             />
             <ProductDetail key={id + slug}>
-                <div className="container mx-auto max-w-7xl my-10">
-                    <Breadcrumb value1={title || ""} />
+                <div className="container mx-auto max-w-7xl my-10 px-3">
+                    <Breadcrumb
+                        value1={{
+                            label: title || "",
+                            url: `/chi-tiet/${slug}`,
+                        }}
+                    />
                     <div className="detail px-4 md:px-0">
                         <ThumbDetail images={images} />
                         <ProductDescription>

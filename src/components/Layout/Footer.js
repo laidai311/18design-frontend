@@ -21,9 +21,19 @@ import {
 } from "@/constant/default";
 import { useStore } from "@/stores";
 import Loader from "../Loader";
+import { useInView } from "@/hooks";
+import { useRef } from "react";
 
 export default function Footer({ onContactClick }) {
-    const { defaultPage, defaultPageLoading } = useStore();
+    const ref = useRef();
+    const { defaultPage, defaultPageLoading, setOpenFloatContactForm } =
+        useStore();
+
+    useInView(ref, {
+        callback: (value) => {
+            setOpenFloatContactForm(!value);
+        },
+    });
 
     const colorLogoUrl = defaultPage?.color_logo?.full_url || COLOR_LOGO_URL;
     const colorLogoName = defaultPage?.color_logo?.name || LOGO_NAME;
@@ -33,7 +43,7 @@ export default function Footer({ onContactClick }) {
     return defaultPageLoading ? (
         <Loader className="relative py-10" />
     ) : (
-        <footer id="footer" className="relative">
+        <footer ref={ref} id="footer" className="relative">
             <section className="bg-gray-800">
                 <div
                     className="absolute inset-0"
@@ -47,7 +57,7 @@ export default function Footer({ onContactClick }) {
                     <div className="bg-black/70 h-full" />
                 </div>
                 <div className="relative py-10">
-                    <div className="container mx-auto max-w-7xl">
+                    <div className="container mx-auto max-w-7xl px-3">
                         <div className="-mx-4 flex flex-wrap text-white ">
                             <div className="w-full p-7 md:w-1/2 lg:w-1/3 flex flex-col items-center">
                                 <FooterLogo>
@@ -109,7 +119,7 @@ export default function Footer({ onContactClick }) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="w-full p-7 md:w-1/2 lg:w-1/3">
+                            <div className="w-full p-7 md:w-1/2 lg:w-1/3 flex flex-col items-center lg:items-start">
                                 <h3 className="font-semibold mb-3 uppercase">
                                     Fanpage Facebook
                                 </h3>

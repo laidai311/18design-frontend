@@ -30,7 +30,7 @@ export const PricingTitle = styled.div`
 export function OutPartner({ our_partner_images }) {
     return (
         <div className="relative bg-white py-10">
-            <div className="container max-w-7xl mx-auto">
+            <div className="container max-w-7xl mx-auto px-3">
                 <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                     Đối tác của chúng tôi
                 </h2>

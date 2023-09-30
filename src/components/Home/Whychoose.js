@@ -20,7 +20,7 @@ export default function Whychoose({
             }}
             className="pt-10 relative text-white"
         >
-            <div className="container max-w-7xl mx-auto">
+            <div className="container max-w-7xl mx-auto px-3">
                 <div className="bg-black/70 absolute inset-0" />
                 <h3 className="relative text-2xl uppercase text-center mb-6 px-6">
                     Tại sao chọn 18 Design

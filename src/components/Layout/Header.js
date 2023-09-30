@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { COLOR_LOGO_URL, LOGO_NAME, WHITE_LOGO_URL } from "@/constant/default";
-import { IconMenu } from "@/components/Icons";
+import { IconMenu, IconSearch, IconXmark } from "@/components/Icons";
 import { useStore } from "@/stores";
 import { useSwipesHoriziontal } from "@/hooks";
 import CloseButton from "../CloseButton";
@@ -48,22 +48,41 @@ export default function Header({ isHomePage }) {
                 )}
             >
                 <div className="relative container max-w-7xl mx-auto flex justify-start lg:justify-between items-stretch h-header px-3">
-                    <div className="lg:hidden absolute top-0 right-0 h-header w-header flex items-center justify-center">
-                        <button
-                            onClick={() => setOpenSidebar(true)}
-                            className={clsx(
-                                "w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10 text-white",
-                                { hidden: openSidebar }
-                            )}
-                        >
-                            <IconMenu width={20} height={20} />
-                        </button>
+                    <div className="lg:hidden absolute top-0 right-7 h-header w-header flex items-center justify-center">
+                        <div className="flex space-x-2">
+                            <button
+                                onClick={() => {
+                                    setOpenSearch(!openSearch);
+                                }}
+                                className={clsx(
+                                    "w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10 text-white",
+                                    {
+                                        "invisible pointer-events-none":
+                                            openSearch,
+                                    }
+                                )}
+                            >
+                                <IconSearch width={18} height={18} />
+                            </button>
+                            <button
+                                onClick={() => setOpenSidebar(true)}
+                                className={clsx(
+                                    "w-11 h-11 flex items-center justify-center rounded-full hover:bg-black/10 text-white",
+                                    { invisible: openSidebar }
+                                )}
+                            >
+                                <IconMenu width={20} height={20} />
+                            </button>
+                        </div>
                     </div>
                     <div className="shrink-0 mr-3 flex items-center">
                         {defaultPageLoading ? (
                             <Loader />
                         ) : (
-                            <Link href={"/"} className="w-40 ml-3 lg:ml-0">
+                            <Link
+                                href={"/"}
+                                className="w-32 lg:w-40 ml-3 lg:ml-0"
+                            >
                                 <img
                                     alt={colorLogoName}
                                     src={colorLogoUrl}
@@ -136,7 +155,7 @@ export default function Header({ isHomePage }) {
                 <div
                     className={clsx(
                         "transition-all opacity-0 backdrop-blur-md  bg-slate-900/25 fixed inset-0 z-50 pointer-events-none",
-                        { "!pointer-events-auto opacity-100": openSearch }
+                        { "lg:!pointer-events-auto lg:opacity-100": openSearch }
                     )}
                     onClick={() => setOpenSearch(false)}
                 >
@@ -146,15 +165,21 @@ export default function Header({ isHomePage }) {
                 </div>
                 <div
                     className={clsx(
-                        "transition-all py-2 px-3 overflow-hidden lg:p-0 lg:h-0 border-t lg:border-t-0",
+                        "transition-all overflow-hidden p-0 h-0 border-t-0",
                         {
-                            "fixed top-32 left-1/2 -translate-x-1/2 z-50 !h-auto transition-none w-full max-w-screen-sm":
+                            "border-t-0 lg:fixed top-32 left-1/2 lg:-translate-x-1/2 z-50 !h-auto transition-none w-full lg:max-w-screen-sm px-5 py-1 lg:p-0":
                                 openSearch,
                         }
                     )}
                 >
                     <div className="lg:px-5 lg:py-3 bg-header rounded-lg divide-y w-full">
-                        <SearchForm className="py-1" open={openSearch} />
+                        <SearchForm
+                            className="py-1"
+                            open={openSearch}
+                            onClickOutside={() => {
+                                setOpenSearch(false);
+                            }}
+                        />
                     </div>
                 </div>
             </div>

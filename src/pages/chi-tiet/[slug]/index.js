@@ -88,11 +88,11 @@ export default function Page({
                 title={`${title || seo_title || ""} - ${site_name}`}
                 description={seo_description || ""}
             />
-            <section className="relative py-10 min-h-[80vh]">
-                <div className="container mx-auto max-w-7xl">
+            <section className="relative mb-10">
+                <div className="container mx-auto max-w-7xl px-3">
                     <div className="-mx-4 flex flex-wrap">
                         <div className="p-4 w-full lg:w-2/3 space-y-3">
-                            <div className="p-8 shadow-lg rounded-lg">
+                            <div className="p-4 lg:p-8 shadow-lg rounded-lg">
                                 <div className="space-x-1">
                                     {categoriesLoading ? (
                                         <Loader />

@@ -24,12 +24,12 @@ export function About({
             }}
         >
             <div className="absolute inset-0 bg-black/60" />
-            <div className="container mx-auto max-w-7xl">
+            <div className="container mx-auto max-w-7xl px-3">
                 <div className="relative text-white">
                     <h2 className="relative text-2xl uppercase text-center mb-10 px-6 after:absolute after:h-1 after:w-20 after:bg-primary after:left-[calc(50%-40px)] after:-bottom-3">
                         Về chúng tôi
                     </h2>
-                    <div className="text-center px-5 lg:px-20 space-y-3">
+                    <div className="text-center px-5 lg:px-20 space-y-3 mb-5">
                         <div className="uppercase font-semibold">
                             {about_title || ABOUT_TITLE}
                         </div>
@@ -47,7 +47,7 @@ export function About({
                                           className={clsx(
                                               "w-full p-4 md:w-1/3 group",
                                               {
-                                                  "mt-12": index % 2 === 0,
+                                                  "md:mt-12": index % 2 === 0,
                                               }
                                           )}
                                       >
