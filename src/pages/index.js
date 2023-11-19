@@ -108,7 +108,7 @@ export default function Page({
             <NextSeo
                 title={seo?.seo_title || site_name || ""}
                 description={seo?.seo_description || ""}
-                noindex={seo?.seo_noindex || ""}
+                noindex={false}
                 titleTemplate={seo?.seo_title_template || ""}
                 defaultTitle={seo?.seo_default_title || ""}
                 canonical={seo?.seo_canonical || ""}
