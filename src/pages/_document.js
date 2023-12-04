@@ -29,6 +29,7 @@ export default function MyDocument() {
                     href="/favicon-16x16.png"
                 />
                 <link rel="manifest" href="/site.webmanifest" />
+                <meta name="google-site-verification" content="sLQ7k4IhjvsYVE8n1OwNNsH4n8mG3-VV2ylygcFZ0tM" />
             </Head>
             <body>
                 <Main />
