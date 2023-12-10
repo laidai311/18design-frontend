@@ -34,8 +34,8 @@ export default function Whychoose({
                                   >
                                       <div className="flex justify-center">
                                           {whyChooseGroupLoading ? (
-                                              <div class="animate-pulse">
-                                                  <div class="rounded-full bg-white/10 h-16 w-16"></div>
+                                              <div className="animate-pulse">
+                                                  <div className="rounded-full bg-white/10 h-16 w-16"></div>
                                               </div>
                                           ) : (
                                               <img

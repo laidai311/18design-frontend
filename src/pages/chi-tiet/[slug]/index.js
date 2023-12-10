@@ -109,10 +109,10 @@ export default function Page({
                             <div className="p-4 lg:p-8 shadow-lg rounded-lg">
                                 <div className="space-x-1">
                                     {categoriesLoading ? (
-                                        <div class="animate-pulse flex space-x-2">
-                                            <div class="rounded-full bg-black/5 h-5 w-20"></div>
-                                            <div class="rounded-full bg-black/5 h-5 w-10"></div>
-                                            <div class="rounded-full bg-black/5 h-5 w-16"></div>
+                                        <div className="animate-pulse flex space-x-2">
+                                            <div className="rounded-full bg-black/5 h-5 w-20"></div>
+                                            <div className="rounded-full bg-black/5 h-5 w-10"></div>
+                                            <div className="rounded-full bg-black/5 h-5 w-16"></div>
                                         </div>
                                     ) : Array.isArray(categoriesData) ? (
                                         categoriesData.map((item, index) => {
@@ -163,12 +163,12 @@ export default function Page({
                                         ? range(0, 5).map((key) => (
                                               <div
                                                   key={key}
-                                                  class="animate-pulse flex space-x-2 px-3 py-3"
+                                                  className="animate-pulse flex space-x-2 px-3 py-3"
                                               >
-                                                  <div class="rounded-lg bg-black/5 w-24 h-24"></div>
+                                                  <div className="rounded-lg bg-black/5 w-24 h-24"></div>
                                                   <div className="grow space-y-2">
-                                                      <div class="rounded-full bg-black/5 h-4"></div>
-                                                      <div class="rounded-full bg-black/5 h-4 w-20"></div>
+                                                      <div className="rounded-full bg-black/5 h-4"></div>
+                                                      <div className="rounded-full bg-black/5 h-4 w-20"></div>
                                                   </div>
                                               </div>
                                           ))

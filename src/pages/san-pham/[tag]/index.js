@@ -86,11 +86,11 @@ export default function Page({
                                     className="p-4 w-full md:w-1/2 lg:w-1/4"
                                 >
                                     <div className="relative pt-[100%]">
-                                        <div class="absolute inset-0 animate-pulse flex flex-col space-y-5">
-                                            <div class="rounded-lg bg-black/10 h-72"></div>
+                                        <div className="absolute inset-0 animate-pulse flex flex-col space-y-5">
+                                            <div className="rounded-lg bg-black/10 h-72"></div>
                                             <div className="space-y-2">
-                                                <div class="rounded-lg bg-black/10 h-5"></div>
-                                                <div class="rounded-lg bg-black/10 h-5 w-1/2"></div>
+                                                <div className="rounded-lg bg-black/10 h-5"></div>
+                                                <div className="rounded-lg bg-black/10 h-5 w-1/2"></div>
                                             </div>
                                         </div>
                                     </div>

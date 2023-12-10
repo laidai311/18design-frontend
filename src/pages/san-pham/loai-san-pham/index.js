@@ -66,8 +66,8 @@ export default function Page({ title, seo_title, seo_description }) {
                                 className="p-4 w-full md:w-1/2 lg:w-1/4"
                             >
                                 <div className="relative pt-[67%]">
-                                    <div class="absolute inset-0 animate-pulse h-full">
-                                        <div class="rounded-lg bg-black/10 h-full w-full"></div>
+                                    <div className="absolute inset-0 animate-pulse h-full">
+                                        <div className="rounded-lg bg-black/10 h-full w-full"></div>
                                     </div>
                                 </div>
                             </div>

@@ -57,8 +57,8 @@ export function About({
                                               <div className="bg-white text-black p-4 text-center min-h-[250px]">
                                                   <div className="flex justify-center mb-3">
                                                       {aboutGroupLoading ? (
-                                                          <div class="animate-pulse">
-                                                              <div class="rounded-full bg-black/10 h-16 w-16"></div>
+                                                          <div className="animate-pulse">
+                                                              <div className="rounded-full bg-black/10 h-16 w-16"></div>
                                                           </div>
                                                       ) : (
                                                           <Img

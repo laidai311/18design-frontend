@@ -165,13 +165,13 @@ function Menu() {
     const { menu, menuLoading } = useStore();
 
     return menuLoading ? (
-        <div class="animate-pulse flex space-x-2 items-stretch">
+        <div className="animate-pulse flex space-x-2 items-stretch">
             <div className="flex items-center">
-                <div class="rounded-lg bg-black/5 h-5 w-5"></div>
+                <div className="rounded-lg bg-black/5 h-5 w-5"></div>
             </div>
             {range(1, 7).map((key) => (
                 <div key={key} className="flex items-center">
-                    <div class="rounded-lg bg-white/10 h-5 w-32"></div>
+                    <div className="rounded-lg bg-white/10 h-5 w-32"></div>
                 </div>
             ))}
         </div>

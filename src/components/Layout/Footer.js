@@ -40,8 +40,8 @@ export default function Footer({ onContactClick }) {
     const defaulImage = defaultPage?.default_image?.full_url || "/#";
 
     return defaultPageLoading ? (
-        <div class="animate-pulse">
-            <div class="rounded-lg bg-black/5 h-72"></div>
+        <div className="animate-pulse">
+            <div className="rounded-lg bg-black/5 h-72"></div>
         </div>
     ) : (
         <footer ref={ref} id="footer" className="relative">

@@ -90,13 +90,13 @@ export default function ContactForm({ onClose, className }) {
     };
 
     return formfieldsStatus === "loading" ? (
-        <div class="animate-pulse flex flex-col space-y-5">
-            <div class="rounded-lg bg-black/10 h-9"></div>
-            <div class="rounded-lg bg-black/10 h-9"></div>
-            <div class="rounded-lg bg-black/10 h-9"></div>
-            <div class="rounded-lg bg-black/10 h-9"></div>
-            <div class="rounded-lg bg-black/10 h-9"></div>
-            <div class="rounded-lg bg-black/20 h-10"></div>
+        <div className="animate-pulse flex flex-col space-y-5">
+            <div className="rounded-lg bg-black/10 h-9"></div>
+            <div className="rounded-lg bg-black/10 h-9"></div>
+            <div className="rounded-lg bg-black/10 h-9"></div>
+            <div className="rounded-lg bg-black/10 h-9"></div>
+            <div className="rounded-lg bg-black/10 h-9"></div>
+            <div className="rounded-lg bg-black/20 h-10"></div>
         </div>
     ) : (
         <form

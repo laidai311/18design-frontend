@@ -76,8 +76,8 @@ export default function Header({ isHomePage }) {
                     </div>
                     <div className="shrink-0 mr-3 flex items-center">
                         {defaultPageLoading ? (
-                            <div class="animate-pulse flex space-x-2">
-                                <div class="rounded-lg bg-white/10 h-24 w-32"></div>
+                            <div className="animate-pulse flex space-x-2">
+                                <div className="rounded-lg bg-white/10 h-24 w-32"></div>
                             </div>
                         ) : (
                             <Link
